@@ -1,0 +1,60 @@
+#include "mitolina_types.hpp"
+
+#include <vector>
+
+class Individual {
+private:
+  int m_pid; 
+  int m_generation = -1;
+  
+  std::vector<Individual*>* m_children = nullptr;
+  Individual* m_mother = nullptr;
+  
+  Pedigree* m_pedigree = nullptr;
+  int m_pedigree_id = 0;
+  
+  void meiosis_dist_tree_internal(Individual* dest, int* dist) const;
+  
+  bool m_dijkstra_visited = false;
+  int m_dijkstra_distance = 0;
+
+  std::vector<int> m_haplotype;
+  bool m_haplotype_set = false;
+  bool m_haplotype_mutated = false;
+  void haplotype_mutate(std::vector<double>& mutation_rates);
+  
+public:
+  Individual(int pid, int m_generation);
+  ~Individual();
+  int get_pid() const;
+  int get_generation() const;
+  void add_child(Individual* child);
+  void set_mother(Individual* i);
+  Individual* get_mother() const;
+  std::vector<Individual*>* get_children() const;
+  int get_children_count() const;
+  bool pedigree_is_set() const;
+  Pedigree* get_pedigree() const;
+  int get_pedigree_id() const;
+  
+  void set_pedigree_id(int id, Pedigree* ped, int* pedigree_size);
+
+  int meiosis_dist_tree(Individual* dest) const;
+  
+  std::vector<Individual*> calculate_path_to(Individual* dest) const;
+  
+  void dijkstra_reset();
+  void dijkstra_tick_distance(int step);
+  void dijkstra_set_distance_if_less(int dist);
+  void dijkstra_mark_visited();
+  int dijkstra_get_distance() const;
+  bool dijkstra_was_visited() const;
+  
+  bool is_haplotype_set() const;
+  void set_haplotype(std::vector<int> h);
+  std::vector<int> get_haplotype() const;
+  void pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates);
+  
+  int get_haplotype_L1(Individual* dest) const;
+};
+

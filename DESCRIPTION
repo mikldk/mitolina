@@ -1,0 +1,20 @@
+Package: mitolina
+Type: Package
+Title: MItochondrial LINeage Analysis
+Version: 0.0.1
+Date: 2017-09-29
+Author: Mikkel Meyer Andersen <mikl@math.aau.dk>
+Maintainer: Mikkel Meyer Andersen <mikl@math.aau.dk>
+Description: Simulation and tools for analysing mitochondrial lineages.
+License: GPL (>= 2)
+Imports:
+    Rcpp (>= 0.12.7),
+    RcppProgress (>= 0.2.1),
+    RcppArmadillo (>= 0.7.600.1.0),
+    igraph (>= 1.0.1),
+    tibble (>= 1.1)
+LinkingTo: Rcpp, RcppArmadillo, RcppProgress, igraph
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+SystemRequirements: C++11
+RoxygenNote: 6.0.1
