@@ -6,7 +6,7 @@
 #include <progress.hpp>
 
 #include "mitolina_types.hpp"
-#include "api_simulate.hpp"
+#include "api_simulate_helper.hpp"
 
 using namespace Rcpp;
 
@@ -66,7 +66,7 @@ using namespace Rcpp;
 //' @import RcppArmadillo
 //' @export
 // [[Rcpp::export]]
-List sample_geneology_varying_size(
+List sample_mtdna_geneology_varying_size(
   IntegerVector population_sizes,
   int extra_generations_full = 0,  
   double gamma_parameter_shape = 7, double gamma_parameter_scale = 7, 
@@ -157,7 +157,7 @@ List sample_geneology_varying_size(
     int children_population_size = population_sizes[generations-generation];
 
     
-    WFRandommother wf_random_mother(population_size);
+    WFRandomMother wf_random_mother(population_size);
     GammaVarianceRandomMother gamma_variance_mother(population_size, gamma_parameter_shape, gamma_parameter_scale);  
     SimulateChooseMother* choose_mother = &wf_random_mother;
     if (enable_gamma_variance_extension) {
