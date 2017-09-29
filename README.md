@@ -1,5 +1,8 @@
 # mitolina
+
 MItochondrial LINeage Analysis
+
+**NOTE**: Not yet adapted for mtDNA
 
 Simulating genealogies backwards and imposing mutations forwards.
 
