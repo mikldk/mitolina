@@ -5,7 +5,8 @@
 class Individual {
 private:
   int m_pid; 
-  int m_generation = -1;
+  int m_generations_from_final = -1;
+  bool m_is_female = true;
   
   std::vector<Individual*>* m_children = nullptr;
   Individual* m_mother = nullptr;
@@ -18,16 +19,18 @@ private:
   bool m_dijkstra_visited = false;
   int m_dijkstra_distance = 0;
 
-  std::vector<int> m_haplotype;
+  std::vector<bool> m_haplotype;
   bool m_haplotype_set = false;
   bool m_haplotype_mutated = false;
   void haplotype_mutate(std::vector<double>& mutation_rates);
   
 public:
-  Individual(int pid, int m_generation);
+  Individual(int pid, int generation, bool is_female);
   ~Individual();
   int get_pid() const;
-  int get_generation() const;
+  int get_generations_from_final() const;
+  bool is_female() const;
+  
   void add_child(Individual* child);
   void set_mother(Individual* i);
   Individual* get_mother() const;
@@ -51,10 +54,10 @@ public:
   bool dijkstra_was_visited() const;
   
   bool is_haplotype_set() const;
-  void set_haplotype(std::vector<int> h);
-  std::vector<int> get_haplotype() const;
+  void set_haplotype(std::vector<bool> h);
+  std::vector<bool> get_haplotype() const;
   void pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates);
   
-  int get_haplotype_L1(Individual* dest) const;
+  int get_haplotype_L0(Individual* dest) const;
 };
 

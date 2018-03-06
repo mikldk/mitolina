@@ -20,7 +20,7 @@ void create_mother_update_simulation_state_varying_size(
   int* new_founders_left,
   List& last_k_generations_individuals) {  
   
-  Individual* mother = new Individual(*individual_id, generation);
+  Individual* mother = new Individual(*individual_id, generation, true);
   (*individual_id) = (*individual_id) + 1;
   
   mothers_generation[mother_i] = mother;

@@ -106,7 +106,7 @@ Rcpp::IntegerMatrix individuals_get_haplotypes(Rcpp::ListOf< Rcpp::XPtr<Individu
   Rcpp::IntegerMatrix haps(n, loci);
 
   for (size_t i = 0; i < n; ++i) {
-    std::vector<int> hap = individuals[i]->get_haplotype();
+    std::vector<bool> hap = individuals[i]->get_haplotype();
 
     if (hap.size() != loci) {
       Rcpp::stop("Expected > 0 loci for all haplotypes");
@@ -163,7 +163,7 @@ void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedi
 
 //' @export
 // [[Rcpp::export]]
-std::vector<int> get_haplotype(Rcpp::XPtr<Individual> individual) {
+std::vector<bool> get_haplotype(Rcpp::XPtr<Individual> individual) {
   return individual->get_haplotype();
 }
 
@@ -175,11 +175,11 @@ int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const 
   int loci = haplotype.size();
   int count = 0;
   
-  std::vector<int> h = Rcpp::as< std::vector<int> >(haplotype);
+  std::vector<bool> h = Rcpp::as< std::vector<bool> >(haplotype);
   
   for (int i = 0; i < n; ++i) {
     Rcpp::XPtr<Individual> indv = individuals[i];
-    std::vector<int> indv_h = indv->get_haplotype();
+    std::vector<bool> indv_h = indv->get_haplotype();
     
     if (indv_h.size() != loci) {
       Rcpp::stop("haplotype and indv_h did not have same number of loci");
@@ -202,7 +202,7 @@ int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const 
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerVector meiosis_dist_haplotype_matches_individuals(const Rcpp::XPtr<Individual> suspect, const Rcpp::List individuals) {
-  std::vector<int> h = suspect->get_haplotype();
+  std::vector<bool> h = suspect->get_haplotype();
   
   int n = individuals.size();
   int loci = h.size();
@@ -215,7 +215,7 @@ Rcpp::IntegerVector meiosis_dist_haplotype_matches_individuals(const Rcpp::XPtr<
       continue; // no meiosis distance for individuals in different pedigrees
     }
     
-    std::vector<int> indv_h = indv->get_haplotype();
+    std::vector<bool> indv_h = indv->get_haplotype();
     
     if (indv_h.size() != loci) {
       Rcpp::stop("haplotype and indv_h did not have same number of loci");
@@ -236,24 +236,24 @@ Rcpp::IntegerVector meiosis_dist_haplotype_matches_individuals(const Rcpp::XPtr<
 }
 
 // There are count_haplotype_occurrences_pedigree matches. 
-// This gives details on meiotic distance and the max L1 distance of the haplotypes on the path between the suspect and the matching individual in the pedigree. Some of these matches may have (back)mutations between in between them.
+// This gives details on meiotic distance and the max L0 distance of the haplotypes on the path between the suspect and the matching individual in the pedigree. Some of these matches may have (back)mutations between in between them.
 //
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(const Rcpp::XPtr<Individual> suspect, int generation_upper_bound_in_result = -1) {
-  const std::vector<int> h = suspect->get_haplotype();
+Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(const Rcpp::XPtr<Individual> suspect, int generation_upper_bound_in_result = -1) {
+  const std::vector<bool> h = suspect->get_haplotype();
 
   const Pedigree* pedigree = suspect->get_pedigree();
   const int suspect_pedigree_id = suspect->get_pedigree_id();
   const std::vector<Individual*>* family = pedigree->get_all_individuals();
   
   std::vector<int> meiosis_dists;
-  std::vector<int> max_L1_dists;
+  std::vector<int> max_L0_dists;
   std::vector<int> pids;
   
   // includes suspect by purpose
   for (auto dest : *family) { 
-    int generation = dest->get_generation();
+    int generation = dest->get_generations_from_final();
     
     if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
       continue;
@@ -264,7 +264,7 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(cons
       continue;
     }
     
-    std::vector<int> dest_h = dest->get_haplotype();
+    std::vector<bool> dest_h = dest->get_haplotype();
     
     if (dest_h.size() != h.size()) {
       Rcpp::stop("haplotype and dest_h did not have same number of loci");
@@ -277,17 +277,17 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(cons
       int meiosis_dist_from_path = path.size() - 1; // n vertices means n-1 edges (tree)
       //Rcpp::Rcout << ">> path from " << suspect->get_pid() << " to " << dest->get_pid() << " has length = " << meiosis_dist_from_path << " and meioses = " << meiosis_dist << (meiosis_dist_from_path == meiosis_dist ? " ok" : " ERROR") << ": " << std::endl;
       
-      int max_L1 = 0;
+      int max_L0 = 0;
       
       //Rcpp::Rcout << "  ";
       
       for (auto intermediate_node : path) { 
         //Rcpp::Rcout << intermediate_node->get_pid();
         
-        int d = suspect->get_haplotype_L1(intermediate_node);
+        int d = suspect->get_haplotype_L0(intermediate_node);
         
-        if (d > max_L1) {
-          max_L1 = d;
+        if (d > max_L0) {
+          max_L0 = d;
           //Rcpp::Rcout << "!";
         }
         
@@ -301,7 +301,7 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(cons
       }
       
       meiosis_dists.push_back(meiosis_dist);
-      max_L1_dists.push_back(max_L1);
+      max_L0_dists.push_back(max_L0);
       pids.push_back(dest->get_pid());
     }
   }
@@ -309,11 +309,11 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(cons
   size_t n = meiosis_dists.size();
   
   Rcpp::IntegerMatrix matches(n, 3);
-  colnames(matches) = Rcpp::CharacterVector::create("meioses", "max_L1", "pid");
+  colnames(matches) = Rcpp::CharacterVector::create("meioses", "max_L0", "pid");
   
   for (size_t i = 0; i < n; ++i) {
     matches(i, 0) = meiosis_dists[i];
-    matches(i, 1) = max_L1_dists[i];
+    matches(i, 1) = max_L0_dists[i];
     matches(i, 2) = pids[i];
   }
   
@@ -332,18 +332,18 @@ int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rc
   int loci = haplotype.size();
   int count = 0;
   
-  std::vector<int> h = Rcpp::as< std::vector<int> >(haplotype);
+  std::vector<bool> h = Rcpp::as< std::vector<bool> >(haplotype);
 
   std::vector<Individual*>* family = pedigree->get_all_individuals();
 
   for (auto dest : *family) {    
-    int generation = dest->get_generation();
+    int generation = dest->get_generations_from_final();
     
     if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
       continue;
     }
     
-    std::vector<int> dest_h = dest->get_haplotype();
+    std::vector<bool> dest_h = dest->get_haplotype();
     
     if (dest_h.size() != loci) {
       Rcpp::stop("haplotype and indv_h did not have same number of loci");

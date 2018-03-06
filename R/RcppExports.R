@@ -49,15 +49,17 @@ build_pedigrees <- function(population, progress = TRUE) {
 #' and 
 #' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
 #' 
-#' @param population_sizes The size of the population at each generation, g. 
-#'        population_sizes[g] is the population size at generation g.
-#'        The length of population_sizes is the number of generations being simulated.
+#' @param population_sizes_females The size of the female population at each generation, g. All >= 1.
+#'        population_sizes_females[g] is the population size at generation g.
+#'        The length of population_sizes_females is the number of generations being simulated.
+#' @param population_sizes_males The size of the male population at each generation, g. All >= 0.
+#'        population_sizes_males[g] is the population size at generation g.
 #' @param extra_generations_full Additional full generations to be simulated.
 #' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.
 #' @param gamma_parameter_scale Parameter realted to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.
 #' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
 #' @param progress Show progress.
-#' @param individuals_generations_return How many generations back to return (pointers to) individuals for.
+#' @param extra_individuals_generations_return How many generations back to return (pointers to) individuals for in addition to the end population?
 #' 
 #' @return A mitolina_simulation / list with the following entries:
 #' \itemize{
@@ -66,16 +68,16 @@ build_pedigrees <- function(population, progress = TRUE) {
 #'   \item \code{founders}. Number of founders after the simulated \code{generations}.
 #'   \item \code{growth_type}. Growth type model.
 #'   \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
-#'   \item \code{end_generation_individuals}. Pointers to individuals in end generation.
-#'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
+#'   \item \code{end_generation_female_individuals}. Pointers to female individuals in end generation.
+#'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
 #' }
 #' 
 #' @import Rcpp
 #' @import RcppProgress
 #' @import RcppArmadillo
 #' @export
-sample_mtdna_geneology_varying_size <- function(population_sizes, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L) {
-    .Call('_mitolina_sample_mtdna_geneology_varying_size', PACKAGE = 'mitolina', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return)
+sample_mtdna_geneology_varying_size <- function(population_sizes_females, population_sizes_males, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, extra_individuals_generations_return = 2L) {
+    .Call('_mitolina_sample_mtdna_geneology_varying_size', PACKAGE = 'mitolina', population_sizes_females, population_sizes_males, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, extra_individuals_generations_return)
 }
 
 #' @export
@@ -119,8 +121,8 @@ meiosis_dist_haplotype_matches_individuals <- function(suspect, individuals) {
 }
 
 #' @export
-pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists <- function(suspect, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists', PACKAGE = 'mitolina', suspect, generation_upper_bound_in_result)
+pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists <- function(suspect, generation_upper_bound_in_result = -1L) {
+    .Call('_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists', PACKAGE = 'mitolina', suspect, generation_upper_bound_in_result)
 }
 
 #' @export
@@ -151,8 +153,8 @@ print_individual <- function(individual) {
 #' Get individual's generations
 #' 
 #' @export
-get_generation <- function(individual) {
-    .Call('_mitolina_get_generation', PACKAGE = 'mitolina', individual)
+get_generations_from_final <- function(individual) {
+    .Call('_mitolina_get_generations_from_final', PACKAGE = 'mitolina', individual)
 }
 
 #' Get pedigree from individual
@@ -187,11 +189,6 @@ mother_matches <- function(individual) {
 #' @export
 grandmother_matches <- function(individual) {
     .Call('_mitolina_grandmother_matches', PACKAGE = 'mitolina', individual)
-}
-
-#' @export
-count_uncles <- function(individual) {
-    .Call('_mitolina_count_uncles', PACKAGE = 'mitolina', individual)
 }
 
 mitolina_test <- function() {
@@ -260,6 +257,13 @@ get_pids_in_pedigree <- function(ped) {
     .Call('_mitolina_get_pids_in_pedigree', PACKAGE = 'mitolina', ped)
 }
 
+#' get genders in pedigree
+#' 
+#' @export
+get_is_female_in_pedigree <- function(ped) {
+    .Call('_mitolina_get_is_female_in_pedigree', PACKAGE = 'mitolina', ped)
+}
+
 #' get pids in pedigree
 #' 
 #' @export
@@ -276,5 +280,11 @@ get_pedigree_edgelist <- function(ped) {
 #' @export
 get_pedigree_as_graph <- function(ped) {
     .Call('_mitolina_get_pedigree_as_graph', PACKAGE = 'mitolina', ped)
+}
+
+#' get pedigrees information in tidy format
+#' 
+get_pedigrees_tidy <- function(pedigrees) {
+    .Call('_mitolina_get_pedigrees_tidy', PACKAGE = 'mitolina', pedigrees)
 }
 

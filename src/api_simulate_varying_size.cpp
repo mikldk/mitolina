@@ -40,15 +40,17 @@ using namespace Rcpp;
 //' and 
 //' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
 //' 
-//' @param population_sizes The size of the population at each generation, g. 
-//'        population_sizes[g] is the population size at generation g.
-//'        The length of population_sizes is the number of generations being simulated.
+//' @param population_sizes_females The size of the female population at each generation, g. All >= 1.
+//'        population_sizes_females[g] is the population size at generation g.
+//'        The length of population_sizes_females is the number of generations being simulated.
+//' @param population_sizes_males The size of the male population at each generation, g. All >= 0.
+//'        population_sizes_males[g] is the population size at generation g.
 //' @param extra_generations_full Additional full generations to be simulated.
 //' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.
 //' @param gamma_parameter_scale Parameter realted to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.
 //' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
 //' @param progress Show progress.
-//' @param individuals_generations_return How many generations back to return (pointers to) individuals for.
+//' @param extra_individuals_generations_return How many generations back to return (pointers to) individuals for in addition to the end population?
 //' 
 //' @return A mitolina_simulation / list with the following entries:
 //' \itemize{
@@ -57,8 +59,8 @@ using namespace Rcpp;
 //'   \item \code{founders}. Number of founders after the simulated \code{generations}.
 //'   \item \code{growth_type}. Growth type model.
 //'   \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
-//'   \item \code{end_generation_individuals}. Pointers to individuals in end generation.
-//'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
+//'   \item \code{end_generation_female_individuals}. Pointers to female individuals in end generation.
+//'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
 //' }
 //' 
 //' @import Rcpp
@@ -67,23 +69,38 @@ using namespace Rcpp;
 //' @export
 // [[Rcpp::export]]
 List sample_mtdna_geneology_varying_size(
-  IntegerVector population_sizes,
+  IntegerVector population_sizes_females,
+  IntegerVector population_sizes_males,
   int extra_generations_full = 0,  
   double gamma_parameter_shape = 7, double gamma_parameter_scale = 7, 
   bool enable_gamma_variance_extension = false,
   bool progress = true, 
-  int individuals_generations_return = 2) {
+  int extra_individuals_generations_return = 2) {
   
   // boolean chosen like this to obey NA's
-  bool all_gt_1 = is_true(all(population_sizes >= 1));
-  if (!all_gt_1) {
-    Rcpp::stop("Please specify only population_sizes >= 1");
+  bool all_gte_1_females = is_true(all(population_sizes_females >= 1));
+  if (!all_gte_1_females) {
+    Rcpp::stop("Please specify only population_sizes_females >= 1");
   }
   
-  int generations = population_sizes.length();
+  // boolean chosen like this to obey NA's
+  bool all_gte_0_males = is_true(all(population_sizes_males >= 0));
+  if (!all_gte_0_males) {
+    Rcpp::stop("Please specify only population_sizes_males >= 0");
+  }
   
-  if (generations < -1 || generations == 0) {
-    Rcpp::stop("Please specify generations as -1 (for simulation to 1 founder) or > 0");
+  int generations = population_sizes_females.length();
+  
+  if (generations == 0) {
+    Rcpp::stop("Please specify at least 1 generation (the vector population_sizes must have length >= 1)");
+  }
+  
+  if (population_sizes_males.length() != generations) {
+    Rcpp::stop("length(population_sizes_males) != length(population_sizes_females)");
+  }
+  
+  if (population_sizes_males[0] != 0) {
+    Rcpp::stop("Please specify 0 in the first male generation (no male founders)");
   }
 
   if (enable_gamma_variance_extension) {
@@ -106,110 +123,164 @@ List sample_mtdna_geneology_varying_size(
   population_xptr.attr("class") = CharacterVector::create("mitolina_population", "externalptr");
   
   
+  
+  
+  
   int individual_id = 1;
-  std::vector<Individual*> end_generation(population_sizes[generations-1]);
-  List end_generation_individuals(population_sizes[generations-1]);
-  List last_k_generations_individuals;
+  
+  
+  
+  // Create females
+  std::vector<Individual*> end_generation_females(population_sizes_females[generations - 1]);
+  List end_generation_female_individuals(population_sizes_females[generations - 1]);
+  List last_k_generations_female_individuals;
 
-  for (size_t i = 0; i < population_sizes[generations-1]; ++i) {
-    Individual* indv = new Individual(individual_id++, 0);
-    end_generation[i] = indv;    
+  for (size_t i = 0; i < population_sizes_females[generations - 1]; ++i) {
+    Individual* indv = new Individual(individual_id++, 0, true); // is_female = true: hence a female
+    end_generation_females[i] = indv;    
     (*population_map)[indv->get_pid()] = indv;
     
     Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
-    end_generation_individuals[i] = indv_xptr;
+    end_generation_female_individuals[i] = indv_xptr;
     
-    if (individuals_generations_return >= 0) {
-      last_k_generations_individuals.push_back(indv_xptr);
+    if (extra_individuals_generations_return >= 0) {
+      last_k_generations_female_individuals.push_back(indv_xptr);
     }
   }
+  
+  // Create males
+  std::vector<Individual*> end_generation_males(population_sizes_males[generations - 1]);
+  List end_generation_male_individuals(population_sizes_males[generations - 1]);
+  List last_k_generations_male_individuals;
+
+  for (size_t i = 0; i < population_sizes_males[generations - 1]; ++i) {
+    Individual* indv = new Individual(individual_id++, 0, false); // is_female = false: hence a male
+    end_generation_males[i] = indv;    
+    (*population_map)[indv->get_pid()] = indv;
+    
+    Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
+    end_generation_male_individuals[i] = indv_xptr;
+    
+    if (extra_individuals_generations_return >= 0) {
+      last_k_generations_male_individuals.push_back(indv_xptr);
+    }
+  }
+  
   
   if (progress) {
     progress_bar.increment();
   }
   
-  //Rcpp::Rcout << "vary 2" << std::endl;
-  //Rcpp::Rcout << "  population_sizes[generations-1] = population_sizes[" << (generations-1) << "]" << std::endl;
+  /////////////////////////////////////////////////////////////////////////////////////////////
+  // Next generation
+  /////////////////////////////////////////////////////////////////////////////////////////////
   
-  // Next generation  
-  //std::vector<Individual*>* children_generation = &end_generation;
-  std::vector<Individual*> children_generation(population_sizes[generations-1]);
-  for (size_t i = 0; i < population_sizes[generations-1]; ++i) {
-    children_generation[i] = end_generation[i];
+  // Female init
+  std::vector<Individual*> female_children_generation(population_sizes_females[generations-1]);
+  for (size_t i = 0; i < population_sizes_females[generations-1]; ++i) {
+    female_children_generation[i] = end_generation_females[i];
   }
-  std::vector<Individual*> mothers_generation;
   
-  int founders_left = population_sizes[generations-1];
+  // Male init    
+  std::vector<Individual*> male_children_generation(population_sizes_males[generations-1]);
+  for (size_t i = 0; i < population_sizes_males[generations-1]; ++i) {
+    male_children_generation[i] = end_generation_males[i];
+  }  
   
-  //Rcpp::Rcout << "vary 3" << std::endl;
-  //Rcpp::Rcout << "  generations = " << generations << std::endl;
-  //Rcpp::Rcout << "  population_sizes.length() = " << population_sizes.length() << std::endl;
+  // Generations
+  std::vector<Individual*> mothers_generation;  
+  int founders_left = population_sizes_females[generations - 1];
   
-  // now, find out who the mothers to the children are
+  // now, find out who the mothers to the children (both females and males!) are
   for (size_t generation = 1; generation < generations; ++generation) {
     // Init ->
-    //Rcpp::Rcout << "vary 4-" << generation << std::endl;
-
-    //Rcpp::Rcout << "  population_size          = population_sizes[generations-(generation+1)] = population_sizes[" << generations << "-" << (generation+1) << "] = population_sizes[" << (generations-(generation+1)) << "]" << std::endl;
-    //Rcpp::Rcout << "  children_population_size = population_sizes[generations-generation] = population_sizes[" << generations << "-" << generation << "] = population_sizes[" << (generations-generation) << "]" << std::endl;
-
-    int population_size = population_sizes[generations-(generation+1)];    
-    int children_population_size = population_sizes[generations-generation];
-
+  
+    // Mother choosing mechanism
+    int mother_population_size = population_sizes_females[generations-(generation+1)];
     
-    WFRandomMother wf_random_mother(population_size);
-    GammaVarianceRandomMother gamma_variance_mother(population_size, gamma_parameter_shape, gamma_parameter_scale);  
+    WFRandomMother wf_random_mother(mother_population_size);
+    GammaVarianceRandomMother gamma_variance_mother(mother_population_size, gamma_parameter_shape, gamma_parameter_scale);  
     SimulateChooseMother* choose_mother = &wf_random_mother;
     if (enable_gamma_variance_extension) {
       choose_mother = &gamma_variance_mother;
     }
-    
-    //Rcpp::Rcout << "vary 5-" << generation << std::endl;
-    
-    mothers_generation.clear();
-    mothers_generation.resize(population_size);
-    
-    // <- Init
-    
-    int new_founders_left = 0;
-    //Rcpp::Rcerr << "Generation " << generation << std::endl;
-    
-    // clear
-    for (size_t i = 0; i < population_size; ++i) { // necessary?
-      mothers_generation[i] = nullptr;
-    }
-    
-    //Rcpp::Rcout << "vary 6-" << generation << std::endl;
-    
+    // FIXME: Why not simply put this in constructor?
     choose_mother->update_state_new_generation();
     
-    //Rcpp::Rcout << "vary 7-" << generation << std::endl;
+    //--------------------------------------------------------------------------
     
-    /*
-    FIXME: New, more explicit logic? Maybe copy create_mother_update_simulation_state_varying_size into here?
-    */
+    // Variables to keep tract of selected mothers
     
-    // now, run through children to pick each child's mother
-    for (size_t i = 0; i < children_population_size; ++i) {
+    mothers_generation.clear();
+    mothers_generation.resize(mother_population_size);    
+    // clear
+    for (size_t i = 0; i < mother_population_size; ++i) { // necessary?
+      mothers_generation[i] = nullptr;
+    }
+    int new_founders_left = 0;
+    
+    
+    //--------------------------------------------------------------------------
+    // now, run through **FEMALE** children to pick each child's mother
+    int female_children_population_size = population_sizes_females[generations-generation];
+    for (size_t i = 0; i < female_children_population_size; ++i) {
       // if a child did not have children himself, forget his ancestors
-      if (children_generation[i] == nullptr) {
+      if (female_children_generation[i] == nullptr) {
         continue;
       }
       
-      // child [i] in [generation-1]/children_generation has mother [mother_i] in [generation]/mothers_generation
-      //int mother_i = sample_person_weighted(population_size, mothers_prob, mothers_prob_perm);
       int mother_i = choose_mother->get_mother_i();
       
       // if this is the mother's first child, create the mother
       if (mothers_generation[mother_i] == nullptr) {
         create_mother_update_simulation_state_varying_size(mother_i, &individual_id, generation, 
-              individuals_generations_return, mothers_generation, population_map, 
-              &new_founders_left, last_k_generations_individuals);
+              extra_individuals_generations_return, mothers_generation, population_map, 
+              &new_founders_left, last_k_generations_female_individuals);
       }
       
-      children_generation[i]->set_mother(mothers_generation[mother_i]);
-      mothers_generation[mother_i]->add_child(children_generation[i]);
+      female_children_generation[i]->set_mother(mothers_generation[mother_i]);
+      mothers_generation[mother_i]->add_child(female_children_generation[i]);
     }
+    //--------------------------------------------------------------------------
+    // now, run through **MALE** children to pick each child's mother
+    int male_children_population_size = population_sizes_males[generations-generation];
+    for (size_t i = 0; i < male_children_population_size; ++i) {
+      int mother_i = choose_mother->get_mother_i();
+      
+      // if this is the mother's first child, create the mother
+      if (mothers_generation[mother_i] == nullptr) {
+        create_mother_update_simulation_state_varying_size(mother_i, &individual_id, generation, 
+              extra_individuals_generations_return, mothers_generation, population_map, 
+              &new_founders_left, last_k_generations_female_individuals);
+      }
+
+      male_children_generation[i]->set_mother(mothers_generation[mother_i]);
+      mothers_generation[mother_i]->add_child(male_children_generation[i]);
+    }    
+    
+    // Creates previous generation's males (i.e. for next iteration)
+    male_children_population_size = population_sizes_males[generations-(generation+1)];
+    male_children_generation.clear();
+    male_children_generation.resize(male_children_population_size);
+        
+    for (size_t i = 0; i < male_children_population_size; ++i) {
+      Individual* indv = new Individual(individual_id++, 0, false); // is_female = false: hence a male
+      (*population_map)[indv->get_pid()] = indv;
+      male_children_generation[i] = indv;
+    }
+    
+    // possibly also add these new to last_k_generations_male_individuals
+    if (generation <= extra_individuals_generations_return) {
+      for (size_t i = 0; i < male_children_population_size; ++i) {
+        Rcpp::XPtr<Individual> male_xptr(male_children_generation[i], RCPP_XPTR_2ND_ARG);
+        last_k_generations_male_individuals.push_back(male_xptr);
+      }
+    }
+    
+
+    //--------------------------------------------------------------------------
+    
+    
     
     //Rcpp::Rcout << "vary 8-" << generation << std::endl;
     
@@ -217,31 +288,36 @@ List sample_mtdna_geneology_varying_size(
     
     // create additional mothers (without children) if needed:
     if (generation <= extra_generations_full) {
-      for (size_t mother_i = 0; mother_i < population_size; ++mother_i) {
+      for (size_t mother_i = 0; mother_i < mother_population_size; ++mother_i) {
         //Rcpp::Rcout << "vary 8-dong-" << mother_i << std::endl;
         
         if (mothers_generation[mother_i] != nullptr) {
           continue;
         }        
+
+        //Rcpp::Rcout << "   CREATE" << std::endl;
+        
+        //Rcpp::Rcout << "     " << individual_id << "->";
         
         // create mother, no children etc.
         create_mother_update_simulation_state_varying_size(mother_i, &individual_id, generation, 
-              individuals_generations_return, mothers_generation, population_map, 
-              &new_founders_left, last_k_generations_individuals);
+              extra_individuals_generations_return, mothers_generation, population_map, 
+              &new_founders_left, last_k_generations_female_individuals);
+              
+        // STOP: The created mother must have a mother next iteration!
+              
+        //Rcpp::Rcout << individual_id << std::endl;
       }      
     }
     
     //Rcpp::Rcout << "vary 9-" << generation << std::endl;
     
-    // children_generation = &mothers_generation;
-    // FIXME mikl 2017-06-26 19:09
-    //children_generation = mothers_generation;
-    //vs:
-    children_generation.clear();
-    children_generation.resize(population_size);
-    for (size_t i = 0; i < population_size; ++i) {
-      children_generation[i] = mothers_generation[i];
+    female_children_generation.clear();
+    female_children_generation.resize(mother_population_size);
+    for (size_t i = 0; i < mother_population_size; ++i) {
+      female_children_generation[i] = mothers_generation[i];
     }
+    
     //<-
     
     if (Progress::check_abort()) {
@@ -261,8 +337,10 @@ List sample_mtdna_geneology_varying_size(
   res["founders"] = founders_left;
   res["growth_type"] = "VaryingPopulationSize";
   res["sdo_type"] = (enable_gamma_variance_extension) ? "GammaVariation" : "StandardWF";
-  res["end_generation_individuals"] = end_generation_individuals;
-  res["individuals_generations"] = last_k_generations_individuals;
+  res["end_generation_female_individuals"] = end_generation_female_individuals;
+  res["female_individuals_generations"] = last_k_generations_female_individuals;
+  res["end_generation_male_individuals"] = end_generation_male_individuals;
+  res["male_individuals_generations"] = last_k_generations_male_individuals;
 
   res.attr("class") = CharacterVector::create("mitolina_simulation", "list");
   

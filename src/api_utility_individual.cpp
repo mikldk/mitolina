@@ -33,9 +33,11 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
   Individual* i = individual;
   
   int pid_f = (i->get_mother() != nullptr) ? i->get_mother()->get_pid() : -1;
+  char gender = i->is_female() ? 'F' : 'M';
+    
   std::vector<Individual*>* children = i->get_children();
   
-  Rcpp::Rcout << "  pid = " << i->get_pid() << " with mother pid = " << pid_f << " and";
+  Rcpp::Rcout << "  pid = " << i->get_pid() << " [" << gender << "] with mother pid = " << pid_f << " and";
   
   if (children->size() == 0) {
     Rcpp::Rcout << " no children" << std::endl;
@@ -45,7 +47,9 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
     for (auto child : *children) {    
       std::vector<Individual*>* child_children = child->get_children();
       
-      Rcpp::Rcout << "    pid = " << child->get_pid() << " with mother pid = " << pid_f << " and " <<  child_children->size() << " children" << std::endl;
+      char child_gender = child->is_female() ? 'F' : 'M';
+      
+      Rcpp::Rcout << "    pid = " << child->get_pid() << " [" << gender << "] with mother pid = " << pid_f << " and " <<  child_children->size() << " children" << std::endl;
     }
   }
 }
@@ -54,8 +58,8 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
 //' 
 //' @export
 // [[Rcpp::export]]
-int get_generation(Rcpp::XPtr<Individual> individual) {  
-  return individual->get_generation();
+int get_generations_from_final(Rcpp::XPtr<Individual> individual) {  
+  return individual->get_generations_from_final();
 }
 
 //' Get pedigree from individual
@@ -119,7 +123,7 @@ int brothers_matching(Rcpp::XPtr<Individual> individual) {
     Rcpp::stop("Individual did not have a haplotype");
   }
 
-  std::vector<int> h = i->get_haplotype();  
+  std::vector<bool> h = i->get_haplotype();  
   int loci = h.size();  
   
   std::vector<Individual*>* brothers = i->get_mother()->get_children();
@@ -139,7 +143,7 @@ int brothers_matching(Rcpp::XPtr<Individual> individual) {
       Rcpp::stop("Individual's brother did not have a haplotype");
     }  
   
-    std::vector<int> indv_h = brother->get_haplotype();    
+    std::vector<bool> indv_h = brother->get_haplotype();    
     if (indv_h.size() != loci) {
       Rcpp::stop("haplotype and indv_h did not have same number of loci");
     }
@@ -171,8 +175,8 @@ bool mother_matches(Rcpp::XPtr<Individual> individual) {
     Rcpp::stop("Individual's mother did not have a haplotype");
   }  
   
-  std::vector<int> h = i->get_haplotype();
-  std::vector<int> h_mother = mother->get_haplotype();    
+  std::vector<bool> h = i->get_haplotype();
+  std::vector<bool> h_mother = mother->get_haplotype();    
   
   return (h.size() == h_mother.size() && h == h_mother);
 }
@@ -206,32 +210,10 @@ bool grandmother_matches(Rcpp::XPtr<Individual> individual) {
     Rcpp::stop("Individual's grandmother did not have a haplotype");
   }  
   
-  std::vector<int> h = i->get_haplotype();
-  std::vector<int> h_grandmother = grandmother->get_haplotype();    
+  std::vector<bool> h = i->get_haplotype();
+  std::vector<bool> h_grandmother = grandmother->get_haplotype();    
   
   return (h.size() == h_grandmother.size() && h == h_grandmother);
-}
-
-
-//' @export
-// [[Rcpp::export]]
-int count_uncles(Rcpp::XPtr<Individual> individual) {  
-  Individual* i = individual;
-  
-  if (i->get_mother() == nullptr) {
-    Rcpp::stop("Individual did not have a mother");
-  }
-  
-  Individual* mother = i->get_mother();
-  
-  if (mother->get_mother() == nullptr) {
-    Rcpp::stop("Individual's mother did not have a mother");
-  }  
-  
-  int mothers_mothers_girls = mother->get_mother()->get_children_count();
-
-  // exclude mother
-  return (mothers_mothers_girls - 1);
 }
 
 

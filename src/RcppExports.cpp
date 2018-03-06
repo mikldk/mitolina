@@ -30,19 +30,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_mtdna_geneology_varying_size
-List sample_mtdna_geneology_varying_size(IntegerVector population_sizes, int extra_generations_full, double gamma_parameter_shape, double gamma_parameter_scale, bool enable_gamma_variance_extension, bool progress, int individuals_generations_return);
-RcppExport SEXP _mitolina_sample_mtdna_geneology_varying_size(SEXP population_sizesSEXP, SEXP extra_generations_fullSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP) {
+List sample_mtdna_geneology_varying_size(IntegerVector population_sizes_females, IntegerVector population_sizes_males, int extra_generations_full, double gamma_parameter_shape, double gamma_parameter_scale, bool enable_gamma_variance_extension, bool progress, int extra_individuals_generations_return);
+RcppExport SEXP _mitolina_sample_mtdna_geneology_varying_size(SEXP population_sizes_femalesSEXP, SEXP population_sizes_malesSEXP, SEXP extra_generations_fullSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP progressSEXP, SEXP extra_individuals_generations_returnSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type population_sizes(population_sizesSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type population_sizes_females(population_sizes_femalesSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type population_sizes_males(population_sizes_malesSEXP);
     Rcpp::traits::input_parameter< int >::type extra_generations_full(extra_generations_fullSEXP);
     Rcpp::traits::input_parameter< double >::type gamma_parameter_shape(gamma_parameter_shapeSEXP);
     Rcpp::traits::input_parameter< double >::type gamma_parameter_scale(gamma_parameter_scaleSEXP);
     Rcpp::traits::input_parameter< bool >::type enable_gamma_variance_extension(enable_gamma_variance_extensionSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
-    Rcpp::traits::input_parameter< int >::type individuals_generations_return(individuals_generations_returnSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_mtdna_geneology_varying_size(population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return));
+    Rcpp::traits::input_parameter< int >::type extra_individuals_generations_return(extra_individuals_generations_returnSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_mtdna_geneology_varying_size(population_sizes_females, population_sizes_males, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, extra_individuals_generations_return));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -108,7 +109,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_haplotype
-std::vector<int> get_haplotype(Rcpp::XPtr<Individual> individual);
+std::vector<bool> get_haplotype(Rcpp::XPtr<Individual> individual);
 RcppExport SEXP _mitolina_get_haplotype(SEXP individualSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -142,15 +143,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists
-Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(const Rcpp::XPtr<Individual> suspect, int generation_upper_bound_in_result);
-RcppExport SEXP _mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(SEXP suspectSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+// pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists
+Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(const Rcpp::XPtr<Individual> suspect, int generation_upper_bound_in_result);
+RcppExport SEXP _mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(SEXP suspectSEXP, SEXP generation_upper_bound_in_resultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::XPtr<Individual> >::type suspect(suspectSEXP);
     Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(suspect, generation_upper_bound_in_result));
+    rcpp_result_gen = Rcpp::wrap(pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(suspect, generation_upper_bound_in_result));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -212,14 +213,14 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// get_generation
-int get_generation(Rcpp::XPtr<Individual> individual);
-RcppExport SEXP _mitolina_get_generation(SEXP individualSEXP) {
+// get_generations_from_final
+int get_generations_from_final(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP _mitolina_get_generations_from_final(SEXP individualSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_generation(individual));
+    rcpp_result_gen = Rcpp::wrap(get_generations_from_final(individual));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -287,17 +288,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
     rcpp_result_gen = Rcpp::wrap(grandmother_matches(individual));
-    return rcpp_result_gen;
-END_RCPP
-}
-// count_uncles
-int count_uncles(Rcpp::XPtr<Individual> individual);
-RcppExport SEXP _mitolina_count_uncles(SEXP individualSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_uncles(individual));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -434,6 +424,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_is_female_in_pedigree
+Rcpp::LogicalVector get_is_female_in_pedigree(Rcpp::XPtr<Pedigree> ped);
+RcppExport SEXP _mitolina_get_is_female_in_pedigree(SEXP pedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type ped(pedSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_is_female_in_pedigree(ped));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_haplotypes_in_pedigree
 Rcpp::List get_haplotypes_in_pedigree(Rcpp::XPtr<Pedigree> ped);
 RcppExport SEXP _mitolina_get_haplotypes_in_pedigree(SEXP pedSEXP) {
@@ -467,11 +468,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_pedigrees_tidy
+Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
+RcppExport SEXP _mitolina_get_pedigrees_tidy(SEXP pedigreesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_pedigrees_tidy(pedigrees));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_wipe_pedigrees", (DL_FUNC) &_mitolina_wipe_pedigrees, 1},
     {"_mitolina_build_pedigrees", (DL_FUNC) &_mitolina_build_pedigrees, 2},
-    {"_mitolina_sample_mtdna_geneology_varying_size", (DL_FUNC) &_mitolina_sample_mtdna_geneology_varying_size, 7},
+    {"_mitolina_sample_mtdna_geneology_varying_size", (DL_FUNC) &_mitolina_sample_mtdna_geneology_varying_size, 8},
     {"_mitolina_indices_in_mixture", (DL_FUNC) &_mitolina_indices_in_mixture, 3},
     {"_mitolina_pedigree_get_haplotypes_pids", (DL_FUNC) &_mitolina_pedigree_get_haplotypes_pids, 2},
     {"_mitolina_individuals_get_haplotypes", (DL_FUNC) &_mitolina_individuals_get_haplotypes, 1},
@@ -480,20 +492,19 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_get_haplotype", (DL_FUNC) &_mitolina_get_haplotype, 1},
     {"_mitolina_count_haplotype_occurrences_individuals", (DL_FUNC) &_mitolina_count_haplotype_occurrences_individuals, 2},
     {"_mitolina_meiosis_dist_haplotype_matches_individuals", (DL_FUNC) &_mitolina_meiosis_dist_haplotype_matches_individuals, 2},
-    {"_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists", (DL_FUNC) &_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists, 2},
+    {"_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists", (DL_FUNC) &_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists, 2},
     {"_mitolina_meiotic_dist", (DL_FUNC) &_mitolina_meiotic_dist, 2},
     {"_mitolina_count_haplotype_occurrences_pedigree", (DL_FUNC) &_mitolina_count_haplotype_occurrences_pedigree, 3},
     {"_mitolina_get_individual", (DL_FUNC) &_mitolina_get_individual, 2},
     {"_mitolina_get_pid", (DL_FUNC) &_mitolina_get_pid, 1},
     {"_mitolina_print_individual", (DL_FUNC) &_mitolina_print_individual, 1},
-    {"_mitolina_get_generation", (DL_FUNC) &_mitolina_get_generation, 1},
+    {"_mitolina_get_generations_from_final", (DL_FUNC) &_mitolina_get_generations_from_final, 1},
     {"_mitolina_get_pedigree_from_individual", (DL_FUNC) &_mitolina_get_pedigree_from_individual, 1},
     {"_mitolina_get_pedigree_id_from_pid", (DL_FUNC) &_mitolina_get_pedigree_id_from_pid, 2},
     {"_mitolina_count_brothers", (DL_FUNC) &_mitolina_count_brothers, 1},
     {"_mitolina_brothers_matching", (DL_FUNC) &_mitolina_brothers_matching, 1},
     {"_mitolina_mother_matches", (DL_FUNC) &_mitolina_mother_matches, 1},
     {"_mitolina_grandmother_matches", (DL_FUNC) &_mitolina_grandmother_matches, 1},
-    {"_mitolina_count_uncles", (DL_FUNC) &_mitolina_count_uncles, 1},
     {"_mitolina_mitolina_test", (DL_FUNC) &_mitolina_mitolina_test, 0},
     {"_mitolina_pop_size", (DL_FUNC) &_mitolina_pop_size, 1},
     {"_mitolina_meioses_generation_distribution", (DL_FUNC) &_mitolina_meioses_generation_distribution, 2},
@@ -506,9 +517,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_get_pedigree", (DL_FUNC) &_mitolina_get_pedigree, 2},
     {"_mitolina_print_pedigree", (DL_FUNC) &_mitolina_print_pedigree, 1},
     {"_mitolina_get_pids_in_pedigree", (DL_FUNC) &_mitolina_get_pids_in_pedigree, 1},
+    {"_mitolina_get_is_female_in_pedigree", (DL_FUNC) &_mitolina_get_is_female_in_pedigree, 1},
     {"_mitolina_get_haplotypes_in_pedigree", (DL_FUNC) &_mitolina_get_haplotypes_in_pedigree, 1},
     {"_mitolina_get_pedigree_edgelist", (DL_FUNC) &_mitolina_get_pedigree_edgelist, 1},
     {"_mitolina_get_pedigree_as_graph", (DL_FUNC) &_mitolina_get_pedigree_as_graph, 1},
+    {"_mitolina_get_pedigrees_tidy", (DL_FUNC) &_mitolina_get_pedigrees_tidy, 1},
     {NULL, NULL, 0}
 };
 

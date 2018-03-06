@@ -84,12 +84,28 @@ void Pedigree::populate_haplotypes(int loci, std::vector<double>& mutation_rates
   /* FIXME: Exploits tree */
   Individual* root = this->get_root();
   
-  std::vector<int> h(loci); // initialises to 0, 0, ..., 0
+  std::vector<bool> h(loci); // initialises to 0, 0, ..., 0
   
   root->set_haplotype(h);
   root->pass_haplotype_to_children(true, mutation_rates);
 }
 
+void Pedigree::populate_haplotypes_custom_founders(std::vector<double>& mutation_rates, Rcpp::Function get_founder_hap) {
+  /* FIXME: Exploits tree */
+  Individual* root = this->get_root();
+  
+  std::vector<bool> h = Rcpp::as< std::vector<bool> >( get_founder_hap() );  
+  
+  // Test that a haplotype of proper length generated  
+  if (h.size() != mutation_rates.size()) {
+    Rcpp::stop("get_founder_haplotype generated haplotype with number of loci different from the number of mutation rates specified");
+  }
+  
+  //Rf_PrintValue(Rcpp::wrap(h));
+  
+  root->set_haplotype(h);
+  root->pass_haplotype_to_children(true, mutation_rates);
+}
 
 
 

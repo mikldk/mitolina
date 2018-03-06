@@ -4,15 +4,19 @@
 \alias{sample_mtdna_geneology_varying_size}
 \title{Simulate a geneology with varying population size.}
 \usage{
-sample_mtdna_geneology_varying_size(population_sizes,
-  extra_generations_full = 0L, gamma_parameter_shape = 7,
-  gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE,
-  progress = TRUE, individuals_generations_return = 2L)
+sample_mtdna_geneology_varying_size(population_sizes_females,
+  population_sizes_males, extra_generations_full = 0L,
+  gamma_parameter_shape = 7, gamma_parameter_scale = 7,
+  enable_gamma_variance_extension = FALSE, progress = TRUE,
+  extra_individuals_generations_return = 2L)
 }
 \arguments{
-\item{population_sizes}{The size of the population at each generation, g. 
-population_sizes[g] is the population size at generation g.
-The length of population_sizes is the number of generations being simulated.}
+\item{population_sizes_females}{The size of the female population at each generation, g. All >= 1.
+population_sizes_females[g] is the population size at generation g.
+The length of population_sizes_females is the number of generations being simulated.}
+
+\item{population_sizes_males}{The size of the male population at each generation, g. All >= 0.
+population_sizes_males[g] is the population size at generation g.}
 
 \item{extra_generations_full}{Additional full generations to be simulated.}
 
@@ -24,7 +28,7 @@ The length of population_sizes is the number of generations being simulated.}
 
 \item{progress}{Show progress.}
 
-\item{individuals_generations_return}{How many generations back to return (pointers to) individuals for.}
+\item{extra_individuals_generations_return}{How many generations back to return (pointers to) individuals for in addition to the end population?}
 }
 \value{
 A mitolina_simulation / list with the following entries:
@@ -34,8 +38,8 @@ A mitolina_simulation / list with the following entries:
   \item \code{founders}. Number of founders after the simulated \code{generations}.
   \item \code{growth_type}. Growth type model.
   \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
-  \item \code{end_generation_individuals}. Pointers to individuals in end generation.
-  \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
+  \item \code{end_generation_female_individuals}. Pointers to female individuals in end generation.
+  \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
 }
 }
 \description{

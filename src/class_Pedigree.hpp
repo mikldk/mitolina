@@ -1,5 +1,7 @@
 #include "mitolina_types.hpp"
 
+#include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?
+
 #include <vector>
 
 class Pedigree {
@@ -21,5 +23,6 @@ public:
   Individual* get_root();
   
   void populate_haplotypes(int loci, std::vector<double>& mutation_rates);
+  void populate_haplotypes_custom_founders(std::vector<double>& mutation_rates, Rcpp::Function get_founder_hap);
 };
 

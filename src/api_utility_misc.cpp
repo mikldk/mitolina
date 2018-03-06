@@ -28,7 +28,7 @@ Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> indiv
   std::map<int, std::map<int, int> > tab;
   
   for (auto dest : *family) {    
-    int generation = dest->get_generation();
+    int generation = dest->get_generations_from_final();
     
     if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
       continue;
@@ -71,7 +71,7 @@ int population_size_generation(Rcpp::XPtr<Population> population, int generation
   int size = 0;
   
   for (auto dest : *pop) {    
-    int generation = dest.second->get_generation();
+    int generation = dest.second->get_generations_from_final();
     
     if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
       continue;
@@ -92,7 +92,7 @@ int pedigree_size_generation(Rcpp::XPtr<Pedigree> pedigree, int generation_upper
   int size = 0;
   
   for (auto dest : *family) {    
-    int generation = dest->get_generation();
+    int generation = dest->get_generations_from_final();
     
     if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
       continue;

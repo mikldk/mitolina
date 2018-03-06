@@ -105,47 +105,118 @@ pedigree_as_igraph <-
     return(g)
   }
 
-  
-#' @export  
-#plot_pedigrees <-
-plot.mitolina_pedigreelist <-
-  function(x, ...) {
-    pedigrees <- x
-    peds_gs <- lapply(1L:pedigrees_count(pedigrees), function(i) pedigree_as_igraph(pedigrees[[i]]))
-    
-    big_graph <- do.call(igraph::union, peds_gs)
+#   
+# #' @export  
+# #plot_pedigrees <-
+# plot.mitolina_pedigreelist <-
+#   function(x, ...) {
+#     pedigrees <- x
+#     peds_gs <- lapply(1L:pedigrees_count(pedigrees), function(i) pedigree_as_igraph(pedigrees[[i]]))
+#     
+#     big_graph <- do.call(igraph::union, peds_gs)
+# 
+#     #http://stackoverflow.com/questions/15558218/draw-multiple-discrete-networks-in-r-using-igraph
+#     
+#     roots <- sapply(lapply(peds_gs, igraph::topological.sort), head, n = 1)
+#     coords <- mapply(FUN = igraph::layout.reingold.tilford, peds_gs, root = roots, SIMPLIFY = FALSE)
+#     
+#     ## Put the graphs side by side, roots on the top
+#     width <- sapply(coords, function(x) { r <- range(x[, 1]); r[2] - r[1] })
+#     gap <- 0.5
+#     shift <- c(0, cumsum(width[-length(width)] + gap))
+#     ncoords <- mapply(FUN=function(mat, shift) {
+#       mat[,1] <- mat[,1] - min(mat[,1]) + shift
+#       mat[,2] <- mat[,2] - max(mat[,2])
+#       mat
+#     }, coords, shift, SIMPLIFY=FALSE)
+#     
+#    ## Put together the coordinates for the original graph,
+#     ## based on the names of the vertices
+#     lay <- matrix(0, ncol = 2, nrow = igraph::vcount(big_graph))
+#     for (i in seq_along(peds_gs)) {
+#       lay[match(igraph::V(peds_gs[[i]])$name, igraph::V(big_graph)$name),] <- ncoords[[i]]
+#     }
+#     
+#     ## Plot everything
+#     old_mar <- par("mar")
+#     par(mar = c(0, 0, 0, 0))
+#     igraph::plot.igraph(big_graph, layout = lay, ...)
+#     par(mar = old_mar)
+#         
+#     return(invisible(NULL))
+#     #eturn(g)
+#   }
 
-    #http://stackoverflow.com/questions/15558218/draw-multiple-discrete-networks-in-r-using-igraph
+
+
+
+#' @export
+tidy_graph_tbl <- function(x, ...) {
+  if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
+  
+  ret <- get_pedigrees_tidy(peds)
+  
+  d_edges <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+    tibble(ped_id = ret$ped_ids[[i]], 
+           from = ret$edgelists[[i]][, 1], 
+           to = ret$edgelists[[i]][, 2])
+  }))
+  #d_edges
+  
+  d_indv <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+    tibble(pid = ret$pids[[i]], is_female = ret$is_female[[i]], haplotype = ret$haplotypes[[i]])
+  }))
+  #d_indv
+  
+  d <- d_edges %>% 
+    left_join(d_indv, by = c("from" = "pid")) %>% 
+    rename(from_haplotype = haplotype,
+           from_is_female = is_female) %>% 
+    left_join(d_indv, by = c("to" = "pid")) %>% 
+    rename(to_haplotype = haplotype,
+           to_is_female = is_female)
+  
+  return(d)
+}
+
+#' @export
+get_nodes_edges <- function(x, ...) {
+  if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
+  
+  ret <- get_pedigrees_tidy(x)
+  
+  d_edges <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+    tibble(from = ret$edgelists[[i]][, 1], 
+           to = ret$edgelists[[i]][, 2])
+  })) %>%
+  mutate(from = as.character(from),
+         to = as.character(to))
+  #d_edges
+  
+  d_indv <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+    tibble(name = ret$pids[[i]], 
+           gens_from_final = ret$generation[[i]], 
+           ped_id = ret$ped_ids[[i]], 
+           sex = factor(ifelse(ret$is_female[[i]], "Female", "Male"), levels = c("Female", "Male")), 
+           haplotype = ret$haplotypes[[i]])
+  })) %>%
+  mutate(name = as.character(name))
+  #d_indv
+      
+  return(list(nodes = d_indv, edges = d_edges))
+}
+
+
+#' @export
+as_tbl_graph.mitolina_pedigreelist <- function(x, ...) {
+  if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
+  
+  VE <- get_nodes_edges(x)
+  
+  g <- tbl_graph(nodes = VE$nodes, edges = VE$edges)
     
-    roots <- sapply(lapply(peds_gs, igraph::topological.sort), head, n = 1)
-    coords <- mapply(FUN = igraph::layout.reingold.tilford, peds_gs, root = roots, SIMPLIFY = FALSE)
-    
-    ## Put the graphs side by side, roots on the top
-    width <- sapply(coords, function(x) { r <- range(x[, 1]); r[2] - r[1] })
-    gap <- 0.5
-    shift <- c(0, cumsum(width[-length(width)] + gap))
-    ncoords <- mapply(FUN=function(mat, shift) {
-      mat[,1] <- mat[,1] - min(mat[,1]) + shift
-      mat[,2] <- mat[,2] - max(mat[,2])
-      mat
-    }, coords, shift, SIMPLIFY=FALSE)
-    
-    ## Put together the coordinates for the original graph,
-    ## based on the names of the vertices
-    lay <- matrix(0, ncol = 2, nrow = igraph::vcount(big_graph))
-    for (i in seq_along(peds_gs)) {
-      lay[match(igraph::V(peds_gs[[i]])$name, igraph::V(big_graph)$name),] <- ncoords[[i]]
-    }
-    
-    ## Plot everything
-    old_mar <- par("mar")
-    par(mar = c(0, 0, 0, 0))
-    igraph::plot.igraph(big_graph, layout = lay, ...)
-    par(mar = old_mar)
-        
-    return(invisible(NULL))
-    #eturn(g)
-  }
+  return(g)
+}
 
 
   
@@ -153,10 +224,15 @@ plot.mitolina_pedigreelist <-
 #' @export  
 plot.mitolina_pedigree <-
   function(x, ids = TRUE, haplotypes = FALSE, locus_sep = " ", mark_pids = NULL, label_color = "black", node_color = "lightgray", mark_color = "orange", ...) {
+  
     if (!is(x, "mitolina_pedigree")) stop("x must be a mitolina_pedigree object")
     
     x_pids <- get_pids_in_pedigree(x)
+    x_is_females <- get_is_female_in_pedigree(x)
     
+    vertex_shapes <- rep("circle", length(x_pids))
+    vertex_shapes[!x_is_females] <- "square"
+
     vertex_label <- rep("", length(x_pids))
     
     if (ids) {
@@ -194,6 +270,8 @@ plot.mitolina_pedigree <-
       }
     }
     
+    vertex_colors[!x_is_females] <- "orange"
+    
     g <- pedigree_as_igraph(x)
     igraph::V(g)$color <- vertex_colors
     
@@ -201,6 +279,7 @@ plot.mitolina_pedigree <-
     old_mar <- par("mar")
     par(mar = c(0, 0, 0, 0))        
     igraph::plot.igraph(g, 
+                        vertex.shape = vertex_shapes,
                         vertex.label = vertex_label, 
                         vertex.label.cex = 0.75, 
                         vertex.label.color = label_color, 

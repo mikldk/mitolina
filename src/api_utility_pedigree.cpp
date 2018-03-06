@@ -70,10 +70,11 @@ void print_pedigree(Rcpp::XPtr<Pedigree> ped) {
   
   Rcpp::Rcout << "Pedigree with " << p->get_all_individuals()->size() << " individuals:" << std::endl;
   
-  for (auto i : *inds) {    
+  for (auto i : *inds) {
     int pid_f = (i->get_mother() != NULL) ? i->get_mother()->get_pid() : -1;
+    char gender = i->is_female() ? 'F' : 'M';
     
-    Rcpp::Rcout << "  " << i->get_pid() << " with mother " << pid_f << std::endl;
+    Rcpp::Rcout << "  " << i->get_pid() << " [" << gender << "] with mother " << pid_f << std::endl;
   } 
 }
 
@@ -90,6 +91,25 @@ Rcpp::IntegerVector get_pids_in_pedigree(Rcpp::XPtr<Pedigree> ped) {
   int i = 0;
   for (auto ind : *inds) {   
     res(i) = ind->get_pid();
+    ++i;
+  } 
+  
+  return res;
+}
+
+//' get genders in pedigree
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::LogicalVector get_is_female_in_pedigree(Rcpp::XPtr<Pedigree> ped) {  
+  Pedigree* p = ped;
+  
+  std::vector<Individual*>* inds = p->get_all_individuals();
+  
+  Rcpp::LogicalVector res(inds->size());
+  int i = 0;
+  for (auto ind : *inds) {   
+    res(i) = ind->is_female();
     ++i;
   } 
   
@@ -158,4 +178,90 @@ Rcpp::List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped) {
   
   return ret;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//' get pedigrees information in tidy format
+//' 
+// [[Rcpp::export]]
+Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {  
+  std::vector<Pedigree*>* peds = pedigrees;
+  
+  Rcpp::List ret_ped_ids;
+  Rcpp::List ret_edgelists;
+  Rcpp::List ret_haplotypes;
+  Rcpp::List ret_pids;
+  Rcpp::List ret_is_female;
+  Rcpp::List ret_generation;  
+  
+  for (auto it = peds->begin(); it != peds->end(); ++it) {
+    Pedigree* ped = *it;
+
+    ret_ped_ids.push_back(ped->get_id());    
+    
+    std::vector< std::pair<Individual*, Individual*>* >* rels = ped->get_relations();
+    
+    Rcpp::IntegerMatrix edgelist(rels->size(), 2);
+    int i = 0;
+    
+    for (auto pair: *rels) {
+      edgelist(i, 0) = pair->first->get_pid();
+      edgelist(i, 1) = pair->second->get_pid();
+      ++i;
+    }
+    
+    ret_edgelists.push_back(edgelist);
+
+    
+    std::vector<Individual*>* inds = ped->get_all_individuals();
+    
+    size_t N = inds->size();
+    Rcpp::List haps(N);
+    Rcpp::IntegerVector pids(N);
+    Rcpp::LogicalVector is_female(N);
+    Rcpp::IntegerVector generation(N);
+    
+    for (size_t i = 0; i < N; ++i) {
+      Individual* indv = inds->at(i);
+      haps(i) = indv->get_haplotype();
+      pids(i) = indv->get_pid();
+      is_female(i) = indv->is_female();
+      generation(i) = indv->get_generations_from_final();
+    }
+    
+    ret_haplotypes.push_back(haps);
+    ret_pids.push_back(pids);
+    ret_is_female.push_back(is_female);
+    ret_generation.push_back(generation);
+  }
+  
+  Rcpp::List ret;
+  
+  ret["ped_ids"] = ret_ped_ids;
+  ret["edgelists"] = ret_edgelists;
+  ret["haplotypes"] = ret_haplotypes;
+  ret["pids"] = ret_pids;
+  ret["is_female"] = ret_is_female;
+  ret["generations_from_final"] = ret_generation;
+  
+  return ret;
+}
+
 

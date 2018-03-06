@@ -9,9 +9,10 @@
 Individual
 ==========================================
 */
-Individual::Individual(int pid, int generation) {
+Individual::Individual(int pid, int generations_from_final, bool is_female) {
   m_pid = pid;
-  m_generation = generation;
+  m_generations_from_final = generations_from_final;
+  m_is_female = is_female;
   
   m_children = new std::vector<Individual*>();
 }
@@ -24,8 +25,12 @@ int Individual::get_pid() const {
   return m_pid;
 }
 
-int Individual::get_generation() const {
-  return m_generation;
+int Individual::get_generations_from_final() const {
+  return m_generations_from_final;
+}
+
+bool Individual::is_female() const {
+  return m_is_female;
 }
 
 void Individual::add_child(Individual* child) {
@@ -194,16 +199,11 @@ void Individual::haplotype_mutate(std::vector<double>& mutation_rates) {
   }
   if (m_haplotype_mutated) {
     throw std::invalid_argument("mother haplotype already set and mutated");
-  }
-  
+  }  
   
   for (int loc = 0; loc < m_haplotype.size(); ++loc) {
     if (R::runif(0.0, 1.0) < mutation_rates[loc]) {
-      if (R::runif(0.0, 1.0) < 0.5) {
-        m_haplotype[loc] = m_haplotype[loc] - 1;
-      } else {
-        m_haplotype[loc] = m_haplotype[loc] + 1;
-      }
+      m_haplotype[loc] = !m_haplotype[loc]; // flip bit / mutate bit
     }
   }
 }
@@ -212,12 +212,12 @@ bool Individual::is_haplotype_set() const {
   return m_haplotype_set; 
 }
 
-void Individual::set_haplotype(std::vector<int> h) {
+void Individual::set_haplotype(std::vector<bool> h) {
   m_haplotype = h;
   m_haplotype_set = true;
 }
 
-std::vector<int> Individual::get_haplotype() const {
+std::vector<bool> Individual::get_haplotype() const {
   return m_haplotype;
 }
 
@@ -232,9 +232,9 @@ void Individual::pass_haplotype_to_children(bool recursive, std::vector<double>&
   }
 }
 
-int Individual::get_haplotype_L1(Individual* dest) const {
-  std::vector<int> h_this = this->get_haplotype();
-  std::vector<int> h_dest = dest->get_haplotype();
+int Individual::get_haplotype_L0(Individual* dest) const {
+  std::vector<bool> h_this = this->get_haplotype();
+  std::vector<bool> h_dest = dest->get_haplotype();
   
   if (h_this.size() != h_dest.size()) {
     Rcpp::Rcout << "this pid = " << this->get_pid() << " has haplotype with " << h_this.size() << " loci" << std::endl;
@@ -244,13 +244,15 @@ int Individual::get_haplotype_L1(Individual* dest) const {
   
   int d = 0;
   for (size_t i = 0; i < h_this.size(); ++i) {
-    d += abs(h_this[i] - h_dest[i]);
+    if (h_this[i] == h_dest[i]) {
+      continue;
+    }
+    
+    d += 1;
   }
   
   return d;
 }
-
-
 
 std::vector<Individual*> Individual::calculate_path_to(Individual* dest) const {
   if (!(this->pedigree_is_set())) {
