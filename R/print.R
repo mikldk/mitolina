@@ -207,6 +207,7 @@ get_nodes_edges <- function(x, ...) {
 }
 
 
+#' @importFrom tidygraph as_tbl_graph
 #' @export
 as_tbl_graph.mitolina_pedigreelist <- function(x, ...) {
   if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
