@@ -96,6 +96,7 @@ Rcpp::IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, 
 
 //////////////////////////////////////
 
+/*
 //' @export
 // [[Rcpp::export]]
 int count_brothers(Rcpp::XPtr<Individual> individual) {  
@@ -109,7 +110,8 @@ int count_brothers(Rcpp::XPtr<Individual> individual) {
   // exclude individual
   return (mothers_girls - 1);
 }
-
+*/
+/*
 //' @export
 // [[Rcpp::export]]
 int brothers_matching(Rcpp::XPtr<Individual> individual) {  
@@ -215,5 +217,7 @@ bool grandmother_matches(Rcpp::XPtr<Individual> individual) {
   
   return (h.size() == h_grandmother.size() && h == h_grandmother);
 }
+
+*/
 
 

@@ -167,10 +167,18 @@ std::vector<bool> get_haplotype(Rcpp::XPtr<Individual> individual) {
   return individual->get_haplotype();
 }
 
+//' @export
+// [[Rcpp::export]]
+int get_haplotype_no_variants(Rcpp::XPtr<Individual> individual) {
+  return individual->get_haplotype_total_no_variants();
+}
 
 //' @export
 // [[Rcpp::export]]
-int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector haplotype) {
+int count_haplotype_occurrences_individuals(const Rcpp::List individuals, 
+    const Rcpp::IntegerVector haplotype, 
+    const int haplotype_no_variants) {
+    
   int n = individuals.size();
   int loci = haplotype.size();
   int count = 0;
@@ -179,6 +187,11 @@ int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const 
   
   for (int i = 0; i < n; ++i) {
     Rcpp::XPtr<Individual> indv = individuals[i];
+
+    if (haplotype_no_variants != indv->get_haplotype_total_no_variants()) {
+      continue;
+    }
+    
     std::vector<bool> indv_h = indv->get_haplotype();
     
     if (indv_h.size() != loci) {
@@ -240,8 +253,11 @@ Rcpp::IntegerVector meiosis_dist_haplotype_matches_individuals(const Rcpp::XPtr<
 //
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(const Rcpp::XPtr<Individual> suspect, int generation_upper_bound_in_result = -1) {
+Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(const Rcpp::XPtr<Individual> suspect, bool matches_are_female = true, int generation_upper_bound_in_result = -1) {
+  Rcpp::stop("Extract matches, then count them and then find this information");
+  
   const std::vector<bool> h = suspect->get_haplotype();
+  const int h_no_variants = suspect->get_haplotype_total_no_variants();
 
   const Pedigree* pedigree = suspect->get_pedigree();
   const int suspect_pedigree_id = suspect->get_pedigree_id();
@@ -259,8 +275,16 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(cons
       continue;
     }
     
+    if (dest->is_female() != matches_are_female) {
+      continue;
+    }
+    
     // only considering within pedigree matches
     if (dest->get_pedigree_id() != suspect_pedigree_id) {
+      continue;
+    }
+    
+    if (h_no_variants != dest->get_haplotype_total_no_variants()) {
       continue;
     }
     
@@ -328,7 +352,11 @@ int meiotic_dist(Rcpp::XPtr<Individual> ind1, Rcpp::XPtr<Individual> ind2) {
 
 //' @export
 // [[Rcpp::export]]
-int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rcpp::IntegerVector haplotype, int generation_upper_bound_in_result = -1) {
+int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, 
+  const Rcpp::LogicalVector haplotype, 
+  const int haplotype_total_no_variants,
+  int generation_upper_bound_in_result = -1) {
+  
   int loci = haplotype.size();
   int count = 0;
   

@@ -65,7 +65,7 @@ Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> indiv
 
 //' @export
 // [[Rcpp::export]]
-int population_size_generation(Rcpp::XPtr<Population> population, int generation_upper_bound_in_result = -1) {  
+int population_size_generation(Rcpp::XPtr<Population> population, bool is_female = true, int generation_upper_bound_in_result = -1) {  
   std::unordered_map<int, Individual*>* pop = population->get_population();
   
   int size = 0;
@@ -74,6 +74,10 @@ int population_size_generation(Rcpp::XPtr<Population> population, int generation
     int generation = dest.second->get_generations_from_final();
     
     if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
+      continue;
+    }
+    
+    if (dest.second->is_female() != is_female) {
       continue;
     }
     

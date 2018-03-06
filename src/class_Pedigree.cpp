@@ -84,9 +84,9 @@ void Pedigree::populate_haplotypes(int loci, std::vector<double>& mutation_rates
   /* FIXME: Exploits tree */
   Individual* root = this->get_root();
   
-  std::vector<bool> h(loci); // initialises to 0, 0, ..., 0
+  std::vector<bool> h(loci); // initialises to 0, 0, ..., 0 / false, false, ..., false
   
-  root->set_haplotype(h);
+  root->set_haplotype(h, 0);
   root->pass_haplotype_to_children(true, mutation_rates);
 }
 
@@ -103,7 +103,15 @@ void Pedigree::populate_haplotypes_custom_founders(std::vector<double>& mutation
   
   //Rf_PrintValue(Rcpp::wrap(h));
   
-  root->set_haplotype(h);
+  int no_variants = 0;
+  
+  for (size_t i = 0; i < h.size(); ++i) {
+    if (h[i] == true) {
+      no_variants += 1;
+    }
+  }
+  
+  root->set_haplotype(h, no_variants);
   root->pass_haplotype_to_children(true, mutation_rates);
 }
 

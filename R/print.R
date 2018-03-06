@@ -185,7 +185,7 @@ get_nodes_edges <- function(x, ...) {
   
   ret <- get_pedigrees_tidy(x)
   
-  d_edges <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+  d_edges <- dplyr::bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
     tibble(from = ret$edgelists[[i]][, 1], 
            to = ret$edgelists[[i]][, 2])
   })) %>%
@@ -193,7 +193,7 @@ get_nodes_edges <- function(x, ...) {
          to = as.character(to))
   #d_edges
   
-  d_indv <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+  d_indv <- dplyr::bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
     tibble(name = ret$pids[[i]], 
            gens_from_final = ret$generation[[i]], 
            ped_id = ret$ped_ids[[i]], 

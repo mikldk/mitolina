@@ -20,6 +20,7 @@ private:
   int m_dijkstra_distance = 0;
 
   std::vector<bool> m_haplotype;
+  int m_haplotype_total_no_variants = -1;
   bool m_haplotype_set = false;
   bool m_haplotype_mutated = false;
   void haplotype_mutate(std::vector<double>& mutation_rates);
@@ -55,7 +56,9 @@ public:
   
   bool is_haplotype_set() const;
   void set_haplotype(std::vector<bool> h);
+  void set_haplotype(std::vector<bool> h, int total_no_variants);
   std::vector<bool> get_haplotype() const;
+  int get_haplotype_total_no_variants() const;
   void pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates);
   
   int get_haplotype_L0(Individual* dest) const;

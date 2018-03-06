@@ -200,10 +200,19 @@ void Individual::haplotype_mutate(std::vector<double>& mutation_rates) {
   if (m_haplotype_mutated) {
     throw std::invalid_argument("mother haplotype already set and mutated");
   }  
+  if (m_haplotype_total_no_variants == -1) {
+    throw std::invalid_argument("m_haplotype_total_no_variants not set");
+  }
   
   for (int loc = 0; loc < m_haplotype.size(); ++loc) {
     if (R::runif(0.0, 1.0) < mutation_rates[loc]) {
-      m_haplotype[loc] = !m_haplotype[loc]; // flip bit / mutate bit
+      if (m_haplotype[loc] == false) {
+        m_haplotype[loc] = true; // flip bit / mutate locus
+        m_haplotype_total_no_variants += 1;
+      } else { // m_haplotype[loc] == true
+        m_haplotype[loc] = false; // flip bit / mutate locus
+        m_haplotype_total_no_variants -= 1;
+      }
     }
   }
 }
@@ -217,13 +226,22 @@ void Individual::set_haplotype(std::vector<bool> h) {
   m_haplotype_set = true;
 }
 
+void Individual::set_haplotype(std::vector<bool> h, int total_no_variants) {
+  this->set_haplotype(h);
+  m_haplotype_total_no_variants = total_no_variants;
+}
+
 std::vector<bool> Individual::get_haplotype() const {
   return m_haplotype;
 }
 
+int Individual::get_haplotype_total_no_variants() const {
+  return m_haplotype_total_no_variants;
+}
+
 void Individual::pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates) {
   for (auto &child : (*m_children)) {
-    child->set_haplotype(m_haplotype);
+    child->set_haplotype(m_haplotype, this->get_haplotype_total_no_variants());
     child->haplotype_mutate(mutation_rates);
     
     if (recursive) {

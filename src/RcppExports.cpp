@@ -119,15 +119,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_haplotype_no_variants
+int get_haplotype_no_variants(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP _mitolina_get_haplotype_no_variants(SEXP individualSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_haplotype_no_variants(individual));
+    return rcpp_result_gen;
+END_RCPP
+}
 // count_haplotype_occurrences_individuals
-int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector haplotype);
-RcppExport SEXP _mitolina_count_haplotype_occurrences_individuals(SEXP individualsSEXP, SEXP haplotypeSEXP) {
+int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector haplotype, const int haplotype_no_variants);
+RcppExport SEXP _mitolina_count_haplotype_occurrences_individuals(SEXP individualsSEXP, SEXP haplotypeSEXP, SEXP haplotype_no_variantsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_haplotype_occurrences_individuals(individuals, haplotype));
+    Rcpp::traits::input_parameter< const int >::type haplotype_no_variants(haplotype_no_variantsSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_haplotype_occurrences_individuals(individuals, haplotype, haplotype_no_variants));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -144,14 +156,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists
-Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(const Rcpp::XPtr<Individual> suspect, int generation_upper_bound_in_result);
-RcppExport SEXP _mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(SEXP suspectSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(const Rcpp::XPtr<Individual> suspect, bool matches_are_female, int generation_upper_bound_in_result);
+RcppExport SEXP _mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(SEXP suspectSEXP, SEXP matches_are_femaleSEXP, SEXP generation_upper_bound_in_resultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::XPtr<Individual> >::type suspect(suspectSEXP);
+    Rcpp::traits::input_parameter< bool >::type matches_are_female(matches_are_femaleSEXP);
     Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(suspect, generation_upper_bound_in_result));
+    rcpp_result_gen = Rcpp::wrap(pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(suspect, matches_are_female, generation_upper_bound_in_result));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -168,15 +181,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // count_haplotype_occurrences_pedigree
-int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rcpp::IntegerVector haplotype, int generation_upper_bound_in_result);
-RcppExport SEXP _mitolina_count_haplotype_occurrences_pedigree(SEXP pedigreeSEXP, SEXP haplotypeSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rcpp::LogicalVector haplotype, const int haplotype_total_no_variants, int generation_upper_bound_in_result);
+RcppExport SEXP _mitolina_count_haplotype_occurrences_pedigree(SEXP pedigreeSEXP, SEXP haplotypeSEXP, SEXP haplotype_total_no_variantsSEXP, SEXP generation_upper_bound_in_resultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type pedigree(pedigreeSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector >::type haplotype(haplotypeSEXP);
+    Rcpp::traits::input_parameter< const int >::type haplotype_total_no_variants(haplotype_total_no_variantsSEXP);
     Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_haplotype_occurrences_pedigree(pedigree, haplotype, generation_upper_bound_in_result));
+    rcpp_result_gen = Rcpp::wrap(count_haplotype_occurrences_pedigree(pedigree, haplotype, haplotype_total_no_variants, generation_upper_bound_in_result));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -247,50 +261,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// count_brothers
-int count_brothers(Rcpp::XPtr<Individual> individual);
-RcppExport SEXP _mitolina_count_brothers(SEXP individualSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_brothers(individual));
-    return rcpp_result_gen;
-END_RCPP
-}
-// brothers_matching
-int brothers_matching(Rcpp::XPtr<Individual> individual);
-RcppExport SEXP _mitolina_brothers_matching(SEXP individualSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
-    rcpp_result_gen = Rcpp::wrap(brothers_matching(individual));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mother_matches
-bool mother_matches(Rcpp::XPtr<Individual> individual);
-RcppExport SEXP _mitolina_mother_matches(SEXP individualSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
-    rcpp_result_gen = Rcpp::wrap(mother_matches(individual));
-    return rcpp_result_gen;
-END_RCPP
-}
-// grandmother_matches
-bool grandmother_matches(Rcpp::XPtr<Individual> individual);
-RcppExport SEXP _mitolina_grandmother_matches(SEXP individualSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
-    rcpp_result_gen = Rcpp::wrap(grandmother_matches(individual));
-    return rcpp_result_gen;
-END_RCPP
-}
 // mitolina_test
 void mitolina_test();
 RcppExport SEXP _mitolina_mitolina_test() {
@@ -324,14 +294,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // population_size_generation
-int population_size_generation(Rcpp::XPtr<Population> population, int generation_upper_bound_in_result);
-RcppExport SEXP _mitolina_population_size_generation(SEXP populationSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+int population_size_generation(Rcpp::XPtr<Population> population, bool is_female, int generation_upper_bound_in_result);
+RcppExport SEXP _mitolina_population_size_generation(SEXP populationSEXP, SEXP is_femaleSEXP, SEXP generation_upper_bound_in_resultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_female(is_femaleSEXP);
     Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(population_size_generation(population, generation_upper_bound_in_result));
+    rcpp_result_gen = Rcpp::wrap(population_size_generation(population, is_female, generation_upper_bound_in_result));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -490,25 +461,22 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_pedigree_populate_haplotypes", (DL_FUNC) &_mitolina_pedigree_populate_haplotypes, 3},
     {"_mitolina_pedigrees_all_populate_haplotypes", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes, 4},
     {"_mitolina_get_haplotype", (DL_FUNC) &_mitolina_get_haplotype, 1},
-    {"_mitolina_count_haplotype_occurrences_individuals", (DL_FUNC) &_mitolina_count_haplotype_occurrences_individuals, 2},
+    {"_mitolina_get_haplotype_no_variants", (DL_FUNC) &_mitolina_get_haplotype_no_variants, 1},
+    {"_mitolina_count_haplotype_occurrences_individuals", (DL_FUNC) &_mitolina_count_haplotype_occurrences_individuals, 3},
     {"_mitolina_meiosis_dist_haplotype_matches_individuals", (DL_FUNC) &_mitolina_meiosis_dist_haplotype_matches_individuals, 2},
-    {"_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists", (DL_FUNC) &_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists, 2},
+    {"_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists", (DL_FUNC) &_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists, 3},
     {"_mitolina_meiotic_dist", (DL_FUNC) &_mitolina_meiotic_dist, 2},
-    {"_mitolina_count_haplotype_occurrences_pedigree", (DL_FUNC) &_mitolina_count_haplotype_occurrences_pedigree, 3},
+    {"_mitolina_count_haplotype_occurrences_pedigree", (DL_FUNC) &_mitolina_count_haplotype_occurrences_pedigree, 4},
     {"_mitolina_get_individual", (DL_FUNC) &_mitolina_get_individual, 2},
     {"_mitolina_get_pid", (DL_FUNC) &_mitolina_get_pid, 1},
     {"_mitolina_print_individual", (DL_FUNC) &_mitolina_print_individual, 1},
     {"_mitolina_get_generations_from_final", (DL_FUNC) &_mitolina_get_generations_from_final, 1},
     {"_mitolina_get_pedigree_from_individual", (DL_FUNC) &_mitolina_get_pedigree_from_individual, 1},
     {"_mitolina_get_pedigree_id_from_pid", (DL_FUNC) &_mitolina_get_pedigree_id_from_pid, 2},
-    {"_mitolina_count_brothers", (DL_FUNC) &_mitolina_count_brothers, 1},
-    {"_mitolina_brothers_matching", (DL_FUNC) &_mitolina_brothers_matching, 1},
-    {"_mitolina_mother_matches", (DL_FUNC) &_mitolina_mother_matches, 1},
-    {"_mitolina_grandmother_matches", (DL_FUNC) &_mitolina_grandmother_matches, 1},
     {"_mitolina_mitolina_test", (DL_FUNC) &_mitolina_mitolina_test, 0},
     {"_mitolina_pop_size", (DL_FUNC) &_mitolina_pop_size, 1},
     {"_mitolina_meioses_generation_distribution", (DL_FUNC) &_mitolina_meioses_generation_distribution, 2},
-    {"_mitolina_population_size_generation", (DL_FUNC) &_mitolina_population_size_generation, 2},
+    {"_mitolina_population_size_generation", (DL_FUNC) &_mitolina_population_size_generation, 3},
     {"_mitolina_pedigree_size_generation", (DL_FUNC) &_mitolina_pedigree_size_generation, 2},
     {"_mitolina_get_pedigree_id", (DL_FUNC) &_mitolina_get_pedigree_id, 1},
     {"_mitolina_pedigrees_count", (DL_FUNC) &_mitolina_pedigrees_count, 1},

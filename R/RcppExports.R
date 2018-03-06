@@ -111,8 +111,13 @@ get_haplotype <- function(individual) {
 }
 
 #' @export
-count_haplotype_occurrences_individuals <- function(individuals, haplotype) {
-    .Call('_mitolina_count_haplotype_occurrences_individuals', PACKAGE = 'mitolina', individuals, haplotype)
+get_haplotype_no_variants <- function(individual) {
+    .Call('_mitolina_get_haplotype_no_variants', PACKAGE = 'mitolina', individual)
+}
+
+#' @export
+count_haplotype_occurrences_individuals <- function(individuals, haplotype, haplotype_no_variants) {
+    .Call('_mitolina_count_haplotype_occurrences_individuals', PACKAGE = 'mitolina', individuals, haplotype, haplotype_no_variants)
 }
 
 #' @export
@@ -121,8 +126,8 @@ meiosis_dist_haplotype_matches_individuals <- function(suspect, individuals) {
 }
 
 #' @export
-pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists <- function(suspect, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists', PACKAGE = 'mitolina', suspect, generation_upper_bound_in_result)
+pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists <- function(suspect, matches_are_female = TRUE, generation_upper_bound_in_result = -1L) {
+    .Call('_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists', PACKAGE = 'mitolina', suspect, matches_are_female, generation_upper_bound_in_result)
 }
 
 #' @export
@@ -131,8 +136,8 @@ meiotic_dist <- function(ind1, ind2) {
 }
 
 #' @export
-count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_count_haplotype_occurrences_pedigree', PACKAGE = 'mitolina', pedigree, haplotype, generation_upper_bound_in_result)
+count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, haplotype_total_no_variants, generation_upper_bound_in_result = -1L) {
+    .Call('_mitolina_count_haplotype_occurrences_pedigree', PACKAGE = 'mitolina', pedigree, haplotype, haplotype_total_no_variants, generation_upper_bound_in_result)
 }
 
 #' @export
@@ -171,26 +176,6 @@ get_pedigree_id_from_pid <- function(population, pids) {
     .Call('_mitolina_get_pedigree_id_from_pid', PACKAGE = 'mitolina', population, pids)
 }
 
-#' @export
-count_brothers <- function(individual) {
-    .Call('_mitolina_count_brothers', PACKAGE = 'mitolina', individual)
-}
-
-#' @export
-brothers_matching <- function(individual) {
-    .Call('_mitolina_brothers_matching', PACKAGE = 'mitolina', individual)
-}
-
-#' @export
-mother_matches <- function(individual) {
-    .Call('_mitolina_mother_matches', PACKAGE = 'mitolina', individual)
-}
-
-#' @export
-grandmother_matches <- function(individual) {
-    .Call('_mitolina_grandmother_matches', PACKAGE = 'mitolina', individual)
-}
-
 mitolina_test <- function() {
     invisible(.Call('_mitolina_mitolina_test', PACKAGE = 'mitolina'))
 }
@@ -205,8 +190,8 @@ meioses_generation_distribution <- function(individual, generation_upper_bound_i
 }
 
 #' @export
-population_size_generation <- function(population, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_population_size_generation', PACKAGE = 'mitolina', population, generation_upper_bound_in_result)
+population_size_generation <- function(population, is_female = TRUE, generation_upper_bound_in_result = -1L) {
+    .Call('_mitolina_population_size_generation', PACKAGE = 'mitolina', population, is_female, generation_upper_bound_in_result)
 }
 
 #' @export
