@@ -151,35 +151,36 @@ pedigree_as_igraph <-
 
 
 #' @export
-tidy_graph_tbl <- function(x, ...) {
-  if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
-  
-  ret <- get_pedigrees_tidy(peds)
-  
-  d_edges <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
-    tibble(ped_id = ret$ped_ids[[i]], 
-           from = ret$edgelists[[i]][, 1], 
-           to = ret$edgelists[[i]][, 2])
-  }))
-  #d_edges
-  
-  d_indv <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
-    tibble(pid = ret$pids[[i]], is_female = ret$is_female[[i]], haplotype = ret$haplotypes[[i]])
-  }))
-  #d_indv
-  
-  d <- d_edges %>% 
-    left_join(d_indv, by = c("from" = "pid")) %>% 
-    rename(from_haplotype = haplotype,
-           from_is_female = is_female) %>% 
-    left_join(d_indv, by = c("to" = "pid")) %>% 
-    rename(to_haplotype = haplotype,
-           to_is_female = is_female)
-  
-  return(d)
-}
+#tidy_graph_tbl <- function(x, ...) {
+#  if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
+#  
+#  ret <- get_pedigrees_tidy(peds)
+#  
+#  d_edges <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+#    tibble(ped_id = ret$ped_ids[[i]], 
+#           from = ret$edgelists[[i]][, 1], 
+#           to = ret$edgelists[[i]][, 2])
+#  }))
+#  #d_edges
+#  
+#  d_indv <- bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+#    tibble(pid = ret$pids[[i]], is_female = ret$is_female[[i]], haplotype = ret$haplotypes[[i]])
+#  }))
+#  #d_indv
+#  
+#  d <- d_edges %>% 
+#    left_join(d_indv, by = c("from" = "pid")) %>% 
+#    rename(from_haplotype = haplotype,
+#           from_is_female = is_female) %>% 
+#    left_join(d_indv, by = c("to" = "pid")) %>% 
+#    rename(to_haplotype = haplotype,
+#           to_is_female = is_female)
+#  
+#  return(d)
+#}
 
 #' @importFrom magrittr "%>%"
+#' @importFrom dplyr mutate
 #' @export
 get_nodes_edges <- function(x, ...) {
   if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
@@ -190,7 +191,7 @@ get_nodes_edges <- function(x, ...) {
     tibble(from = ret$edgelists[[i]][, 1], 
            to = ret$edgelists[[i]][, 2])
   })) %>%
-  mutate(from = as.character(from),
+  dplyr::mutate(from = as.character(from),
          to = as.character(to))
   #d_edges
   
@@ -201,21 +202,21 @@ get_nodes_edges <- function(x, ...) {
            sex = factor(ifelse(ret$is_female[[i]], "Female", "Male"), levels = c("Female", "Male")), 
            haplotype = ret$haplotypes[[i]])
   })) %>%
-  mutate(name = as.character(name))
+  dplyr::mutate(name = as.character(name))
   #d_indv
       
   return(list(nodes = d_indv, edges = d_edges))
 }
 
 
-#' @importFrom tidygraph as_tbl_graph
+#' @importFrom tidygraph as_tbl_graph tbl_graph
 #' @export
 as_tbl_graph.mitolina_pedigreelist <- function(x, ...) {
   if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
   
   VE <- get_nodes_edges(x)
   
-  g <- tbl_graph(nodes = VE$nodes, edges = VE$edges)
+  g <- tidygraph::tbl_graph(nodes = VE$nodes, edges = VE$edges)
     
   return(g)
 }
