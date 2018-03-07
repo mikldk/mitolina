@@ -179,6 +179,7 @@ tidy_graph_tbl <- function(x, ...) {
   return(d)
 }
 
+#' @importFrom magrittr "%>%"
 #' @export
 get_nodes_edges <- function(x, ...) {
   if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
