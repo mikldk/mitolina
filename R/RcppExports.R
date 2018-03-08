@@ -146,6 +146,11 @@ count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, haplotype_
 }
 
 #' @export
+haplotypes_to_hashes <- function(haplotypes) {
+    .Call('_mitolina_haplotypes_to_hashes', PACKAGE = 'mitolina', haplotypes)
+}
+
+#' @export
 get_individual <- function(population, pid) {
     .Call('_mitolina_get_individual', PACKAGE = 'mitolina', population, pid)
 }

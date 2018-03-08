@@ -196,11 +196,18 @@ get_nodes_edges <- function(x, ...) {
   #d_edges
   
   d_indv <- dplyr::bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+    haplotype_id <- rep(NA, length(ret$pids[[i]]))
+    
+    if (length(ret$haplotypes[[i]]) > 0L && any(unlist(lapply(ret$haplotypes[[i]], length)) > 0)) {
+      haplotype_id <- haplotypes_to_hashes(ret$haplotypes[[i]])
+    }
+    
     tibble(name = ret$pids[[i]], 
            gens_from_final = ret$generation[[i]], 
            ped_id = ret$ped_ids[[i]], 
            sex = factor(ifelse(ret$is_female[[i]], "Female", "Male"), levels = c("Female", "Male")), 
-           haplotype = ret$haplotypes[[i]])
+           haplotype = ret$haplotypes[[i]],
+           haplotype_id = haplotype_id)
   })) %>%
   dplyr::mutate(name = as.character(name))
   #d_indv

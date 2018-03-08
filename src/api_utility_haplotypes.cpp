@@ -441,3 +441,33 @@ int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree,
   return count;
 }
 
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > haplotypes) {   
+  size_t n = haplotypes.size();
+  std::unordered_map< std::vector<bool>, std::vector<int> > hashtable;
+  
+  for (size_t i = 0; i < n; ++i) {
+    std::vector<bool> h = Rcpp::as< std::vector<bool> >(haplotypes[i]);
+    hashtable[h].push_back(i);
+  }  
+  
+  Rcpp::IntegerVector hap_ids(n);
+  int id = 1;
+  
+  for (auto it : hashtable) {
+    std::vector<int> indices = it.second;
+    
+    for (size_t j = 0; j < indices.size(); ++j) {
+      hap_ids[ indices[j] ] = id;
+    }
+    
+    ++id;
+  }
+
+  return hap_ids;
+}
+
+
+
