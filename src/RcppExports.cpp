@@ -131,27 +131,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // count_haplotype_occurrences_individuals
-int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector haplotype, const int haplotype_no_variants);
+int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const Rcpp::LogicalVector haplotype, const int haplotype_no_variants);
 RcppExport SEXP _mitolina_count_haplotype_occurrences_individuals(SEXP individualsSEXP, SEXP haplotypeSEXP, SEXP haplotype_no_variantsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector >::type haplotype(haplotypeSEXP);
     Rcpp::traits::input_parameter< const int >::type haplotype_no_variants(haplotype_no_variantsSEXP);
     rcpp_result_gen = Rcpp::wrap(count_haplotype_occurrences_individuals(individuals, haplotype, haplotype_no_variants));
     return rcpp_result_gen;
 END_RCPP
 }
-// meiosis_dist_haplotype_matches_individuals
-Rcpp::IntegerVector meiosis_dist_haplotype_matches_individuals(const Rcpp::XPtr<Individual> suspect, const Rcpp::List individuals);
-RcppExport SEXP _mitolina_meiosis_dist_haplotype_matches_individuals(SEXP suspectSEXP, SEXP individualsSEXP) {
+// get_haplotype_matching_individuals
+Rcpp::List get_haplotype_matching_individuals(const Rcpp::List individuals, const Rcpp::LogicalVector haplotype, const int haplotype_no_variants);
+RcppExport SEXP _mitolina_get_haplotype_matching_individuals(SEXP individualsSEXP, SEXP haplotypeSEXP, SEXP haplotype_no_variantsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::XPtr<Individual> >::type suspect(suspectSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
-    rcpp_result_gen = Rcpp::wrap(meiosis_dist_haplotype_matches_individuals(suspect, individuals));
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector >::type haplotype(haplotypeSEXP);
+    Rcpp::traits::input_parameter< const int >::type haplotype_no_variants(haplotype_no_variantsSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_haplotype_matching_individuals(individuals, haplotype, haplotype_no_variants));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -165,6 +166,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type matches_are_female(matches_are_femaleSEXP);
     Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
     rcpp_result_gen = Rcpp::wrap(pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(suspect, matches_are_female, generation_upper_bound_in_result));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_matches_info
+Rcpp::IntegerMatrix get_matches_info(const Rcpp::XPtr<Individual> suspect, const Rcpp::List matching_indv);
+RcppExport SEXP _mitolina_get_matches_info(SEXP suspectSEXP, SEXP matching_indvSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::XPtr<Individual> >::type suspect(suspectSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type matching_indv(matching_indvSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_matches_info(suspect, matching_indv));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -463,8 +476,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_get_haplotype", (DL_FUNC) &_mitolina_get_haplotype, 1},
     {"_mitolina_get_haplotype_no_variants", (DL_FUNC) &_mitolina_get_haplotype_no_variants, 1},
     {"_mitolina_count_haplotype_occurrences_individuals", (DL_FUNC) &_mitolina_count_haplotype_occurrences_individuals, 3},
-    {"_mitolina_meiosis_dist_haplotype_matches_individuals", (DL_FUNC) &_mitolina_meiosis_dist_haplotype_matches_individuals, 2},
+    {"_mitolina_get_haplotype_matching_individuals", (DL_FUNC) &_mitolina_get_haplotype_matching_individuals, 3},
     {"_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists", (DL_FUNC) &_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists, 3},
+    {"_mitolina_get_matches_info", (DL_FUNC) &_mitolina_get_matches_info, 2},
     {"_mitolina_meiotic_dist", (DL_FUNC) &_mitolina_meiotic_dist, 2},
     {"_mitolina_count_haplotype_occurrences_pedigree", (DL_FUNC) &_mitolina_count_haplotype_occurrences_pedigree, 4},
     {"_mitolina_get_individual", (DL_FUNC) &_mitolina_get_individual, 2},

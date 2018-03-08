@@ -176,7 +176,7 @@ int get_haplotype_no_variants(Rcpp::XPtr<Individual> individual) {
 //' @export
 // [[Rcpp::export]]
 int count_haplotype_occurrences_individuals(const Rcpp::List individuals, 
-    const Rcpp::IntegerVector haplotype, 
+    const Rcpp::LogicalVector haplotype, 
     const int haplotype_no_variants) {
     
   int n = individuals.size();
@@ -206,26 +206,23 @@ int count_haplotype_occurrences_individuals(const Rcpp::List individuals,
   return count;
 }
 
-// MIKL: DEPRECATED FOR pedigree_matches_with_mutations?
-//
-// individuals typically only generation 0 to 2...
-// 
-// meiosis distance only well defined for pedigrees
-//
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerVector meiosis_dist_haplotype_matches_individuals(const Rcpp::XPtr<Individual> suspect, const Rcpp::List individuals) {
-  std::vector<bool> h = suspect->get_haplotype();
-  
+Rcpp::List get_haplotype_matching_individuals(const Rcpp::List individuals, 
+    const Rcpp::LogicalVector haplotype, 
+    const int haplotype_no_variants) {
+    
   int n = individuals.size();
-  int loci = h.size();
-  Rcpp::IntegerVector meiosis_dists;
+  int loci = haplotype.size();
+  Rcpp::List ret_indv;
+  
+  std::vector<bool> h = Rcpp::as< std::vector<bool> >(haplotype);
   
   for (int i = 0; i < n; ++i) {
     Rcpp::XPtr<Individual> indv = individuals[i];
-    
-    if (indv->get_pedigree_id() != suspect->get_pedigree_id()) {
-      continue; // no meiosis distance for individuals in different pedigrees
+
+    if (haplotype_no_variants != indv->get_haplotype_total_no_variants()) {
+      continue;
     }
     
     std::vector<bool> indv_h = indv->get_haplotype();
@@ -235,17 +232,11 @@ Rcpp::IntegerVector meiosis_dist_haplotype_matches_individuals(const Rcpp::XPtr<
     }
     
     if (indv_h == h) {
-      int dist = suspect->meiosis_dist_tree(indv);
-      
-      if (dist == -1) {
-        meiosis_dists.push_back(R_PosInf);        
-      } else {    
-        meiosis_dists.push_back(dist);
-      }
+      ret_indv.push_back(indv);
     }
   }
   
-  return meiosis_dists;
+  return ret_indv;
 }
 
 // There are count_haplotype_occurrences_pedigree matches. 
@@ -343,6 +334,71 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(cons
   
   return matches;
 }
+  
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix get_matches_info(const Rcpp::XPtr<Individual> suspect, const Rcpp::List matching_indv) {
+  const std::vector<bool> h = suspect->get_haplotype();
+  const int suspect_pedigree_id = suspect->get_pedigree_id();
+
+  std::vector<int> meiosis_dists;
+  std::vector<int> max_L0_dists;
+  std::vector<int> pids;
+  
+  // includes suspect by purpose
+  for (int i = 0; i < matching_indv.size(); ++i) {
+    Rcpp::XPtr<Individual> dest = matching_indv[i];
+    
+    // only considering within pedigree matches
+    if (dest->get_pedigree_id() != suspect_pedigree_id) {
+      continue;
+    }
+    
+  
+    std::vector<Individual*> path = suspect->calculate_path_to(dest);  
+    int meiosis_dist = path.size() - 1;
+    //int meiosis_dist = suspect->meiosis_dist_tree(dest);    
+    //int meiosis_dist_from_path = path.size() - 1; // n vertices means n-1 edges (tree)
+    //Rcpp::Rcout << ">> path from " << suspect->get_pid() << " to " << dest->get_pid() << " has length = " << meiosis_dist_from_path << " and meioses = " << meiosis_dist << (meiosis_dist_from_path == meiosis_dist ? " ok" : " ERROR") << ": " << std::endl;
+    
+    int max_L0 = 0;
+    
+    //Rcpp::Rcout << "  ";
+    
+    for (auto intermediate_node : path) { 
+      //Rcpp::Rcout << intermediate_node->get_pid();
+      
+      int d = suspect->get_haplotype_L0(intermediate_node);
+      
+      if (d > max_L0) {
+        max_L0 = d;
+      }
+    }
+    
+    if (meiosis_dist == -1) { // <=> path.size() == 0
+      Rcpp::stop("Cannot occur in pedigree!");
+    }
+    
+    meiosis_dists.push_back(meiosis_dist);
+    max_L0_dists.push_back(max_L0);
+    pids.push_back(dest->get_pid());
+  }
+  
+  size_t n = meiosis_dists.size();
+  
+  Rcpp::IntegerMatrix matches(n, 3);
+  colnames(matches) = Rcpp::CharacterVector::create("meioses", "max_L0", "pid");
+  
+  for (size_t i = 0; i < n; ++i) {
+    matches(i, 0) = meiosis_dists[i];
+    matches(i, 1) = max_L0_dists[i];
+    matches(i, 2) = pids[i];
+  }
+  
+  return matches;
+}
+  
   
 //' @export
 // [[Rcpp::export]]

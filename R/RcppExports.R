@@ -121,13 +121,18 @@ count_haplotype_occurrences_individuals <- function(individuals, haplotype, hapl
 }
 
 #' @export
-meiosis_dist_haplotype_matches_individuals <- function(suspect, individuals) {
-    .Call('_mitolina_meiosis_dist_haplotype_matches_individuals', PACKAGE = 'mitolina', suspect, individuals)
+get_haplotype_matching_individuals <- function(individuals, haplotype, haplotype_no_variants) {
+    .Call('_mitolina_get_haplotype_matching_individuals', PACKAGE = 'mitolina', individuals, haplotype, haplotype_no_variants)
 }
 
 #' @export
 pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists <- function(suspect, matches_are_female = TRUE, generation_upper_bound_in_result = -1L) {
     .Call('_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists', PACKAGE = 'mitolina', suspect, matches_are_female, generation_upper_bound_in_result)
+}
+
+#' @export
+get_matches_info <- function(suspect, matching_indv) {
+    .Call('_mitolina_get_matches_info', PACKAGE = 'mitolina', suspect, matching_indv)
 }
 
 #' @export
