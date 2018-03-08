@@ -15,11 +15,9 @@ Imports:
     tibble (>= 1.1),
     magrittr (>= 1.5)
 Depends:
-  dplyr (>= 0.7.4),
-  tidygraph (>= 1.0.0.9999),
-  ggraph (>= 1.0.1)
+  dplyr (>= 0.7.4)
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress, igraph
-Suggests: knitr, rmarkdown
+Suggests: knitr, rmarkdown, tidygraph, ggraph
 VignetteBuilder: knitr
 SystemRequirements: C++11
 RoxygenNote: 6.0.1
