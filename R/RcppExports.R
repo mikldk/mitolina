@@ -76,7 +76,7 @@ build_pedigrees <- function(population, progress = TRUE) {
 #' @import RcppProgress
 #' @import RcppArmadillo
 #' @export
-sample_mtdna_geneology_varying_size <- function(population_sizes_females, population_sizes_males, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, extra_individuals_generations_return = 2L) {
+sample_mtdna_geneology_varying_size <- function(population_sizes_females, population_sizes_males, extra_generations_full = 0L, gamma_parameter_shape = 5, gamma_parameter_scale = 5, enable_gamma_variance_extension = FALSE, progress = TRUE, extra_individuals_generations_return = 2L) {
     .Call('_mitolina_sample_mtdna_geneology_varying_size', PACKAGE = 'mitolina', population_sizes_females, population_sizes_males, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, extra_individuals_generations_return)
 }
 
@@ -148,6 +148,21 @@ count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, haplotype_
 #' @export
 haplotypes_to_hashes <- function(haplotypes) {
     .Call('_mitolina_haplotypes_to_hashes', PACKAGE = 'mitolina', haplotypes)
+}
+
+#' @export
+build_haplotypes_hashmap <- function(individuals) {
+    .Call('_mitolina_build_haplotypes_hashmap', PACKAGE = 'mitolina', individuals)
+}
+
+#' @export
+print_haplotypes_hashmap <- function(hashmap) {
+    invisible(.Call('_mitolina_print_haplotypes_hashmap', PACKAGE = 'mitolina', hashmap))
+}
+
+#' @export
+get_haplotype_matching_individuals_from_hashmap <- function(hashmap, haplotype) {
+    .Call('_mitolina_get_haplotype_matching_individuals_from_hashmap', PACKAGE = 'mitolina', hashmap, haplotype)
 }
 
 #' @export

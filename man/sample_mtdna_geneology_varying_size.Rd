@@ -6,7 +6,7 @@
 \usage{
 sample_mtdna_geneology_varying_size(population_sizes_females,
   population_sizes_males, extra_generations_full = 0L,
-  gamma_parameter_shape = 7, gamma_parameter_scale = 7,
+  gamma_parameter_shape = 5, gamma_parameter_scale = 5,
   enable_gamma_variance_extension = FALSE, progress = TRUE,
   extra_individuals_generations_return = 2L)
 }

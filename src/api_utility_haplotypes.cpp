@@ -471,3 +471,99 @@ Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > hap
 
 
 
+
+
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(const Rcpp::List individuals) {
+  int n = individuals.size();
+  
+  std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >* hashtable = new std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >();
+  Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > res(hashtable, RCPP_XPTR_2ND_ARG);
+  res.attr("class") = Rcpp::CharacterVector::create("mitolina_haplotype_hashmap", "externalptr");
+  
+  for (int i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    (*hashtable)[indv->get_haplotype()].push_back(indv);
+  }
+  
+  return res;
+}
+
+
+//' @export
+// [[Rcpp::export]]
+void print_haplotypes_hashmap(const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > hashmap) {
+  std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > map = *hashmap;
+
+  auto fn = map.hash_function();
+  int n = 0;
+  
+  for (auto elem : map) {
+    size_t hash = fn(elem.first);
+    std::vector< Rcpp::XPtr<Individual> > indvs = elem.second;
+    
+    //Rcpp::Rcout << "Key = " << elem.first << std::endl;
+    if (indvs.size() > 50) {
+      Rcpp::Rcout << "Hash = " << hash << " (size = " << indvs.size() << ")" << std::endl;
+    }
+    
+    int m = 0;
+    
+    for (auto indv: indvs) {
+      if (indvs.size() > 50) {
+        if (m == 0) {
+          Rcpp::Rcout << "   ";
+        }
+        
+        if (m <= 6) {
+          Rcpp::Rcout << indv->get_pid() << " ";
+        } else if (m == 7) { 
+          Rcpp::Rcout << "..." << std::endl;
+        }
+      }
+      
+      m += 1;
+      n += 1;      
+    }
+    
+    //Individual* indv = elem.second;
+    //Rcpp::Rcout << "Key = " << elem.first << ", pid = " << indv->get_pid() << std::endl;
+    //Rcpp::Rcout << "Key = " << elem.first << std::endl;
+  }
+  
+  Rcpp::Rcout << "Total = " << n << std::endl;
+}
+
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::List get_haplotype_matching_individuals_from_hashmap(
+    const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > hashmap,
+    const Rcpp::LogicalVector haplotype) {
+    
+  std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > map = *hashmap;  
+  Rcpp::List ret_indv_empty;
+  std::vector<bool> h = Rcpp::as< std::vector<bool> >(haplotype);
+  
+  std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >::const_iterator got = map.find(h);
+
+  if (got == map.end()) {
+    return ret_indv_empty;
+  } else {
+    std::vector< Rcpp::XPtr<Individual> > indvs = got->second;
+    
+    //Rcpp::List ret_indv(indvs.size());
+    Rcpp::List ret_indv;
+    
+    for (auto indv: indvs) {
+      ret_indv.push_back(indv);
+    }
+    
+    return ret_indv;
+  }
+
+  return ret_indv_empty;
+}
+
