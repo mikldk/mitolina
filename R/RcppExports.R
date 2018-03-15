@@ -105,6 +105,13 @@ pedigrees_all_populate_haplotypes <- function(pedigrees, loci, mutation_rates, p
     invisible(.Call('_mitolina_pedigrees_all_populate_haplotypes', PACKAGE = 'mitolina', pedigrees, loci, mutation_rates, progress))
 }
 
+#' Custom founders
+#' 
+#' @export
+pedigrees_all_populate_haplotypes_custom_founders <- function(pedigrees, mutation_rates, get_founder_haplotype = NULL, progress = TRUE) {
+    invisible(.Call('_mitolina_pedigrees_all_populate_haplotypes_custom_founders', PACKAGE = 'mitolina', pedigrees, mutation_rates, get_founder_haplotype, progress))
+}
+
 #' @export
 get_haplotype <- function(individual) {
     .Call('_mitolina_get_haplotype', PACKAGE = 'mitolina', individual)

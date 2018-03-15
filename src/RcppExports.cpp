@@ -108,6 +108,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// pedigrees_all_populate_haplotypes_custom_founders
+void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector mutation_rates, Rcpp::Nullable<Rcpp::Function> get_founder_haplotype, bool progress);
+RcppExport SEXP _mitolina_pedigrees_all_populate_haplotypes_custom_founders(SEXP pedigreesSEXP, SEXP mutation_ratesSEXP, SEXP get_founder_haplotypeSEXP, SEXP progressSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Function> >::type get_founder_haplotype(get_founder_haplotypeSEXP);
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    pedigrees_all_populate_haplotypes_custom_founders(pedigrees, mutation_rates, get_founder_haplotype, progress);
+    return R_NilValue;
+END_RCPP
+}
 // get_haplotype
 std::vector<bool> get_haplotype(Rcpp::XPtr<Individual> individual);
 RcppExport SEXP _mitolina_get_haplotype(SEXP individualSEXP) {
@@ -517,6 +530,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_individuals_get_haplotypes", (DL_FUNC) &_mitolina_individuals_get_haplotypes, 1},
     {"_mitolina_pedigree_populate_haplotypes", (DL_FUNC) &_mitolina_pedigree_populate_haplotypes, 3},
     {"_mitolina_pedigrees_all_populate_haplotypes", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes, 4},
+    {"_mitolina_pedigrees_all_populate_haplotypes_custom_founders", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes_custom_founders, 4},
     {"_mitolina_get_haplotype", (DL_FUNC) &_mitolina_get_haplotype, 1},
     {"_mitolina_get_haplotype_no_variants", (DL_FUNC) &_mitolina_get_haplotype_no_variants, 1},
     {"_mitolina_count_haplotype_occurrences_individuals", (DL_FUNC) &_mitolina_count_haplotype_occurrences_individuals, 3},
