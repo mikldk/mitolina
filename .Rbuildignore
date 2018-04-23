@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.travis\.yml$
+^.git$
+^.gitignore$
+^tic\.R$
+^docs
+^codemeta\.json$
+#paper:
+paper.html
+paper.bib
+paper.md
