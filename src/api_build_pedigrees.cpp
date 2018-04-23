@@ -3,7 +3,7 @@
 // [[Rcpp::depends(RcppProgress)]]
 #include <progress.hpp>
 
-#include "mitolina_types.hpp"
+#include "mitolina_types.h"
 
 using namespace Rcpp;
 

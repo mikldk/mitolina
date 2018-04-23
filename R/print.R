@@ -44,7 +44,7 @@ stop_invalid_id <- function(id) {
     stop("Invalid id: ", id)
   }
 }
-  
+
 #' @export
 `[[.mitolina_pedigreelist` <- function(x, ...) {
   i <- ..1

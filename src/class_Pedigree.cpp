@@ -1,4 +1,4 @@
-#include "mitolina_types.hpp"
+#include "mitolina_types.h"
 
 #include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?
 

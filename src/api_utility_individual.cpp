@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "mitolina_types.hpp"
+#include "mitolina_types.h"
 
 //' @export
 // [[Rcpp::export]]

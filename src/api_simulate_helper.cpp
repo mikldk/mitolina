@@ -5,7 +5,7 @@
 
 #include <progress.hpp>
 
-#include "mitolina_types.hpp"
+#include "mitolina_types.h"
 //#include "api_simulate_varying_size.hpp"
 
 using namespace Rcpp;

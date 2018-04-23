@@ -1,5 +1,5 @@
 #include <RcppArmadillo.h>
-#include "mitolina_types.hpp"
+#include "mitolina_types.h"
 
 
 bool find_path_from_root_to_dest(Individual* root, std::vector<Individual*>& path, const Individual* dest) {

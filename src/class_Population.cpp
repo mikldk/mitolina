@@ -1,5 +1,5 @@
 #include <RcppArmadillo.h>
-#include "mitolina_types.hpp"
+#include "mitolina_types.h"
 
 // [[Rcpp::depends(RcppProgress)]]
 #include <progress.hpp>

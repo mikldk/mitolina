@@ -1,4 +1,4 @@
-#include "mitolina_types.hpp"
+#include "mitolina_types.h"
 
 #include <stdexcept>
 
@@ -34,14 +34,16 @@ bool Individual::is_female() const {
 }
 
 void Individual::add_child(Individual* child) {
+  child->m_mother = this; // child->set_mother(this);
   m_children->push_back(child);
 }
 
-
+/*
 void Individual::set_mother(Individual* i) {
   // FIXME: Check sex of i?
   m_mother = i;
 }
+*/
 
 Individual* Individual::get_mother() const {
   return m_mother;

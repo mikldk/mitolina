@@ -5,12 +5,7 @@
 
 #include <string>
 
-#include "mitolina_types.hpp"
-
-//[[Rcpp::export]]
-void mitolina_test() {
-  Rcpp::Rcout << "mikl was here 1111" << std::endl;
-}
+#include "mitolina_types.h"
 
 //[[Rcpp::export]]
 int pop_size(Rcpp::XPtr<Population> population) {

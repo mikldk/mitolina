@@ -208,10 +208,6 @@ get_pedigree_id_from_pid <- function(population, pids) {
     .Call('_mitolina_get_pedigree_id_from_pid', PACKAGE = 'mitolina', population, pids)
 }
 
-mitolina_test <- function() {
-    invisible(.Call('_mitolina_mitolina_test', PACKAGE = 'mitolina'))
-}
-
 pop_size <- function(population) {
     .Call('_mitolina_pop_size', PACKAGE = 'mitolina', population)
 }
@@ -303,5 +299,12 @@ get_pedigree_as_graph <- function(ped) {
 #' 
 get_pedigrees_tidy <- function(pedigrees) {
     .Call('_mitolina_get_pedigrees_tidy', PACKAGE = 'mitolina', pedigrees)
+}
+
+#' Generate test population
+#' 
+#' @return An external pointer to the population.
+test_create_population <- function() {
+    .Call('_mitolina_test_create_population', PACKAGE = 'mitolina')
 }
 

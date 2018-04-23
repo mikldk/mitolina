@@ -5,8 +5,8 @@
 
 #include <progress.hpp>
 
-#include "mitolina_types.hpp"
-#include "api_simulate_helper.hpp"
+#include "mitolina_types.h"
+#include "api_simulate_helper.h"
 
 using namespace Rcpp;
 
@@ -238,7 +238,7 @@ List sample_mtdna_geneology_varying_size(
               &new_founders_left, last_k_generations_female_individuals);
       }
       
-      female_children_generation[i]->set_mother(mothers_generation[mother_i]);
+      // mother set in add_child
       mothers_generation[mother_i]->add_child(female_children_generation[i]);
     }
     //--------------------------------------------------------------------------
@@ -254,7 +254,7 @@ List sample_mtdna_geneology_varying_size(
               &new_founders_left, last_k_generations_female_individuals);
       }
 
-      male_children_generation[i]->set_mother(mothers_generation[mother_i]);
+      // mother set in add_child
       mothers_generation[mother_i]->add_child(male_children_generation[i]);
     }    
     

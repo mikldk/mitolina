@@ -1,14 +1,33 @@
-# mitolina
+# mitolina: MITOchondrial LINeage Analysis
 
-MItochondrial LINeage Analysis
+An R package (<https://www.r-project.org/>) to perform **MITO**chondrial **LIN**eage **A**nalysis 
+by simulating genealogies backwards and 
+imposing mtDNA including binary mutations forwards. 
+Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.
 
-**NOTE**: Not yet adapted for mtDNA
+See documentation included in package (vignettes and manual) at <https://mikldk.github.io/mitolina/>.
 
-Simulating genealogies backwards and imposing mutations forwards.
+## Installation
 
-# Disclaimer
+You first need `R` (<https://www.r-project.org/>). 
+Then you can install `mitolina` from GitHub by using the `remotes` package (<https://CRAN.R-project.org/package=remotes>):
+
+``` r
+# install.packages("remotes")
+remotes::install_github("mikldk/mitolina")
+```
+
+## Disclaimer
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+## License
 
+License: GPL (>= 2).
+
+## Build status
+
+Travis CI:
+
+[![Travis-CI Build Status](https://travis-ci.org/mikldk/mitolina.svg?branch=master)](https://travis-ci.org/mikldk/mitolina)
 
