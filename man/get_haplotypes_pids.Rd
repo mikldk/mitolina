@@ -12,13 +12,15 @@ get_haplotypes_pids(population, pids)
 \item{pids}{Vector of pids to get haplotypes for.}
 }
 \value{
-List of haplotypes where row `i` is the haplotype of `individuals[[i]]`.
+List of haplotypes where row \code{i} is the haplotype of \code{individuals[[i]]}.
+
+[[i]: R:[i
 }
 \description{
-Requires that haplotypes are first populated, e.g. 
-with [pedigrees_all_populate_haplotypes()] or 
-[pedigrees_all_populate_haplotypes_custom_founders()].
+Requires that haplotypes are first populated, e.g.
+with \code{\link[=pedigrees_all_populate_haplotypes]{pedigrees_all_populate_haplotypes()}} or
+\code{\link[=pedigrees_all_populate_haplotypes_custom_founders]{pedigrees_all_populate_haplotypes_custom_founders()}}.
 }
 \seealso{
-[get_haplotypes_individuals()].
+\code{\link[=get_haplotypes_individuals]{get_haplotypes_individuals()}}.
 }

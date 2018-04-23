@@ -13,11 +13,14 @@ Imports:
     RcppArmadillo (>= 0.7.600.1.0),
     igraph (>= 1.0.1),
     tibble (>= 1.1),
-    magrittr (>= 1.5)
+    magrittr (>= 1.5),
+    methods
 Depends:
-  dplyr (>= 0.7.4)
+  dplyr (>= 0.7.4),
+  tidygraph (>= 1.0.0.9999)
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress
-Suggests: knitr, rmarkdown, tidygraph, ggraph
+Suggests: knitr, rmarkdown, testthat, ggraph
 VignetteBuilder: knitr
 SystemRequirements: C++11
+Roxygen: list(markdown = TRUE, roclets = c("rd", "collate", "namespace"))
 RoxygenNote: 6.0.1

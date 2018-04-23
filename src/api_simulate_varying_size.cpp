@@ -19,7 +19,7 @@ using namespace Rcpp;
 //' By the backwards simulating process of the Wright-Fisher model, 
 //' individuals with no descendants in the end population are not simulated 
 //' If for some reason additional full generations should be simulated, 
-//' the number can be specified via the \code{extra_generations_full} parameter.
+//' the number can be specified via the `extra_generations_full` parameter.
 //' This can for example be useful if one wants to simulate the 
 //' final 3 generations although some of these may not get (male) children.
 //' 
@@ -32,13 +32,13 @@ using namespace Rcpp;
 //' 
 //' This symmetric Dirichlet distribution is implemented by drawing 
 //' mother (unscaled) probabilities from a Gamma distribution with 
-//' parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale} 
+//' parameters `gamma_parameter_shape` and `gamma_parameter_scale`
 //' that are then normalised to sum to 1. 
 //' To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha}, 
 //' the following must be used:
-//' \eqn{\code{gamma_parameter_shape} = \alpha}
+//' \eqn{`gamma_parameter_shape` = \alpha}
 //' and 
-//' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
+//' \eqn{`gamma_parameter_scale` = 1/\alpha}.
 //' 
 //' @param population_sizes_females The size of the female population at each generation, g. All >= 1.
 //'        population_sizes_females[g] is the population size at generation g.
@@ -52,17 +52,18 @@ using namespace Rcpp;
 //' @param progress Show progress.
 //' @param extra_individuals_generations_return How many generations back to return (pointers to) individuals for in addition to the end population?
 //' 
-//' @return A mitolina_simulation / list with the following entries:
+//' @return A `mitolina_simulation` / list with the following entries:
 //' \itemize{
-//'   \item \code{population}. An external pointer to the population.
-//'   \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
-//'   \item \code{founders}. Number of founders after the simulated \code{generations}.
-//'   \item \code{growth_type}. Growth type model.
-//'   \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
-//'   \item \code{end_generation_female_individuals}. Pointers to female individuals in end generation.
-//'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
+//'   \item `population`. An external pointer to the population.
+//'   \item `generations`. Generations actually simulated, mostly useful when parameter `generations = -1`.
+//'   \item `founders`. Number of founders after the simulated `generations`.
+//'   \item `growth_type`. Growth type model.
+//'   \item `sdo_type`. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on `enable_gamma_variance_extension`.
+//'   \item `end_generation_female_individuals`. Pointers to female individuals in end generation.
+//'   \item `female_individuals_generations`. Pointers to female individuals in end generation in addition to the previous `extra_individuals_generations_return`.
+//'   \item `end_generation_male_individuals`. Pointers to male individuals in end generation.
+//'   \item `male_individuals_generations`. Pointers to male individuals in end generation in addition to the previous `extra_individuals_generations_return`.
 //' }
-//' 
 //' @import Rcpp
 //' @import RcppProgress
 //' @import RcppArmadillo
@@ -72,7 +73,7 @@ List sample_mtdna_geneology_varying_size(
   IntegerVector population_sizes_females,
   IntegerVector population_sizes_males,
   int extra_generations_full = 0,  
-  double gamma_parameter_shape = 5, double gamma_parameter_scale = 5, 
+  double gamma_parameter_shape = 5.0, double gamma_parameter_scale = 1.0/5.0, 
   bool enable_gamma_variance_extension = false,
   bool progress = true, 
   int extra_individuals_generations_return = 2) {

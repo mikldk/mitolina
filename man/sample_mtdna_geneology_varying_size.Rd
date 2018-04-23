@@ -6,17 +6,17 @@
 \usage{
 sample_mtdna_geneology_varying_size(population_sizes_females,
   population_sizes_males, extra_generations_full = 0L,
-  gamma_parameter_shape = 5, gamma_parameter_scale = 5,
+  gamma_parameter_shape = 5, gamma_parameter_scale = 1/5,
   enable_gamma_variance_extension = FALSE, progress = TRUE,
   extra_individuals_generations_return = 2L)
 }
 \arguments{
 \item{population_sizes_females}{The size of the female population at each generation, g. All >= 1.
-population_sizes_females[g] is the population size at generation g.
+population_sizes_females\link{g} is the population size at generation g.
 The length of population_sizes_females is the number of generations being simulated.}
 
 \item{population_sizes_males}{The size of the male population at each generation, g. All >= 0.
-population_sizes_males[g] is the population size at generation g.}
+population_sizes_males\link{g} is the population size at generation g.}
 
 \item{extra_generations_full}{Additional full generations to be simulated.}
 
@@ -31,15 +31,17 @@ population_sizes_males[g] is the population size at generation g.}
 \item{extra_individuals_generations_return}{How many generations back to return (pointers to) individuals for in addition to the end population?}
 }
 \value{
-A mitolina_simulation / list with the following entries:
+A \code{mitolina_simulation} / list with the following entries:
 \itemize{
-  \item \code{population}. An external pointer to the population.
-  \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
-  \item \code{founders}. Number of founders after the simulated \code{generations}.
-  \item \code{growth_type}. Growth type model.
-  \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
-  \item \code{end_generation_female_individuals}. Pointers to female individuals in end generation.
-  \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
+\item \code{population}. An external pointer to the population.
+\item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
+\item \code{founders}. Number of founders after the simulated \code{generations}.
+\item \code{growth_type}. Growth type model.
+\item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
+\item \code{end_generation_female_individuals}. Pointers to female individuals in end generation.
+\item \code{female_individuals_generations}. Pointers to female individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
+\item \code{end_generation_male_individuals}. Pointers to male individuals in end generation.
+\item \code{male_individuals_generations}. Pointers to male individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
 }
 }
 \description{
@@ -47,27 +49,27 @@ This function simulates a geneology with varying population size specified
 by a vector of population sizes, one for each generation.
 }
 \details{
-By the backwards simulating process of the Wright-Fisher model, 
-individuals with no descendants in the end population are not simulated 
-If for some reason additional full generations should be simulated, 
+By the backwards simulating process of the Wright-Fisher model,
+individuals with no descendants in the end population are not simulated
+If for some reason additional full generations should be simulated,
 the number can be specified via the \code{extra_generations_full} parameter.
-This can for example be useful if one wants to simulate the 
+This can for example be useful if one wants to simulate the
 final 3 generations although some of these may not get (male) children.
 
-Let \eqn{\alpha} be the parameter of a symmetric Dirichlet distribution 
-specifying each man's probability to be the mother of an arbitrary 
-male in the next generation. When \eqn{\alpha = 5}, a man's relative probability 
-to be the mother has 95\% probability to lie between 0.32 and 2.05, compared with a 
-constant 1 under the standard Wright-Fisher model and the standard deviation in 
+Let \eqn{\alpha} be the parameter of a symmetric Dirichlet distribution
+specifying each man's probability to be the mother of an arbitrary
+male in the next generation. When \eqn{\alpha = 5}, a man's relative probability
+to be the mother has 95\% probability to lie between 0.32 and 2.05, compared with a
+constant 1 under the standard Wright-Fisher model and the standard deviation in
 the number of male offspring per man is 1.10 (standard Wright-Fisher = 1).
 
-This symmetric Dirichlet distribution is implemented by drawing 
-mother (unscaled) probabilities from a Gamma distribution with 
-parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale} 
-that are then normalised to sum to 1. 
-To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha}, 
+This symmetric Dirichlet distribution is implemented by drawing
+mother (unscaled) probabilities from a Gamma distribution with
+parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale}
+that are then normalised to sum to 1.
+To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha},
 the following must be used:
-\eqn{\code{gamma_parameter_shape} = \alpha}
-and 
-\eqn{\code{gamma_parameter_scale} = 1/\alpha}.
+\eqn{`gamma_parameter_shape` = \alpha}
+and
+\eqn{`gamma_parameter_scale` = 1/\alpha}.
 }

@@ -12,11 +12,8 @@ get_haplotype_matching_individuals(individuals, haplotype)
 \item{haplotype}{Haplotype to count occurrences of.}
 }
 \value{
-List of individuals that matches `haplotype` amongst `individuals`.
+List of individuals that matches \code{haplotype} amongst \code{individuals}.
 }
 \description{
-Get the indvididuals that matches `haplotype` in `individuals`.
-}
-\seealso{
-[pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists()].
+Get the indvididuals that matches \code{haplotype} in \code{individuals}.
 }

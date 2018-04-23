@@ -120,15 +120,32 @@ void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::Nume
   ped->populate_haplotypes(loci, mut_rates);
 }
 
+
+//' Populate haplotypes in pedigrees (founder types same for all).
+//' 
+//' Populate haplotypes from founder and down in all pedigrees.
+//' Note, that haplotypes are binary (TRUE/FALSE) and 
+//' that all founders get haplotype `rep(FALSE, loci)`.
+//' 
+//' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+//' 
+//' @param pedigrees Pedigree list in which to populate haplotypes
+//' @param loci Number of loci
+//' @param mutation_rates Vector with mutation rates, length `loci`
+//' @param progress Show progress
+//'
+//' @seealso [pedigrees_all_populate_haplotypes_custom_founders()].
+//' 
 //' @export
 // [[Rcpp::export]]
-void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, Rcpp::NumericVector mutation_rates, bool progress = true) {
+void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector mutation_rates, bool progress = true) {
   std::vector<Pedigree*> peds = (*pedigrees);
   
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
+  int loci = mut_rates.size();
   
-  if (loci != mut_rates.size()) {
-    Rcpp::stop("Number of loci specified in haplotype must equal number of mutation rates specified");
+  if (loci <= 0) {
+    Rcpp::stop("At least one mutation rate / locus required");
   }
   
   size_t N = peds.size();
@@ -147,7 +164,20 @@ void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedi
   }
 }
 
-//' Custom founders
+//' Populate haplotypes in pedigrees (custom founder types).
+//' 
+//' Populate haplotypes from founder and down in all pedigrees.
+//' All founders get a haplotype from calling the user 
+//' provided function `get_founder_haplotype()` that must return a vector of TRUE/FALSE values.
+//' 
+//' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+//' 
+//' @param pedigrees Pedigree list in which to populate haplotypes
+//' @param mutation_rates Vector with mutation rates
+//' @param get_founder_haplotype Function taking no arguments returning a haplotype, i.e. a logical vector (TRUE/FALSE values) of length `length(mutation_rates)`
+//' @param progress Show progress
+//'
+//' @seealso [pedigrees_all_populate_haplotypes()].
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -233,8 +263,6 @@ int count_haplotype_occurrences_individuals(const Rcpp::List individuals,
 //' @param individuals List of individuals to count occurrences in.
 //' @param haplotype Haplotype to count occurrences of.
 //' @return List of individuals that matches `haplotype` amongst `individuals`.
-//' 
-//' @seealso [pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists()].
 //' 
 //' @export
 // [[Rcpp::export]]

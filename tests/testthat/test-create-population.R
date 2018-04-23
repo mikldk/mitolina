@@ -1,11 +1,3 @@
-# pedigrees_all_populate_haplotypes_custom_founders
-# get_haplotype
-# get_haplotype_no_variants
-# population_size_generation
-# get_haplotype_matching_individuals
-# get_matches_info
-
-  
 context("Pedigrees and haplotypes")
 
 test_pop <- test_create_population()
@@ -61,7 +53,7 @@ test_that("meiotic_dist works", {
 
 
 LOCI <- 100L
-pedigrees_all_populate_haplotypes(peds, loci = LOCI, mutation_rates = rep(0L, LOCI), progress = FALSE)
+pedigrees_all_populate_haplotypes(peds, mutation_rates = rep(0L, LOCI), progress = FALSE)
 test_that("pedigrees_all_populate_haplotypes works", {
   expect_output(print(peds), regexp = "^List of 2 pedigrees \\(of size 12, 7\\)$")
 })

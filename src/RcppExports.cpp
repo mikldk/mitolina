@@ -94,15 +94,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // pedigrees_all_populate_haplotypes
-void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, Rcpp::NumericVector mutation_rates, bool progress);
-RcppExport SEXP _mitolina_pedigrees_all_populate_haplotypes(SEXP pedigreesSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP, SEXP progressSEXP) {
+void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector mutation_rates, bool progress);
+RcppExport SEXP _mitolina_pedigrees_all_populate_haplotypes(SEXP pedigreesSEXP, SEXP mutation_ratesSEXP, SEXP progressSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
-    Rcpp::traits::input_parameter< int >::type loci(lociSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
-    pedigrees_all_populate_haplotypes(pedigrees, loci, mutation_rates, progress);
+    pedigrees_all_populate_haplotypes(pedigrees, mutation_rates, progress);
     return R_NilValue;
 END_RCPP
 }
@@ -522,7 +521,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_get_haplotypes_individuals", (DL_FUNC) &_mitolina_get_haplotypes_individuals, 1},
     {"_mitolina_get_individuals_is_female", (DL_FUNC) &_mitolina_get_individuals_is_female, 1},
     {"_mitolina_pedigree_populate_haplotypes", (DL_FUNC) &_mitolina_pedigree_populate_haplotypes, 3},
-    {"_mitolina_pedigrees_all_populate_haplotypes", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes, 4},
+    {"_mitolina_pedigrees_all_populate_haplotypes", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes, 3},
     {"_mitolina_pedigrees_all_populate_haplotypes_custom_founders", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes_custom_founders, 4},
     {"_mitolina_get_haplotype", (DL_FUNC) &_mitolina_get_haplotype, 1},
     {"_mitolina_get_haplotype_no_variants", (DL_FUNC) &_mitolina_get_haplotype_no_variants, 1},

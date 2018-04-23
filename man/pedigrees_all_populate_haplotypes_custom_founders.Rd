@@ -2,11 +2,29 @@
 % Please edit documentation in R/RcppExports.R
 \name{pedigrees_all_populate_haplotypes_custom_founders}
 \alias{pedigrees_all_populate_haplotypes_custom_founders}
-\title{Custom founders}
+\title{Populate haplotypes in pedigrees (custom founder types).}
 \usage{
 pedigrees_all_populate_haplotypes_custom_founders(pedigrees, mutation_rates,
   get_founder_haplotype = NULL, progress = TRUE)
 }
+\arguments{
+\item{pedigrees}{Pedigree list in which to populate haplotypes}
+
+\item{mutation_rates}{Vector with mutation rates}
+
+\item{get_founder_haplotype}{Function taking no arguments returning a haplotype, i.e. a logical vector (TRUE/FALSE values) of length \code{length(mutation_rates)}}
+
+\item{progress}{Show progress}
+}
 \description{
-Custom founders
+Populate haplotypes from founder and down in all pedigrees.
+All founders get a haplotype from calling the user
+provided function \code{get_founder_haplotype()} that must return a vector of TRUE/FALSE values.
+}
+\details{
+Note, that pedigrees must first have been inferred by \code{\link[=build_pedigrees]{build_pedigrees()}}.
+}
+\seealso{
+\code{\link[=pedigrees_all_populate_haplotypes]{pedigrees_all_populate_haplotypes()}} and
+\code{\link[=pedigrees_all_populate_haplotypes_ladder_bounded]{pedigrees_all_populate_haplotypes_ladder_bounded()}}.
 }

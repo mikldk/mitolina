@@ -10,11 +10,11 @@ meioses_generation_distribution(individual,
 \arguments{
 \item{individual}{Individual to calculate all meiotic distances from}
 
-\item{generation_upper_bound_in_result}{Limit on distribution; -1 means no limit. 
+\item{generation_upper_bound_in_result}{Limit on distribution; -1 means no limit.
 0 is the final generation. 1 second last generation etc.}
 }
 \description{
-Get the distribution of number of meioses from `individual` 
-to all individuals in `individual`'s pedigree.
-Note the `generation_upper_bound_in_result` parameter.
+Get the distribution of number of meioses from \code{individual}
+to all individuals in \code{individual}'s pedigree.
+Note the \code{generation_upper_bound_in_result} parameter.
 }

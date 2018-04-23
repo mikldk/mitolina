@@ -10,13 +10,15 @@ get_haplotypes_individuals(individuals)
 \item{individuals}{Individuals to get haplotypes for.}
 }
 \value{
-Matrix of haplotypes where row `i` is the haplotype of `individuals[[i]]`.
+Matrix of haplotypes where row \code{i} is the haplotype of \code{individuals[[i]]}.
+
+[[i]: R:[i
 }
 \description{
-Requires that haplotypes are first populated, e.g. 
-with [pedigrees_all_populate_haplotypes()] or 
-[pedigrees_all_populate_haplotypes_custom_founders()].
+Requires that haplotypes are first populated, e.g.
+with \code{\link[=pedigrees_all_populate_haplotypes]{pedigrees_all_populate_haplotypes()}} or
+\code{\link[=pedigrees_all_populate_haplotypes_custom_founders]{pedigrees_all_populate_haplotypes_custom_founders()}}.
 }
 \seealso{
-[get_haplotypes_pids()].
+\code{\link[=get_haplotypes_pids]{get_haplotypes_pids()}}.
 }

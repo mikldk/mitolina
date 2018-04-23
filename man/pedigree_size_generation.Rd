@@ -9,10 +9,10 @@ pedigree_size_generation(pedigree, generation_upper_bound_in_result = -1L)
 \arguments{
 \item{pedigree}{Pedigree to get size of}
 
-\item{generation_upper_bound_in_result}{Limit on generation to include in count; -1 means no limit. 
+\item{generation_upper_bound_in_result}{Limit on generation to include in count; -1 means no limit.
 0 only include the final generation. 1 only second last generation etc.}
 }
 \description{
 Get the size of the pedigree.
-Note the `generation_upper_bound_in_result` parameter.
+Note the \code{generation_upper_bound_in_result} parameter.
 }
