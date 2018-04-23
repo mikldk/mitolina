@@ -80,19 +80,48 @@ sample_mtdna_geneology_varying_size <- function(population_sizes_females, popula
     .Call('_mitolina_sample_mtdna_geneology_varying_size', PACKAGE = 'mitolina', population_sizes_females, population_sizes_males, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, extra_individuals_generations_return)
 }
 
+#' Get haplotypes from a vector of pids.
+#' 
+#' Requires that haplotypes are first populated, e.g. 
+#' with [pedigrees_all_populate_haplotypes()] or 
+#' [pedigrees_all_populate_haplotypes_custom_founders()].
+#' 
+#' @param population Population
+#' @param pids Vector of pids to get haplotypes for.
+#' 
+#' @return List of haplotypes where row `i` is the haplotype of `individuals[[i]]`.
+#' 
+#' @seealso [get_haplotypes_individuals()].
+#' 
 #' @export
-indices_in_mixture <- function(haplotypes, H1, H2) {
-    .Call('_mitolina_indices_in_mixture', PACKAGE = 'mitolina', haplotypes, H1, H2)
+get_haplotypes_pids <- function(population, pids) {
+    .Call('_mitolina_get_haplotypes_pids', PACKAGE = 'mitolina', population, pids)
 }
 
+#' Get haplotype matrix from list of individuals
+#' 
+#' Requires that haplotypes are first populated, e.g. 
+#' with [pedigrees_all_populate_haplotypes()] or 
+#' [pedigrees_all_populate_haplotypes_custom_founders()].
+#' 
+#' @param individuals Individuals to get haplotypes for.
+#' @return Matrix of haplotypes where row `i` is the haplotype of `individuals[[i]]`.
+#' 
+#' @seealso [get_haplotypes_pids()].
+#' 
 #' @export
-pedigree_get_haplotypes_pids <- function(population, pids) {
-    .Call('_mitolina_pedigree_get_haplotypes_pids', PACKAGE = 'mitolina', population, pids)
+get_haplotypes_individuals <- function(individuals) {
+    .Call('_mitolina_get_haplotypes_individuals', PACKAGE = 'mitolina', individuals)
 }
 
+#' Is individuals females (or males)
+#' 
+#' @param individuals Individuals to get haplotypes for.
+#' @return Logical vector: true for female, false for male
+#' 
 #' @export
-individuals_get_haplotypes <- function(individuals) {
-    .Call('_mitolina_individuals_get_haplotypes', PACKAGE = 'mitolina', individuals)
+get_individuals_is_female <- function(individuals) {
+    .Call('_mitolina_get_individuals_is_female', PACKAGE = 'mitolina', individuals)
 }
 
 #' @export
@@ -123,18 +152,23 @@ get_haplotype_no_variants <- function(individual) {
 }
 
 #' @export
-count_haplotype_occurrences_individuals <- function(individuals, haplotype, haplotype_no_variants) {
-    .Call('_mitolina_count_haplotype_occurrences_individuals', PACKAGE = 'mitolina', individuals, haplotype, haplotype_no_variants)
+count_haplotype_occurrences_individuals <- function(individuals, haplotype) {
+    .Call('_mitolina_count_haplotype_occurrences_individuals', PACKAGE = 'mitolina', individuals, haplotype)
 }
 
+#' Get individuals matching from list of individuals
+#' 
+#' Get the indvididuals that matches `haplotype` in `individuals`.
+#' 
+#' @param individuals List of individuals to count occurrences in.
+#' @param haplotype Haplotype to count occurrences of.
+#' @return List of individuals that matches `haplotype` amongst `individuals`.
+#' 
+#' @seealso [pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists()].
+#' 
 #' @export
-get_haplotype_matching_individuals <- function(individuals, haplotype, haplotype_no_variants) {
-    .Call('_mitolina_get_haplotype_matching_individuals', PACKAGE = 'mitolina', individuals, haplotype, haplotype_no_variants)
-}
-
-#' @export
-pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists <- function(suspect, matches_are_female = TRUE, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists', PACKAGE = 'mitolina', suspect, matches_are_female, generation_upper_bound_in_result)
+get_haplotype_matching_individuals <- function(individuals, haplotype) {
+    .Call('_mitolina_get_haplotype_matching_individuals', PACKAGE = 'mitolina', individuals, haplotype)
 }
 
 #' @export
@@ -148,8 +182,8 @@ meiotic_dist <- function(ind1, ind2) {
 }
 
 #' @export
-count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, haplotype_total_no_variants, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_count_haplotype_occurrences_pedigree', PACKAGE = 'mitolina', pedigree, haplotype, haplotype_total_no_variants, generation_upper_bound_in_result)
+count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
+    .Call('_mitolina_count_haplotype_occurrences_pedigree', PACKAGE = 'mitolina', pedigree, haplotype, generation_upper_bound_in_result)
 }
 
 #' @export
@@ -212,16 +246,53 @@ pop_size <- function(population) {
     .Call('_mitolina_pop_size', PACKAGE = 'mitolina', population)
 }
 
+#' Get all individuals in population
+#' 
+#' @param population Population
+#'
+#' @export
+get_individuals <- function(population) {
+    .Call('_mitolina_get_individuals', PACKAGE = 'mitolina', population)
+}
+
+#' Meiotic distribution
+#' 
+#' Get the distribution of number of meioses from `individual` 
+#' to all individuals in `individual`'s pedigree.
+#' Note the `generation_upper_bound_in_result` parameter.
+#' 
+#' @param individual Individual to calculate all meiotic distances from
+#' @param generation_upper_bound_in_result Limit on distribution; -1 means no limit. 
+#' 0 is the final generation. 1 second last generation etc.
+#' 
 #' @export
 meioses_generation_distribution <- function(individual, generation_upper_bound_in_result = -1L) {
     .Call('_mitolina_meioses_generation_distribution', PACKAGE = 'mitolina', individual, generation_upper_bound_in_result)
 }
 
+#' Size of population
+#' 
+#' Get the size of the population.
+#' Note the `generation_upper_bound_in_result` parameter.
+#' 
+#' @param population Population to get size of
+#' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
+#' 0 only include the final generation. 1 only second last generation etc.
+#' 
 #' @export
-population_size_generation <- function(population, is_female = TRUE, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_population_size_generation', PACKAGE = 'mitolina', population, is_female, generation_upper_bound_in_result)
+population_size_generation <- function(population, generation_upper_bound_in_result = -1L) {
+    .Call('_mitolina_population_size_generation', PACKAGE = 'mitolina', population, generation_upper_bound_in_result)
 }
 
+#' Size of pedigree
+#' 
+#' Get the size of the pedigree.
+#' Note the `generation_upper_bound_in_result` parameter.
+#' 
+#' @param pedigree Pedigree to get size of
+#' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
+#' 0 only include the final generation. 1 only second last generation etc.
+#' 
 #' @export
 pedigree_size_generation <- function(pedigree, generation_upper_bound_in_result = -1L) {
     .Call('_mitolina_pedigree_size_generation', PACKAGE = 'mitolina', pedigree, generation_upper_bound_in_result)

@@ -24,7 +24,7 @@ Rcpp::XPtr<Population> test_create_population() {
   
   Population* population = new Population(population_map);
   Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG);
-  population_xptr.attr("class") = CharacterVector::create("malan_population", "externalptr");
+  population_xptr.attr("class") = CharacterVector::create("mitolina_population", "externalptr");
   
   //////////
 
@@ -52,8 +52,8 @@ Rcpp::XPtr<Population> test_create_population() {
   Individual* i16 = new Individual(16, 3, false); indvs.push_back(i16);
   Individual* i17 = new Individual(17, 3, false); indvs.push_back(i17);
   
-  Individual* i18 = new Individual(18, 2, false); indvs.push_back(i18);  
-  Individual* i19 = new Individual(19, 2, false); indvs.push_back(i19);
+  Individual* i18 = new Individual(18, 1, false); indvs.push_back(i18);  
+  Individual* i19 = new Individual(19, 1, false); indvs.push_back(i19);
   
   /*
    *     
@@ -61,7 +61,7 @@ Rcpp::XPtr<Population> test_create_population() {
    *           /     \              |
    * G2     F9        F10          F13
    *        /  \       | \          |   \
-   * G1   F6    7     F8  M19      F14   18M
+   * G1   F6   F7     F8  M19      F14   18M
    *       |   /\     /\         /  |  \
    * G0   M1  F2 M3  M4 M5     M15 M16 M17
    */

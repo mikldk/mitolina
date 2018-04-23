@@ -7,76 +7,27 @@
 
 #include "mitolina_types.h"
 
+//' Get haplotypes from a vector of pids.
+//' 
+//' Requires that haplotypes are first populated, e.g. 
+//' with [pedigrees_all_populate_haplotypes()] or 
+//' [pedigrees_all_populate_haplotypes_custom_founders()].
+//' 
+//' @param population Population
+//' @param pids Vector of pids to get haplotypes for.
+//' 
+//' @return List of haplotypes where row `i` is the haplotype of `individuals[[i]]`.
+//' 
+//' @seealso [get_haplotypes_individuals()].
+//' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::List indices_in_mixture(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2) { 
-  size_t N = haplotypes.nrow();
-  
-  Rcpp::List res;
-  
-  if (N == 0) {
-    return res;
-  }
-
-  // mainly count wanted, but indices are good for debuggin
-  Rcpp::IntegerVector res_in_mixture;
-  Rcpp::IntegerVector res_H1;
-  Rcpp::IntegerVector res_H2;
-  
-  size_t loci = haplotypes.ncol();
-
-  for (size_t i = 0; i < N; ++i) {
-    Rcpp::IntegerVector h = haplotypes(i, Rcpp::_);
-    
-    bool in_mixture = true;
-    bool match_H1 = true; // faster than Rcpp equal/all sugar 
-    bool match_H2 = true;
-    
-    for (size_t locus = 0; locus < loci; ++locus) {
-      if (in_mixture && (h[locus] != H1[locus]) && (h[locus] != H2[locus])) {
-        in_mixture = false;
-      }
-      
-      if (match_H1 && (h[locus] != H1[locus])) {
-        match_H1 = false;
-      }
-      
-      if (match_H2 && (h[locus] != H2[locus])) {
-        match_H2 = false;
-      }
-      
-      // if neither have a chance, just stop
-      if (!in_mixture && !match_H1 && !match_H2) {
-        break;
-      }
-    }
-    
-    if (in_mixture) {
-      res_in_mixture.push_back(i + 1); // R indexing
-    }
-    
-    if (match_H1) {
-      res_H1.push_back(i + 1); // R indexing
-    }
-    
-    if (match_H2) {
-      res_H2.push_back(i + 1); // R indexing
-    }
-  }
-  
-  res["in_mixture"] = res_in_mixture;
-  res["match_H1"] = res_H1;
-  res["match_H2"] = res_H2;
-
-  return res;
-}
-
-//' @export
-// [[Rcpp::export]]
-Rcpp::List pedigree_get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids) {  
+Rcpp::List get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids) { 
   size_t N = pids.size();
   Rcpp::List haps(N);
 
+  // FIXME: LogicalMatrix?
+  
   for (size_t i = 0; i < N; ++i) {
     Individual* indv = population->get_individual(pids[i]);
     haps(i) = indv->get_haplotype();
@@ -85,13 +36,24 @@ Rcpp::List pedigree_get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp:
   return haps;
 }
  
+//' Get haplotype matrix from list of individuals
+//' 
+//' Requires that haplotypes are first populated, e.g. 
+//' with [pedigrees_all_populate_haplotypes()] or 
+//' [pedigrees_all_populate_haplotypes_custom_founders()].
+//' 
+//' @param individuals Individuals to get haplotypes for.
+//' @return Matrix of haplotypes where row `i` is the haplotype of `individuals[[i]]`.
+//' 
+//' @seealso [get_haplotypes_pids()].
+//' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix individuals_get_haplotypes(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {   
+Rcpp::LogicalMatrix get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {  
   size_t n = individuals.size();
  
   if (n <= 0) {
-    Rcpp::IntegerMatrix empty_haps(0, 0);
+    Rcpp::LogicalMatrix empty_haps(0, 0);
     return empty_haps;
   }
  
@@ -99,26 +61,50 @@ Rcpp::IntegerMatrix individuals_get_haplotypes(Rcpp::ListOf< Rcpp::XPtr<Individu
 
   if (loci <= 0) {
     Rcpp::stop("Expected > 0 loci");
-    Rcpp::IntegerMatrix empty_haps(0, 0);
+    Rcpp::LogicalMatrix empty_haps(0, 0);
     return empty_haps;
   }
 
-  Rcpp::IntegerMatrix haps(n, loci);
+  Rcpp::LogicalMatrix haps(n, loci);
 
   for (size_t i = 0; i < n; ++i) {
     std::vector<bool> hap = individuals[i]->get_haplotype();
 
     if (hap.size() != loci) {
       Rcpp::stop("Expected > 0 loci for all haplotypes");
-      Rcpp::IntegerMatrix empty_haps(0, 0);
+      Rcpp::LogicalMatrix empty_haps(0, 0);
       return empty_haps;
     }
     
-    Rcpp::IntegerVector h = Rcpp::wrap(hap);
+    Rcpp::LogicalVector h = Rcpp::wrap(hap);
     haps(i, Rcpp::_) = h;
   }
 
   return haps;
+}
+
+//' Is individuals females (or males)
+//' 
+//' @param individuals Individuals to get haplotypes for.
+//' @return Logical vector: true for female, false for male
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::LogicalVector get_individuals_is_female(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {  
+  size_t n = individuals.size();
+ 
+  if (n <= 0) {
+    Rcpp::LogicalVector empty(0);
+    return empty;
+  }
+ 
+  Rcpp::LogicalVector sexes(n);
+
+  for (size_t i = 0; i < n; ++i) {
+    sexes[i] = individuals[i]->is_female();
+  }
+
+  return sexes;
 }
 
 //' @export
@@ -210,14 +196,14 @@ int get_haplotype_no_variants(Rcpp::XPtr<Individual> individual) {
 //' @export
 // [[Rcpp::export]]
 int count_haplotype_occurrences_individuals(const Rcpp::List individuals, 
-    const Rcpp::LogicalVector haplotype, 
-    const int haplotype_no_variants) {
+    const Rcpp::LogicalVector haplotype) {
     
   int n = individuals.size();
   int loci = haplotype.size();
   int count = 0;
   
   std::vector<bool> h = Rcpp::as< std::vector<bool> >(haplotype);
+  int haplotype_no_variants = std::count(h.begin(), h.end(), true);
   
   for (int i = 0; i < n; ++i) {
     Rcpp::XPtr<Individual> indv = individuals[i];
@@ -240,17 +226,27 @@ int count_haplotype_occurrences_individuals(const Rcpp::List individuals,
   return count;
 }
 
+//' Get individuals matching from list of individuals
+//' 
+//' Get the indvididuals that matches `haplotype` in `individuals`.
+//' 
+//' @param individuals List of individuals to count occurrences in.
+//' @param haplotype Haplotype to count occurrences of.
+//' @return List of individuals that matches `haplotype` amongst `individuals`.
+//' 
+//' @seealso [pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists()].
+//' 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List get_haplotype_matching_individuals(const Rcpp::List individuals, 
-    const Rcpp::LogicalVector haplotype, 
-    const int haplotype_no_variants) {
-    
+    const Rcpp::LogicalVector haplotype) {
+
   int n = individuals.size();
   int loci = haplotype.size();
   Rcpp::List ret_indv;
   
   std::vector<bool> h = Rcpp::as< std::vector<bool> >(haplotype);
+  int haplotype_no_variants = std::count(h.begin(), h.end(), true);
   
   for (int i = 0; i < n; ++i) {
     Rcpp::XPtr<Individual> indv = individuals[i];
@@ -273,102 +269,6 @@ Rcpp::List get_haplotype_matching_individuals(const Rcpp::List individuals,
   return ret_indv;
 }
 
-// There are count_haplotype_occurrences_pedigree matches. 
-// This gives details on meiotic distance and the max L0 distance of the haplotypes on the path between the suspect and the matching individual in the pedigree. Some of these matches may have (back)mutations between in between them.
-//
-//' @export
-// [[Rcpp::export]]
-Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L0_dists(const Rcpp::XPtr<Individual> suspect, bool matches_are_female = true, int generation_upper_bound_in_result = -1) {
-  Rcpp::stop("Extract matches, then count them and then find this information");
-  
-  const std::vector<bool> h = suspect->get_haplotype();
-  const int h_no_variants = suspect->get_haplotype_total_no_variants();
-
-  const Pedigree* pedigree = suspect->get_pedigree();
-  const int suspect_pedigree_id = suspect->get_pedigree_id();
-  const std::vector<Individual*>* family = pedigree->get_all_individuals();
-  
-  std::vector<int> meiosis_dists;
-  std::vector<int> max_L0_dists;
-  std::vector<int> pids;
-  
-  // includes suspect by purpose
-  for (auto dest : *family) { 
-    int generation = dest->get_generations_from_final();
-    
-    if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
-      continue;
-    }
-    
-    if (dest->is_female() != matches_are_female) {
-      continue;
-    }
-    
-    // only considering within pedigree matches
-    if (dest->get_pedigree_id() != suspect_pedigree_id) {
-      continue;
-    }
-    
-    if (h_no_variants != dest->get_haplotype_total_no_variants()) {
-      continue;
-    }
-    
-    std::vector<bool> dest_h = dest->get_haplotype();
-    
-    if (dest_h.size() != h.size()) {
-      Rcpp::stop("haplotype and dest_h did not have same number of loci");
-    }
-    
-    if (dest_h == h) {
-      std::vector<Individual*> path = suspect->calculate_path_to(dest);  
-      int meiosis_dist = suspect->meiosis_dist_tree(dest);
-      
-      int meiosis_dist_from_path = path.size() - 1; // n vertices means n-1 edges (tree)
-      //Rcpp::Rcout << ">> path from " << suspect->get_pid() << " to " << dest->get_pid() << " has length = " << meiosis_dist_from_path << " and meioses = " << meiosis_dist << (meiosis_dist_from_path == meiosis_dist ? " ok" : " ERROR") << ": " << std::endl;
-      
-      int max_L0 = 0;
-      
-      //Rcpp::Rcout << "  ";
-      
-      for (auto intermediate_node : path) { 
-        //Rcpp::Rcout << intermediate_node->get_pid();
-        
-        int d = suspect->get_haplotype_L0(intermediate_node);
-        
-        if (d > max_L0) {
-          max_L0 = d;
-          //Rcpp::Rcout << "!";
-        }
-        
-        //Rcpp::Rcout << " ";
-      }
-      
-      //Rcpp::Rcout << std::endl;      
-      
-      if (meiosis_dist == -1) {
-        Rcpp::stop("Cannot occur in pedigree!");
-      }
-      
-      meiosis_dists.push_back(meiosis_dist);
-      max_L0_dists.push_back(max_L0);
-      pids.push_back(dest->get_pid());
-    }
-  }
-  
-  size_t n = meiosis_dists.size();
-  
-  Rcpp::IntegerMatrix matches(n, 3);
-  colnames(matches) = Rcpp::CharacterVector::create("meioses", "max_L0", "pid");
-  
-  for (size_t i = 0; i < n; ++i) {
-    matches(i, 0) = meiosis_dists[i];
-    matches(i, 1) = max_L0_dists[i];
-    matches(i, 2) = pids[i];
-  }
-  
-  return matches;
-}
-  
 
 //' @export
 // [[Rcpp::export]]
@@ -444,14 +344,14 @@ int meiotic_dist(Rcpp::XPtr<Individual> ind1, Rcpp::XPtr<Individual> ind2) {
 // [[Rcpp::export]]
 int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, 
   const Rcpp::LogicalVector haplotype, 
-  const int haplotype_total_no_variants,
   int generation_upper_bound_in_result = -1) {
   
   int loci = haplotype.size();
   int count = 0;
   
   std::vector<bool> h = Rcpp::as< std::vector<bool> >(haplotype);
-
+  int haplotype_no_variants = std::count(h.begin(), h.end(), true);
+  
   std::vector<Individual*>* family = pedigree->get_all_individuals();
 
   for (auto dest : *family) {    
@@ -462,6 +362,10 @@ int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree,
     }
     
     std::vector<bool> dest_h = dest->get_haplotype();
+    
+    if (haplotype_no_variants != dest->get_haplotype_total_no_variants()) {
+      continue;
+    }
     
     if (dest_h.size() != loci) {
       Rcpp::stop("haplotype and indv_h did not have same number of loci");
