@@ -218,16 +218,50 @@ haplotypes_to_hashes <- function(haplotypes) {
     .Call('_mitolina_haplotypes_to_hashes', PACKAGE = 'mitolina', haplotypes)
 }
 
+#' Build hashmap of haplotypes to individuals
+#' 
+#' Makes it possible to find all individuals with a certain haplotype.
+#' Must be used with e.g. [get_haplotype_matching_individuals_from_hashmap()] 
+#' or [print_haplotypes_hashmap()].
+#' 
+#' @param individuals List of individuals to build hashmap of
+#' @return Hashmap with haplotypes as keys and vector of individuals as value
+#' 
+#' @seealso [get_haplotype_matching_individuals_from_hashmap()] 
+#' and [print_haplotypes_hashmap()].
+#' 
 #' @export
 build_haplotypes_hashmap <- function(individuals) {
     .Call('_mitolina_build_haplotypes_hashmap', PACKAGE = 'mitolina', individuals)
 }
 
+#' Print haplotype hashmap
+#' 
+#' Print hashmap a haplotypes to individuals made by [build_haplotypes_hashmap()].
+#' 
+#' @param hashmap Hashmap made by [build_haplotypes_hashmap()]
+#' 
+#' @seealso [get_haplotype_matching_individuals_from_hashmap()] 
+#' and [build_haplotypes_hashmap()].
+#' 
 #' @export
 print_haplotypes_hashmap <- function(hashmap) {
     invisible(.Call('_mitolina_print_haplotypes_hashmap', PACKAGE = 'mitolina', hashmap))
 }
 
+#' Get individuals with a certain haplotype by hashmap lookup
+#' 
+#' By using hashmap made by [build_haplotypes_hashmap()], 
+#' it is easy to get all individuals with a certain haplotype.
+#' 
+#' @param hashmap Hashmap to make lookup in, made by [build_haplotypes_hashmap()]
+#' @param haplotype to get individuals that has this haplotype
+#' 
+#' @return List of individuals with a given haplotype
+#' 
+#' @seealso [print_haplotypes_hashmap()] 
+#' and [build_haplotypes_hashmap()].
+#' 
 #' @export
 get_haplotype_matching_individuals_from_hashmap <- function(hashmap, haplotype) {
     .Call('_mitolina_get_haplotype_matching_individuals_from_hashmap', PACKAGE = 'mitolina', hashmap, haplotype)

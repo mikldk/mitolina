@@ -1,6 +1,8 @@
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppProgress)]]
+// [[Rcpp::plugins(cpp11)]]
+
 #include <progress.hpp>
 
 #include <string>
@@ -439,10 +441,23 @@ Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > hap
 
 
 
-
+//' Build hashmap of haplotypes to individuals
+//' 
+//' Makes it possible to find all individuals with a certain haplotype.
+//' Must be used with e.g. [get_haplotype_matching_individuals_from_hashmap()] 
+//' or [print_haplotypes_hashmap()].
+//' 
+//' @param individuals List of individuals to build hashmap of
+//' @return Hashmap with haplotypes as keys and vector of individuals as value
+//' 
+//' @seealso [get_haplotype_matching_individuals_from_hashmap()] 
+//' and [print_haplotypes_hashmap()].
+//' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(const Rcpp::List individuals) {
+Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(
+    const Rcpp::List individuals) {
+  
   int n = individuals.size();
   
   std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >* hashtable = new std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >();
@@ -458,6 +473,15 @@ Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Indiv
 }
 
 
+//' Print haplotype hashmap
+//' 
+//' Print hashmap a haplotypes to individuals made by [build_haplotypes_hashmap()].
+//' 
+//' @param hashmap Hashmap made by [build_haplotypes_hashmap()]
+//' 
+//' @seealso [get_haplotype_matching_individuals_from_hashmap()] 
+//' and [build_haplotypes_hashmap()].
+//' 
 //' @export
 // [[Rcpp::export]]
 void print_haplotypes_hashmap(const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > hashmap) {
@@ -503,6 +527,19 @@ void print_haplotypes_hashmap(const Rcpp::XPtr< std::unordered_map< std::vector<
 }
 
 
+//' Get individuals with a certain haplotype by hashmap lookup
+//' 
+//' By using hashmap made by [build_haplotypes_hashmap()], 
+//' it is easy to get all individuals with a certain haplotype.
+//' 
+//' @param hashmap Hashmap to make lookup in, made by [build_haplotypes_hashmap()]
+//' @param haplotype to get individuals that has this haplotype
+//' 
+//' @return List of individuals with a given haplotype
+//' 
+//' @seealso [print_haplotypes_hashmap()] 
+//' and [build_haplotypes_hashmap()].
+//' 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List get_haplotype_matching_individuals_from_hashmap(

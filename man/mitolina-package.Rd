@@ -22,3 +22,14 @@ THE SOFTWARE BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item Report bugs at \url{https://github.com/mikldk/mitolina/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Mikkel Meyer Andersen \email{mikl@math.aau.dk}
+
+}

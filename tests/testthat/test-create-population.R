@@ -182,3 +182,13 @@ test_that("pedigrees_all_populate_haplotypes_custom_founders works", {
   expect_equal(haps_from_indvs, do.call(rbind, lapply(seq_along(indvs), function(j) f_hap)))
 })
 
+
+##########################################################
+
+hashmap <- build_haplotypes_hashmap(indvs)
+
+test_that("hashmap works", {
+  expect_output(print_haplotypes_hashmap(hashmap), "Total = 19", fixed = TRUE)
+  expect_equal(length(indvs), length(get_haplotype_matching_individuals_from_hashmap(hashmap, f_hap)))
+  expect_equal(0L, length(get_haplotype_matching_individuals_from_hashmap(hashmap, !f_hap)))
+})
