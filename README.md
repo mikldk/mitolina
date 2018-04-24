@@ -17,6 +17,26 @@ Then you can install `mitolina` from GitHub by using the `remotes` package (<htt
 remotes::install_github("mikldk/mitolina")
 ```
 
+## Getting started
+
+Refer to the included vignettes. You can get an overview of the included vignettes by the following `R` command:
+
+```r
+vignette(package = "mitolina")
+```
+
+To read a vignette, type:
+
+```r
+vignette("introduction", package = "mitolina")
+```
+
+## Contribute, issues, and support
+
+Please use the issue tracker at <https://github.com/mikldk/mitolina/issues> 
+if you want to notify us of an issue or need support.
+If you want to contribute, please either create an issue or make a pull request.
+
 ## Disclaimer
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

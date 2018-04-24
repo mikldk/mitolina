@@ -2,8 +2,12 @@ Package: mitolina
 Type: Package
 Title: MItochondrial LINeage Analysis
 Version: 0.0.1
-Date: 2017-09-29
-Author: Mikkel Meyer Andersen <mikl@math.aau.dk>
+Date: 2018-04-24
+Authors@R: c(
+    person(given = "Mikkel Meyer", family = "Andersen", 
+        email = "mikl@math.aau.dk", role = c("aut", "cre"))
+  )
+Author: Mikkel Meyer Andersen [aut, cre]
 Maintainer: Mikkel Meyer Andersen <mikl@math.aau.dk>
 Description: Simulation and tools for analysing mitochondrial lineages. Genealogies are simulated backwards and binary mtDNA imposed forwards with mutations. Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.
 License: GPL (>= 2) | file LICENSE
@@ -20,6 +24,7 @@ Depends:
   tidygraph (>= 1.0.0.9999)
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress
 Suggests: knitr, rmarkdown, testthat, ggraph
+BugReports: https://github.com/mikldk/mitolina/issues
 VignetteBuilder: knitr
 SystemRequirements: C++11
 Roxygen: list(markdown = TRUE, roclets = c("rd", "collate", "namespace"))

@@ -163,8 +163,7 @@ pedigrees_all_populate_haplotypes <- function(pedigrees, mutation_rates, progres
 #' @param get_founder_haplotype Function taking no arguments returning a haplotype, i.e. a logical vector (TRUE/FALSE values) of length `length(mutation_rates)`
 #' @param progress Show progress
 #'
-#' @seealso [pedigrees_all_populate_haplotypes()] and 
-#' [pedigrees_all_populate_haplotypes_ladder_bounded()].
+#' @seealso [pedigrees_all_populate_haplotypes()].
 #' 
 #' @export
 pedigrees_all_populate_haplotypes_custom_founders <- function(pedigrees, mutation_rates, get_founder_haplotype = NULL, progress = TRUE) {

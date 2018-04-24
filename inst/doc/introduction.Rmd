@@ -1,0 +1,26 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author: Mikkel Meyer Andersen
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(fig.width = 7)
+```
+
+
+First, the library is loaded:
+```{r, message=FALSE}
+library(mitolina)
+```
+
+For reproducibility, the seed for the (pseudo) random number generator is set:
+```{r}
+set.seed(1)
+```
+
