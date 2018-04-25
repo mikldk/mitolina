@@ -1,8 +1,9 @@
 ---
-title: "Introduction"
+title: "Introduction to **MITO**chondrial **LIN**eage **A**nalysis"
 output: rmarkdown::html_vignette
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 author: Mikkel Meyer Andersen
+bibliography: refs.bib
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Introduction}
@@ -13,6 +14,7 @@ vignette: >
 knitr::opts_chunk$set(fig.width = 7)
 ```
 
+## Introduction
 
 First, the library is loaded:
 ```{r, message=FALSE}
@@ -24,3 +26,76 @@ For reproducibility, the seed for the (pseudo) random number generator is set:
 set.seed(1)
 ```
 
+In this vignette, I will use functionality from the `tidyverse` (the pipe operator from the `magrittr` package and `dplyr` functionality). 
+More information about these are available at <https://www.tidyverse.org/>, <https://magrittr.tidyverse.org/> and <http://dplyr.tidyverse.org/>.
+
+### Simulating genealogies
+
+### Adding mitogenomes
+
+#### mtDNA information included
+
+There are several datasets with information about the mitogenome included.
+There is a help file to each of the datasets which can be found by e.g. `?mtdna_partitions` for 
+the `mtdna_partitions` dataset.
+
+First, there is information about the positions from PhyloTree <http://www.phylotree.org/resources/rCRS_annotated.htm> about the revised Cambridge Reference Sequence (rCRS) [@rCRS]:
+
+```{r}
+data(mtdna_partitions)
+mtdna_partitions %>% print(n = 2)
+```
+
+There is also mutation information from [@Soares2009]:
+
+```{r}
+data(mtdna_mut_SoaresK8)
+mtdna_mut_SoaresK8
+```
+
+From [@Rieux2014]
+
+```{r}
+data(mtdna_mut_RieuxK4)
+mtdna_mut_RieuxK4
+
+data(mtdna_mut_RieuxK1)
+mtdna_mut_RieuxK1
+```
+
+And from [@Oversti2017]:
+
+```{r}
+data(mtdna_mut_OverstiK4)
+mtdna_mut_OverstiK4
+```
+
+All these are assembled info one dataframe:
+
+```{r}
+data(mtdna_mut_schemes)
+mtdna_mut_schemes %>% print(n = 2)
+mtdna_mut_schemes %>% count(MutationScheme)
+```
+
+This makes it easier to use the mutation rates from for example `mtdna_mut_RieuxK4`:
+
+```{r}
+d_mu <- mtdna_mut_schemes %>% 
+  filter(MutationScheme == "Rieux 2014 (K = 4)", MutRateYearly > 0)
+mu_mean_year <- d_mu %>% pull(MutRateYearly)
+mu_mean_gen <- 25*mu_mean_year
+```
+
+Now, `mu_mean_gen` contains a mutation rate per generation (of 25 years) for each of the `r length(mu_mean_gen)` sites. The probability of one ore more mutations in a single meiosis is then
+
+```{r}
+1 - prod(1 - mu_mean_gen)
+```
+
+
+Note, that to include variability in the mutation rates, 
+it is probably best to sample a rate per region (in `mtdna_mut_RieuxK4`), and then distribute 
+that to all sites in the partition.
+
+## References

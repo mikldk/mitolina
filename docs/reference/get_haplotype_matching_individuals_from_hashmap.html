@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get pedigree from individual — get_pedigree_from_individual • mitolina</title>
+<title>Get individuals with a certain haplotype by hashmap lookup — get_haplotype_matching_individuals_from_hashmap • mitolina</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,9 +25,10 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Get pedigree from individual — get_pedigree_from_individual" />
+<meta property="og:title" content="Get individuals with a certain haplotype by hashmap lookup — get_haplotype_matching_individuals_from_hashmap" />
 
-<meta property="og:description" content="Get pedigree from individual" />
+<meta property="og:description" content="By using hashmap made by build_haplotypes_hashmap(),
+it is easy to get all individuals with a certain haplotype." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,23 +101,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get pedigree from individual</h1>
+    <h1>Get individuals with a certain haplotype by hashmap lookup</h1>
     
-    <div class="hidden name"><code>get_pedigree_from_individual.Rd</code></div>
+    <div class="hidden name"><code>get_haplotype_matching_individuals_from_hashmap.Rd</code></div>
     </div>
 
     
-    <p>Get pedigree from individual</p>
+    <p>By using hashmap made by <code><a href='build_haplotypes_hashmap.html'>build_haplotypes_hashmap()</a></code>,
+it is easy to get all individuals with a certain haplotype.</p>
     
 
-    <pre class="usage"><span class='fu'>get_pedigree_from_individual</span>(<span class='no'>individual</span>)</pre>
-        
+    <pre class="usage"><span class='fu'>get_haplotype_matching_individuals_from_hashmap</span>(<span class='no'>hashmap</span>, <span class='no'>haplotype</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>hashmap</th>
+      <td><p>Hashmap to make lookup in, made by <code><a href='build_haplotypes_hashmap.html'>build_haplotypes_hashmap()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>haplotype</th>
+      <td><p>to get individuals that has this haplotype</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>List of individuals with a given haplotype</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='print_haplotypes_hashmap.html'>print_haplotypes_hashmap()</a></code>
+and <code><a href='build_haplotypes_hashmap.html'>build_haplotypes_hashmap()</a></code>.</p></div>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

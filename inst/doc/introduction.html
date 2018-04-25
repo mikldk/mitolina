@@ -13,7 +13,7 @@
 <meta name="author" content="Mikkel Meyer Andersen" />
 
 
-<title>Introduction</title>
+<title>Introduction to MITOchondrial LINeage Analysis</title>
 
 
 
@@ -67,16 +67,126 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Introduction</h1>
+<h1 class="title toc-ignore">Introduction to <strong>MITO</strong>chondrial <strong>LIN</strong>eage <strong>A</strong>nalysis</h1>
 <h4 class="author"><em>Mikkel Meyer Andersen</em></h4>
-<h4 class="date"><em>24 April, 2018</em></h4>
+<h4 class="date"><em>25 April, 2018</em></h4>
 
 
 
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
 <p>First, the library is loaded:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mitolina)</code></pre></div>
 <p>For reproducibility, the seed for the (pseudo) random number generator is set:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
+<p>In this vignette, I will use functionality from the <code>tidyverse</code> (the pipe operator from the <code>magrittr</code> package and <code>dplyr</code> functionality). More information about these are available at <a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>, <a href="https://magrittr.tidyverse.org/" class="uri">https://magrittr.tidyverse.org/</a> and <a href="http://dplyr.tidyverse.org/" class="uri">http://dplyr.tidyverse.org/</a>.</p>
+<div id="simulating-genealogies" class="section level3">
+<h3>Simulating genealogies</h3>
+</div>
+<div id="adding-mitogenomes" class="section level3">
+<h3>Adding mitogenomes</h3>
+<div id="mtdna-information-included" class="section level4">
+<h4>mtDNA information included</h4>
+<p>There are several datasets with information about the mitogenome included. There is a help file to each of the datasets which can be found by e.g. <code>?mtdna_partitions</code> for the <code>mtdna_partitions</code> dataset.</p>
+<p>First, there is information about the positions from PhyloTree <a href="http://www.phylotree.org/resources/rCRS_annotated.htm" class="uri">http://www.phylotree.org/resources/rCRS_annotated.htm</a> about the revised Cambridge Reference Sequence (rCRS) <span class="citation">(Andrews et al. 1999)</span>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_partitions)
+mtdna_partitions %&gt;%<span class="st"> </span><span class="kw">print</span>(<span class="dt">n =</span> <span class="dv">2</span>)</code></pre></div>
+<pre><code>## # A tibble: 16,569 x 5
+##   Position rCRS  PartitionPhyloTree PartitionRieux  PartitionSoares
+##      &lt;int&gt; &lt;chr&gt; &lt;chr&gt;              &lt;chr&gt;           &lt;chr&gt;          
+## 1        1 G     Control_region     [Not included?] CR: Remaining  
+## 2        2 A     Control_region     [Not included?] CR: Remaining  
+## # ... with 1.657e+04 more rows</code></pre>
+<p>There is also mutation information from <span class="citation">(Soares et al. 2009)</span>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_mut_SoaresK8)
+mtdna_mut_SoaresK8</code></pre></div>
+<pre><code>## # A tibble: 8 x 4
+##   PartitionSoares MutRateYearly MutRateSEYearly MutationScheme     
+##   &lt;chr&gt;                   &lt;dbl&gt;           &lt;dbl&gt; &lt;chr&gt;              
+## 1 PC1 + PC2       0.00000000888  0.000000000755 Soares 2009 (K = 8)
+## 2 PC3             0.0000000193   0.000000000755 Soares 2009 (K = 8)
+## 3 CR: HVS1        0.000000164    0.000000000755 Soares 2009 (K = 8)
+## 4 CR: HVS2        0.000000230    0.000000000755 Soares 2009 (K = 8)
+## 5 CR: Remaining   0.0000000155   0.000000000755 Soares 2009 (K = 8)
+## 6 rRNA            0.00000000820  0.000000000755 Soares 2009 (K = 8)
+## 7 tRNA            0.00000000691  0.000000000755 Soares 2009 (K = 8)
+## 8 Others          0.0000000249   0.000000000755 Soares 2009 (K = 8)</code></pre>
+<p>From <span class="citation">(Rieux et al. 2014)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_mut_RieuxK4)
+mtdna_mut_RieuxK4</code></pre></div>
+<pre><code>## # A tibble: 5 x 6
+##   PartitionRieux  MutRateYearly   MutHPDLower  MutHPDUpper MutRateSEYearly
+##   &lt;chr&gt;                   &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;
+## 1 PC1 + PC2       0.00000000756 0.00000000571      9.35e-9  0.000000000929
+## 2 PC3             0.0000000332  0.0000000257       4.07e-8  0.00000000384 
+## 3 HVS1 + HVS2     0.000000314   0.000000226        4.03e-7  0.0000000453  
+## 4 rRNA + tRNA     0.0000000101  0.00000000757      1.27e-8  0.00000000130 
+## 5 [Not included?] 0.            0.                 0.       0.            
+## # ... with 1 more variable: MutationScheme &lt;chr&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_mut_RieuxK1)
+mtdna_mut_RieuxK1</code></pre></div>
+<pre><code>## # A tibble: 1 x 5
+##   MutRateYearly  MutHPDLower  MutHPDUpper MutRateSEYearly MutationScheme  
+##           &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt; &lt;chr&gt;           
+## 1  0.0000000214 0.0000000158 0.0000000271   0.00000000287 Rieux 2014 (K =…</code></pre>
+<p>And from <span class="citation">(Översti et al. 2017)</span>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_mut_OverstiK4)
+mtdna_mut_OverstiK4</code></pre></div>
+<pre><code>## # A tibble: 5 x 6
+##   PartitionRieux  MutRateYearly   MutHPDLower  MutHPDUpper MutRateSEYearly
+##   &lt;chr&gt;                   &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;
+## 1 PC1 + PC2        0.0000000180 0.0000000117  0.0000000240   0.00000000314
+## 2 PC3              0.0000000304 0.0000000192  0.0000000421   0.00000000584
+## 3 HVS1 + HVS2      0.000000206  0.000000125   0.000000290    0.0000000421 
+## 4 rRNA + tRNA      0.0000000158 0.00000000940 0.0000000230   0.00000000347
+## 5 [Not included?]  0.           0.            0.             0.           
+## # ... with 1 more variable: MutationScheme &lt;chr&gt;</code></pre>
+<p>All these are assembled info one dataframe:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_mut_schemes)
+mtdna_mut_schemes %&gt;%<span class="st"> </span><span class="kw">print</span>(<span class="dt">n =</span> <span class="dv">2</span>)</code></pre></div>
+<pre><code>## # A tibble: 66,276 x 4
+##   Position MutationScheme      MutRateYearly MutRateSEYearly
+##      &lt;int&gt; &lt;chr&gt;                       &lt;dbl&gt;           &lt;dbl&gt;
+## 1        1 Soares 2009 (K = 8)  0.0000000155  0.000000000755
+## 2        2 Soares 2009 (K = 8)  0.0000000155  0.000000000755
+## # ... with 6.627e+04 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtdna_mut_schemes %&gt;%<span class="st"> </span><span class="kw">count</span>(MutationScheme)</code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   MutationScheme           n
+##   &lt;chr&gt;                &lt;int&gt;
+## 1 Översti 2017 (K = 4) 16569
+## 2 Rieux 2014 (K = 1)   16569
+## 3 Rieux 2014 (K = 4)   16569
+## 4 Soares 2009 (K = 8)  16569</code></pre>
+<p>This makes it easier to use the mutation rates from for example <code>mtdna_mut_RieuxK4</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_mu &lt;-<span class="st"> </span>mtdna_mut_schemes %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(MutationScheme ==<span class="st"> &quot;Rieux 2014 (K = 4)&quot;</span>, MutRateYearly &gt;<span class="st"> </span><span class="dv">0</span>)
+mu_mean_year &lt;-<span class="st"> </span>d_mu %&gt;%<span class="st"> </span><span class="kw">pull</span>(MutRateYearly)
+mu_mean_gen &lt;-<span class="st"> </span><span class="dv">25</span>*mu_mean_year</code></pre></div>
+<p>Now, <code>mu_mean_gen</code> contains a mutation rate per generation (of 25 years) for each of the 16033 sites. The probability of one ore more mutations in a single meiosis is then</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">1</span> -<span class="st"> </span><span class="kw">prod</span>(<span class="dv">1</span> -<span class="st"> </span>mu_mean_gen)</code></pre></div>
+<pre><code>## [1] 0.01083419</code></pre>
+<p>Note, that to include variability in the mutation rates, it is probably best to sample a rate per region (in <code>mtdna_mut_RieuxK4</code>), and then distribute that to all sites in the partition.</p>
+</div>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-rCRS">
+<p>Andrews, Richard M, Iwona Kubacka, Patrick F Chinnery, Robert N Lightowlers, Douglass M Turnbull, and Neil Howell. 1999. “Reanalysis and revision of the Cambridge reference sequence for human mitochondrial DNA.” <em>Nature Genetics</em> 23.</p>
+</div>
+<div id="ref-Oversti2017">
+<p>Översti, Sanni, Päivi Onkamo, Monika Stoljarova, Bruce Budowle, Antti Sajantila, and Jukka U. Palo. 2017. “Identification and analysis of mtDNA genomes attributed to Finns reveal long-stagnant demographic trends obscured in the total diversity.” <em>Scientific Reports</em> 7.</p>
+</div>
+<div id="ref-Rieux2014">
+<p>Rieux, Adrien, Anders Eriksson, Mingkun Li, Benjamin Sobkowiak, Lucy A. Weinert, Vera Warmuth, Andres Ruiz-Linares, Andrea Manica, and François Balloux. 2014. “Improved Calibration of the Human Mitochondrial Clock Using Ancient Genomes.” <em>Molecular Biology and Evolution</em> 31 (10): 2780–92.</p>
+</div>
+<div id="ref-Soares2009">
+<p>Soares, Pedro, Luca Ermini, Noel Thomson, Maru Mormina, Teresa Rito, Arne Röhl, Antonio Salas, Stephen Oppenheimer, Vincent Macaulay, and Martin B Richards. 2009. “Correcting for Purifying Selection: An Improved Human Mitochondrial Molecular Clock.” <em>American Journal of Human Genetics</em> 84: 740–59.</p>
+</div>
+</div>
+</div>
 
 
 

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get pedigree from individual — get_pedigree_from_individual • mitolina</title>
+<title>Mitogenome annotated — mtdna_partitions • mitolina</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,9 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Get pedigree from individual — get_pedigree_from_individual" />
+<meta property="og:title" content="Mitogenome annotated — mtdna_partitions" />
 
-<meta property="og:description" content="Get pedigree from individual" />
+<meta property="og:description" content="A dataset containing information about the mitogenome." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,23 +100,58 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get pedigree from individual</h1>
+    <h1>Mitogenome annotated</h1>
     
-    <div class="hidden name"><code>get_pedigree_from_individual.Rd</code></div>
+    <div class="hidden name"><code>mtdna_partitions.Rd</code></div>
     </div>
 
     
-    <p>Get pedigree from individual</p>
+    <p>A dataset containing information about the mitogenome.</p>
     
 
-    <pre class="usage"><span class='fu'>get_pedigree_from_individual</span>(<span class='no'>individual</span>)</pre>
+    <pre class="usage"><span class='no'>mtdna_partitions</span></pre>
         
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>A tibble / data frame with 16,569 rows and 5 variables:</p><dl class='dl-horizontal'>
+<dt>Position</dt><dd><p>Position in the mitogenome</p></dd>
+<dt>rCRS</dt><dd><p>The base in the revised Cambridge Reference Sequence (rCRS)</p></dd>
+<dt>PartitionPhyloTree</dt><dd><p>Partition according to <a href='http://www.phylotree.org'>http://www.phylotree.org</a></p></dd>
+<dt>PartitionRieux</dt><dd><p>Partition according to Rieux et al. (2014) (see references)</p></dd>
+<dt>PartitionSoares</dt><dd><p>Partition according to Soares et al. (2009) (see references)</p></dd>
+</dl>
+    
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p><a href='http://www.phylotree.org/resources/rCRS_annotated.htm'>http://www.phylotree.org/resources/rCRS_annotated.htm</a></p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <ul>
+<li><p>PhyloTree: <a href='http://www.phylotree.org/resources/rCRS_annotated.htm'>http://www.phylotree.org/resources/rCRS_annotated.htm</a>;</p></li>
+<li><p>Soares et al. (2009): <a href='https://dx.doi.org/10.1016/j.ajhg.2009.05.001'>https://dx.doi.org/10.1016/j.ajhg.2009.05.001</a>;</p></li>
+<li><p>Rieux et al. (2014): <a href='https://doi.org/10.1093/molbev/msu222'>https://doi.org/10.1093/molbev/msu222</a>;</p></li>
+<li><p>Översti et al. (2017): <a href='https://doi.org/10.1038/s41598-017-05673-7'>https://doi.org/10.1038/s41598-017-05673-7</a></p></li>
+</ul>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>mtdna_mut_schemes mtdna_mut_SoaresK8 mtdna_mut_RieuxK4 mtdna_mut_RieuxK1 mtdna_mut_OverstiK4</p></div>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      
+      <li><a href="#format">Format</a></li>
+
+      <li><a href="#source">Source</a></li>
+
+      <li><a href="#references">References</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>
