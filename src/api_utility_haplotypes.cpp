@@ -219,6 +219,11 @@ std::vector<bool> get_haplotype(Rcpp::XPtr<Individual> individual) {
   return individual->get_haplotype();
 }
 
+//' Get number of variants in haplotype
+//'
+//' Number of variants is for example faster when checking for equality or when 
+//' summarising (like plotting). If haplotypes do not have same number of variants, they cannot be equal.
+//'
 //' @export
 // [[Rcpp::export]]
 int get_haplotype_no_variants(Rcpp::XPtr<Individual> individual) {

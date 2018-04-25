@@ -19,9 +19,8 @@ private:
   bool m_dijkstra_visited = false;
   int m_dijkstra_distance = 0;
 
-  // FIXME: http://www.boost.org/doc/libs/1_43_0/libs/dynamic_bitset/dynamic_bitset.html ?
   std::vector<bool> m_haplotype;
-  int m_haplotype_total_no_variants = -1;
+  int m_haplotype_total_no_variants = -1; // for faster equality; if they do not have same number of variants, they cannot be equal
   bool m_haplotype_set = false;
   bool m_haplotype_mutated = false;
   void haplotype_mutate(std::vector<double>& mutation_rates);

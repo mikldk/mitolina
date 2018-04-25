@@ -175,6 +175,11 @@ get_haplotype <- function(individual) {
     .Call('_mitolina_get_haplotype', PACKAGE = 'mitolina', individual)
 }
 
+#' Get number of variants in haplotype
+#'
+#' Number of variants is for example faster when checking for equality or when 
+#' summarising (like plotting). If haplotypes do not have same number of variants, they cannot be equal.
+#'
 #' @export
 get_haplotype_no_variants <- function(individual) {
     .Call('_mitolina_get_haplotype_no_variants', PACKAGE = 'mitolina', individual)

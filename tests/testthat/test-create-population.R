@@ -80,8 +80,6 @@ test_that("count_haplotype_occurrences_individuals works", {
                                                               generation_upper_bound_in_result = 2L))
 })
 
-# HERE
-
 indvs_is_female <- get_individuals_is_female(indvs)
 indv_females <- indvs[indvs_is_female]
 indv_males <- indvs[!indvs_is_female]
@@ -157,7 +155,11 @@ test_that("pedigrees_all_populate_haplotypes haplotypes works", {
   expect_equal(haps_from_ped, hap_from_indv)
 })
 
-
+no_vars <- unlist(lapply(indvs, get_haplotype_no_variants))
+test_that("get_haplotype_no_variants works", {
+  expect_true(all(no_vars == 0L))
+  expect_equal(no_vars, apply(haps_from_indvs, 1, sum))
+})
 
 f_hap <- c(TRUE, rep(FALSE, LOCI-1L))
 pedigrees_all_populate_haplotypes_custom_founders(peds, 
@@ -182,6 +184,12 @@ test_that("pedigrees_all_populate_haplotypes_custom_founders works", {
   expect_equal(haps_from_indvs, do.call(rbind, lapply(seq_along(indvs), function(j) f_hap)))
 })
 
+no_vars <- unlist(lapply(indvs, get_haplotype_no_variants))
+test_that("get_haplotype_no_variants works", {
+  expect_true(all(no_vars == 1L))
+  expect_true(all(no_vars == sum(f_hap)))
+  expect_equal(no_vars, apply(haps_from_indvs, 1, sum))
+})
 
 ##########################################################
 

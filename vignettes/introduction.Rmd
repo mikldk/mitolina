@@ -1,5 +1,5 @@
 ---
-title: "Introduction to **MITO**chondrial **LIN**eage **A**nalysis"
+title: "Introduction to mitolina: MITOchondrial LINeage Analysis"
 output: rmarkdown::html_vignette
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 author: Mikkel Meyer Andersen
@@ -30,6 +30,21 @@ In this vignette, I will use functionality from the `tidyverse` (the pipe operat
 More information about these are available at <https://www.tidyverse.org/>, <https://magrittr.tidyverse.org/> and <http://dplyr.tidyverse.org/>.
 
 ### Simulating genealogies
+
+A genealogy is simulated by specifying population sizes for females and males.
+
+```{r}
+sim <- sample_mtdna_geneology_varying_size(
+  population_sizes_females = rep(10, 10),
+  population_sizes_males = c(0L, rep(10, 9)),
+  progress = FALSE)
+str(sim, 1)
+sim$population
+```
+
+Note, that the first male generation must have size 0.
+
+Please refer to the documentation of `sample_mtdna_geneology_varying_size` (`?sample_mtdna_geneology_varying_size`) for details in variability in reproductive success (VRS) [@AndersenPLOSGEN2017].
 
 ### Adding mitogenomes
 
