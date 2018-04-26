@@ -58,8 +58,7 @@ Rcpp::List build_pedigrees(Rcpp::XPtr<Population> population, bool progress = tr
 
   // Construct pedigrees
   Rcpp::List pedigrees;
-  pedigrees.attr("class") = CharacterVector::create("mitolina_pedigreelist", "list");
-
+  
   int pedigree_id = 1;
   Pedigree* ped;
   
@@ -106,6 +105,8 @@ Rcpp::List build_pedigrees(Rcpp::XPtr<Population> population, bool progress = tr
     delete ped;
   }
   
+  pedigrees.attr("class") = CharacterVector::create("mitolina_pedigreelist", "list");
+
   //std::sort(pedigrees->begin(), pedigrees->end(), pedigree_size_comparator);
   
   return pedigrees;

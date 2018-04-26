@@ -84,11 +84,11 @@ BEGIN_RCPP
 END_RCPP
 }
 // pedigrees_all_populate_haplotypes
-void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector mutation_rates, bool progress);
+void pedigrees_all_populate_haplotypes(Rcpp::List pedigrees, Rcpp::NumericVector mutation_rates, bool progress);
 RcppExport SEXP _mitolina_pedigrees_all_populate_haplotypes(SEXP pedigreesSEXP, SEXP mutation_ratesSEXP, SEXP progressSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type pedigrees(pedigreesSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
     pedigrees_all_populate_haplotypes(pedigrees, mutation_rates, progress);
@@ -96,11 +96,11 @@ BEGIN_RCPP
 END_RCPP
 }
 // pedigrees_all_populate_haplotypes_custom_founders
-void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector mutation_rates, Rcpp::Nullable<Rcpp::Function> get_founder_haplotype, bool progress);
+void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::List pedigrees, Rcpp::NumericVector mutation_rates, Rcpp::Nullable<Rcpp::Function> get_founder_haplotype, bool progress);
 RcppExport SEXP _mitolina_pedigrees_all_populate_haplotypes_custom_founders(SEXP pedigreesSEXP, SEXP mutation_ratesSEXP, SEXP get_founder_haplotypeSEXP, SEXP progressSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type pedigrees(pedigreesSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Function> >::type get_founder_haplotype(get_founder_haplotypeSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
@@ -404,18 +404,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_pedigree_by_0index
-Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::List pedigrees, int index);
-RcppExport SEXP _mitolina_get_pedigree_by_0index(SEXP pedigreesSEXP, SEXP indexSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type pedigrees(pedigreesSEXP);
-    Rcpp::traits::input_parameter< int >::type index(indexSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_pedigree_by_0index(pedigrees, index));
-    return rcpp_result_gen;
-END_RCPP
-}
 // print_pedigree
 void print_pedigree(Rcpp::XPtr<Pedigree> ped);
 RcppExport SEXP _mitolina_print_pedigree(SEXP pedSEXP) {
@@ -482,12 +470,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_pedigrees_tidy
-Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
+Rcpp::List get_pedigrees_tidy(Rcpp::List pedigrees);
 RcppExport SEXP _mitolina_get_pedigrees_tidy(SEXP pedigreesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type pedigrees(pedigreesSEXP);
     rcpp_result_gen = Rcpp::wrap(get_pedigrees_tidy(pedigrees));
     return rcpp_result_gen;
 END_RCPP
@@ -502,8 +490,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-
-RcppExport SEXP _mitolina_wipe_pedigrees(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_build_pedigrees", (DL_FUNC) &_mitolina_build_pedigrees, 2},
@@ -540,7 +526,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_pedigrees_count", (DL_FUNC) &_mitolina_pedigrees_count, 1},
     {"_mitolina_pedigree_size", (DL_FUNC) &_mitolina_pedigree_size, 1},
     {"_mitolina_pedigrees_table", (DL_FUNC) &_mitolina_pedigrees_table, 1},
-    {"_mitolina_get_pedigree_by_0index", (DL_FUNC) &_mitolina_get_pedigree_by_0index, 2},
     {"_mitolina_print_pedigree", (DL_FUNC) &_mitolina_print_pedigree, 1},
     {"_mitolina_get_pids_in_pedigree", (DL_FUNC) &_mitolina_get_pids_in_pedigree, 1},
     {"_mitolina_get_is_female_in_pedigree", (DL_FUNC) &_mitolina_get_is_female_in_pedigree, 1},
@@ -549,7 +534,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_get_pedigree_as_graph", (DL_FUNC) &_mitolina_get_pedigree_as_graph, 1},
     {"_mitolina_get_pedigrees_tidy", (DL_FUNC) &_mitolina_get_pedigrees_tidy, 1},
     {"_mitolina_test_create_population", (DL_FUNC) &_mitolina_test_create_population, 0},
-    {"_mitolina_wipe_pedigrees",                                    (DL_FUNC) &_mitolina_wipe_pedigrees,                                    1},
     {NULL, NULL, 0}
 };
 

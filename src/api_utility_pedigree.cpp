@@ -35,7 +35,7 @@ void stopifnot_mitolina_pedigreelist(Rcpp::List pedigrees) {
 // [[Rcpp::export]]
 int pedigrees_count(Rcpp::List pedigrees) {
   stopifnot_mitolina_pedigreelist(pedigrees);
-  return pedigrees->size();
+  return pedigrees.size();
 }
 
 //' Get pedigree size
@@ -63,6 +63,7 @@ std::unordered_map<int, int> pedigrees_table(Rcpp::List pedigrees) {
   return tab;
 }
 
+/*
 //[[Rcpp::export]]
 Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::List pedigrees, int index) {  
   stopifnot_mitolina_pedigreelist(pedigrees);
@@ -71,14 +72,11 @@ Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::List pedigrees, int index) {
     Rcpp::stop("pedigree index outside range");
   }
   
-  Pedigree* p = pedigrees.at(index);
-  
-  //Rcpp::XPtr<Pedigree> res(p, true);
-  Rcpp::XPtr<Pedigree> res(p, false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
-  res.attr("class") = Rcpp::CharacterVector::create("mitolina_pedigree", "externalptr");
-  
-  return res;
+  Rcpp::XPtr<Pedigree> p = pedigrees.at(index);
+
+  return p;
 }
+*/
 
 /*
 //[[Rcpp::export]]
@@ -234,8 +232,8 @@ Rcpp::List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped) {
 //' get pedigrees information in tidy format
 //' 
 // [[Rcpp::export]]
-Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {  
-  std::vector<Pedigree*>* peds = pedigrees;
+Rcpp::List get_pedigrees_tidy(Rcpp::List pedigrees) {  
+  stopifnot_mitolina_pedigreelist(pedigrees);
   
   Rcpp::List ret_ped_ids;
   Rcpp::List ret_edgelists;
@@ -244,8 +242,8 @@ Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {
   Rcpp::List ret_is_female;
   Rcpp::List ret_generation;  
   
-  for (auto it = peds->begin(); it != peds->end(); ++it) {
-    Pedigree* ped = *it;
+  for (int ped_index = 0; ped_index < pedigrees.size(); ++ped_index) {
+    Rcpp::XPtr<Pedigree> ped = pedigrees.at(ped_index);
 
     ret_ped_ids.push_back(ped->get_id());    
     

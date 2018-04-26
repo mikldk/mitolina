@@ -8,6 +8,7 @@
 #include <string>
 
 #include "mitolina_types.h"
+#include "api_utility_pedigree.h"
 
 //' Get haplotypes from a vector of pids.
 //' 
@@ -138,9 +139,9 @@ void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::Nume
 //' 
 //' @export
 // [[Rcpp::export]]
-void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector mutation_rates, bool progress = true) {
-  std::vector<Pedigree*> peds = (*pedigrees);
-  
+void pedigrees_all_populate_haplotypes(Rcpp::List pedigrees, Rcpp::NumericVector mutation_rates, bool progress = true) {
+  stopifnot_mitolina_pedigreelist(pedigrees);
+
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
   int loci = mut_rates.size();
   
@@ -148,11 +149,12 @@ void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedi
     Rcpp::stop("At least one mutation rate / locus required");
   }
   
-  size_t N = peds.size();
+  size_t N = pedigrees.size();
   Progress p(N, progress);
   
   for (size_t i = 0; i < N; ++i) {
-    peds.at(i)->populate_haplotypes(loci, mut_rates);
+    Rcpp::XPtr<Pedigree> ped = pedigrees.at(i);
+    ped->populate_haplotypes(loci, mut_rates);
     
      if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
       Rcpp::stop("Aborted.");
@@ -181,11 +183,12 @@ void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedi
 //' 
 //' @export
 // [[Rcpp::export]]
-void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, 
+void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::List pedigrees, 
                                        Rcpp::NumericVector mutation_rates,
                                        Rcpp::Nullable<Rcpp::Function> get_founder_haplotype = R_NilValue,
                                        bool progress = true) {
-  std::vector<Pedigree*> peds = (*pedigrees);
+
+  stopifnot_mitolina_pedigreelist(pedigrees);
   
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
   
@@ -195,11 +198,12 @@ void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::XPtr< std::vector<P
   
   Rcpp::Function g_founder_hap = Rcpp::as<Rcpp::Function>(get_founder_haplotype);
 
-  size_t N = peds.size();
+  size_t N = pedigrees.size();
   Progress p(N, progress);
   
   for (size_t i = 0; i < N; ++i) {
-    peds.at(i)->populate_haplotypes_custom_founders(mut_rates, g_founder_hap);
+    Rcpp::XPtr<Pedigree> ped = pedigrees.at(i);
+    ped->populate_haplotypes_custom_founders(mut_rates, g_founder_hap);
     
      if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
       Rcpp::stop("Aborted.");

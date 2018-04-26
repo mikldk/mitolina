@@ -12,7 +12,7 @@ build_pedigrees(population, progress = TRUE)
 \item{progress}{Show progress.}
 }
 \value{
-An object with class \code{mitolina_pedigreelist} (an internal list of external pointers to pedigrees).
+An object with class \code{mitolina_pedigreelist} (a list of external pointers to pedigrees).
 }
 \description{
 In a newly simulated population, each individual only knows its mother and children.

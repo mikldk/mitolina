@@ -388,10 +388,6 @@ pedigrees_table <- function(pedigrees) {
     .Call('_mitolina_pedigrees_table', PACKAGE = 'mitolina', pedigrees)
 }
 
-get_pedigree_by_0index <- function(pedigrees, index) {
-    .Call('_mitolina_get_pedigree_by_0index', PACKAGE = 'mitolina', pedigrees, index)
-}
-
 print_pedigree <- function(ped) {
     invisible(.Call('_mitolina_print_pedigree', PACKAGE = 'mitolina', ped))
 }
