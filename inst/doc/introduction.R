@@ -7,6 +7,9 @@ library(mitolina)
 ## ------------------------------------------------------------------------
 set.seed(1)
 
+## ---- message=FALSE------------------------------------------------------
+library(tidyverse)
+
 ## ------------------------------------------------------------------------
 sim <- sample_mtdna_geneology_varying_size(
   population_sizes_females = rep(10, 10),

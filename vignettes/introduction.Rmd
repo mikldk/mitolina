@@ -29,6 +29,10 @@ set.seed(1)
 In this vignette, I will use functionality from the `tidyverse` (the pipe operator from the `magrittr` package and `dplyr` functionality). 
 More information about these are available at <https://www.tidyverse.org/>, <https://magrittr.tidyverse.org/> and <http://dplyr.tidyverse.org/>.
 
+```{r, message=FALSE}
+library(tidyverse)
+```
+
 ### Simulating genealogies
 
 A genealogy is simulated by specifying population sizes for females and males.

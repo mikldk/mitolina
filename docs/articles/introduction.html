@@ -89,6 +89,7 @@
 <p>For reproducibility, the seed for the (pseudo) random number generator is set:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
 <p>In this vignette, I will use functionality from the <code>tidyverse</code> (the pipe operator from the <code>magrittr</code> package and <code>dplyr</code> functionality). More information about these are available at <a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>, <a href="https://magrittr.tidyverse.org/" class="uri">https://magrittr.tidyverse.org/</a> and <a href="http://dplyr.tidyverse.org/" class="uri">http://dplyr.tidyverse.org/</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre></div>
 <div id="simulating-genealogies" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulating-genealogies" class="anchor"></a>Simulating genealogies</h3>
@@ -116,7 +117,7 @@ ped &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_ped
 <span class="kw"><a href="../reference/pedigree_size.html">pedigree_size</a></span>(ped)</code></pre></div>
 <pre><code>## [1] 46</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ped)</code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 <p>The squares are males and the circles are females.</p>
 </div>
 <div id="adding-mitogenomes" class="section level3">
@@ -144,12 +145,12 @@ x &lt;-<span class="st"> </span><span class="kw">get_founder_mito</span>()
   <span class="dt">progress =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>We can then try to plot the same pedigree again, this time with information about the individuals’ mitogenomes (namely, the number of variants in each individuals mitogenome):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ped, <span class="dt">num_vars =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 <p>Plotting with the <code>igraph</code> plot quickly becomes difficult to customise. Therefore extensions to the <code>tidygraph</code>/<code>ggraph</code> packages is provided:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidygraph)
-<span class="kw">library</span>(ggraph)</code></pre></div>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/tbl_graph">as_tbl_graph</a></span>(peds) %&gt;%<span class="st"> </span>
+<span class="kw">library</span>(ggraph)
+
+g &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/tbl_graph">as_tbl_graph</a></span>(peds) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/activate">activate</a></span>(nodes) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/reexports">filter</a></span>(ped_id ==<span class="st"> </span>ped_id_endgen) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/reexports">mutate</a></span>(<span class="dt">num_vars =</span> <span class="kw">sapply</span>(haplotype, sum))
@@ -162,7 +163,7 @@ p &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentat
 <span class="st">  </span><span class="kw">scale_shape_manual</span>(<span class="ot">NULL</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"Female"</span> =<span class="st"> </span><span class="dv">21</span>, <span class="st">"Male"</span> =<span class="st"> </span><span class="dv">22</span>)) +
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="ot">NULL</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"Female"</span> =<span class="st"> "black"</span>, <span class="st">"Male"</span> =<span class="st"> "red"</span>))
 p</code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-13-1.png" width="1152"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-14-1.png" width="1152"></p>
 <p>Here, the top number is the id and the number below is the number of variants in the individual’s mitogenome. Note, how it is possible to get both a (border) color and fill for <code>pch</code> values 21-25.</p>
 <p>We can also extract all haplotypes in this pedigree:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_haplotypes_in_pedigree.html">get_haplotypes_in_pedigree</a></span>(ped)
@@ -298,7 +299,7 @@ p &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentat
 <span class="st">  </span><span class="kw">scale_shape_manual</span>(<span class="ot">NULL</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"Female"</span> =<span class="st"> </span><span class="dv">21</span>, <span class="st">"Male"</span> =<span class="st"> </span><span class="dv">22</span>)) +
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="ot">NULL</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"Female"</span> =<span class="st"> "black"</span>, <span class="st">"Male"</span> =<span class="st"> "red"</span>))
 p</code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-27-1.png" width="1152"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-28-1.png" width="1152"></p>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">
