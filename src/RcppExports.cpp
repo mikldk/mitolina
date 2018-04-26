@@ -7,18 +7,8 @@
 
 using namespace Rcpp;
 
-// wipe_pedigrees
-void wipe_pedigrees(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
-RcppExport SEXP _mitolina_wipe_pedigrees(SEXP pedigreesSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
-    wipe_pedigrees(pedigrees);
-    return R_NilValue;
-END_RCPP
-}
 // build_pedigrees
-Rcpp::XPtr< std::vector<Pedigree*> > build_pedigrees(Rcpp::XPtr<Population> population, bool progress);
+Rcpp::List build_pedigrees(Rcpp::XPtr<Population> population, bool progress);
 RcppExport SEXP _mitolina_build_pedigrees(SEXP populationSEXP, SEXP progressSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -382,12 +372,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // pedigrees_count
-int pedigrees_count(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
+int pedigrees_count(Rcpp::List pedigrees);
 RcppExport SEXP _mitolina_pedigrees_count(SEXP pedigreesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type pedigrees(pedigreesSEXP);
     rcpp_result_gen = Rcpp::wrap(pedigrees_count(pedigrees));
     return rcpp_result_gen;
 END_RCPP
@@ -404,23 +394,23 @@ BEGIN_RCPP
 END_RCPP
 }
 // pedigrees_table
-std::unordered_map<int, int> pedigrees_table(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
+std::unordered_map<int, int> pedigrees_table(Rcpp::List pedigrees);
 RcppExport SEXP _mitolina_pedigrees_table(SEXP pedigreesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type pedigrees(pedigreesSEXP);
     rcpp_result_gen = Rcpp::wrap(pedigrees_table(pedigrees));
     return rcpp_result_gen;
 END_RCPP
 }
 // get_pedigree_by_0index
-Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int index);
+Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::List pedigrees, int index);
 RcppExport SEXP _mitolina_get_pedigree_by_0index(SEXP pedigreesSEXP, SEXP indexSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type pedigrees(pedigreesSEXP);
     Rcpp::traits::input_parameter< int >::type index(indexSEXP);
     rcpp_result_gen = Rcpp::wrap(get_pedigree_by_0index(pedigrees, index));
     return rcpp_result_gen;
@@ -513,8 +503,9 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _mitolina_wipe_pedigrees(SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
-    {"_mitolina_wipe_pedigrees", (DL_FUNC) &_mitolina_wipe_pedigrees, 1},
     {"_mitolina_build_pedigrees", (DL_FUNC) &_mitolina_build_pedigrees, 2},
     {"_mitolina_sample_mtdna_geneology_varying_size", (DL_FUNC) &_mitolina_sample_mtdna_geneology_varying_size, 8},
     {"_mitolina_get_haplotypes_pids", (DL_FUNC) &_mitolina_get_haplotypes_pids, 2},
@@ -558,6 +549,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_get_pedigree_as_graph", (DL_FUNC) &_mitolina_get_pedigree_as_graph, 1},
     {"_mitolina_get_pedigrees_tidy", (DL_FUNC) &_mitolina_get_pedigrees_tidy, 1},
     {"_mitolina_test_create_population", (DL_FUNC) &_mitolina_test_create_population, 0},
+    {"_mitolina_wipe_pedigrees",                                    (DL_FUNC) &_mitolina_wipe_pedigrees,                                    1},
     {NULL, NULL, 0}
 };
 

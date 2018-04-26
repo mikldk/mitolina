@@ -69,6 +69,7 @@ Pedigree* Individual::get_pedigree() const {
   return m_pedigree;
 }
 
+// Recursively assigns children
 void Individual::set_pedigree_id(int id, Pedigree* ped, int* pedigree_size) {
   if (this->pedigree_is_set()) {
     return;

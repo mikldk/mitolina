@@ -15,11 +15,26 @@ int get_pedigree_id(Rcpp::XPtr<Pedigree> ped) {
   return ped->get_id();
 }
 
+bool is_pedigree_list(Rcpp::List pedigrees) {
+  if (Rf_inherits(pedigrees, "mitolina_pedigreelist")) {
+    return true;
+  }
+  
+  return false;
+}
+
+void stopifnot_mitolina_pedigreelist(Rcpp::List pedigrees) {
+  if (!is_pedigree_list(pedigrees)) {
+    Rcpp::stop("pedigrees is not a mitolina_pedigreelist");
+  }
+}
+
 //' Get number of pedigrees
 //' 
 //' @export
 // [[Rcpp::export]]
-int pedigrees_count(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {
+int pedigrees_count(Rcpp::List pedigrees) {
+  stopifnot_mitolina_pedigreelist(pedigrees);
   return pedigrees->size();
 }
 
@@ -35,21 +50,28 @@ int pedigree_size(Rcpp::XPtr<Pedigree> ped) {
 //' 
 //' @export
 //[[Rcpp::export]]
-std::unordered_map<int, int> pedigrees_table(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {
-  std::vector<Pedigree*>* peds = pedigrees;
+std::unordered_map<int, int> pedigrees_table(Rcpp::List pedigrees) {
+  stopifnot_mitolina_pedigreelist(pedigrees);
+  
   std::unordered_map<int, int> tab;
   
-  for (auto it = peds->begin(); it != peds->end(); ++it) {
-    tab[(*it)->get_all_individuals()->size()] += 1;
+  for (int i = 0; i < pedigrees.size(); ++i) {
+    Rcpp::XPtr<Pedigree> ped = pedigrees[i];
+    tab[ped->get_all_individuals()->size()] += 1;
   }
   
   return tab;
 }
 
 //[[Rcpp::export]]
-Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int index) {  
-  std::vector<Pedigree*>* peds = pedigrees;
-  Pedigree* p = peds->at(index);
+Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::List pedigrees, int index) {  
+  stopifnot_mitolina_pedigreelist(pedigrees);
+  
+  if (index < 0 || index >= pedigrees.size()) {
+    Rcpp::stop("pedigree index outside range");
+  }
+  
+  Pedigree* p = pedigrees.at(index);
   
   //Rcpp::XPtr<Pedigree> res(p, true);
   Rcpp::XPtr<Pedigree> res(p, false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
