@@ -338,12 +338,13 @@ meioses_generation_distribution <- function(individual, generation_upper_bound_i
 #' Note the `generation_upper_bound_in_result` parameter.
 #' 
 #' @param population Population to get size of
+#' @param is_female true to count females, false to count males
 #' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
 #' 0 only include the final generation. 1 only second last generation etc.
 #' 
 #' @export
-population_size_generation <- function(population, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_population_size_generation', PACKAGE = 'mitolina', population, generation_upper_bound_in_result)
+population_size_generation <- function(population, is_female = TRUE, generation_upper_bound_in_result = -1L) {
+    .Call('_mitolina_population_size_generation', PACKAGE = 'mitolina', population, is_female, generation_upper_bound_in_result)
 }
 
 #' Size of pedigree

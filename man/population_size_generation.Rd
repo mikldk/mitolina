@@ -4,10 +4,13 @@
 \alias{population_size_generation}
 \title{Size of population}
 \usage{
-population_size_generation(population, generation_upper_bound_in_result = -1L)
+population_size_generation(population, is_female = TRUE,
+  generation_upper_bound_in_result = -1L)
 }
 \arguments{
 \item{population}{Population to get size of}
+
+\item{is_female}{true to count females, false to count males}
 
 \item{generation_upper_bound_in_result}{Limit on generation to include in count; -1 means no limit.
 0 only include the final generation. 1 only second last generation etc.}

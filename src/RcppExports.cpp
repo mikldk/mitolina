@@ -337,14 +337,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // population_size_generation
-int population_size_generation(Rcpp::XPtr<Population> population, int generation_upper_bound_in_result);
-RcppExport SEXP _mitolina_population_size_generation(SEXP populationSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+int population_size_generation(Rcpp::XPtr<Population> population, bool is_female, int generation_upper_bound_in_result);
+RcppExport SEXP _mitolina_population_size_generation(SEXP populationSEXP, SEXP is_femaleSEXP, SEXP generation_upper_bound_in_resultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_female(is_femaleSEXP);
     Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(population_size_generation(population, generation_upper_bound_in_result));
+    rcpp_result_gen = Rcpp::wrap(population_size_generation(population, is_female, generation_upper_bound_in_result));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -520,7 +521,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_pop_size", (DL_FUNC) &_mitolina_pop_size, 1},
     {"_mitolina_get_individuals", (DL_FUNC) &_mitolina_get_individuals, 1},
     {"_mitolina_meioses_generation_distribution", (DL_FUNC) &_mitolina_meioses_generation_distribution, 2},
-    {"_mitolina_population_size_generation", (DL_FUNC) &_mitolina_population_size_generation, 2},
+    {"_mitolina_population_size_generation", (DL_FUNC) &_mitolina_population_size_generation, 3},
     {"_mitolina_pedigree_size_generation", (DL_FUNC) &_mitolina_pedigree_size_generation, 2},
     {"_mitolina_get_pedigree_id", (DL_FUNC) &_mitolina_get_pedigree_id, 1},
     {"_mitolina_pedigrees_count", (DL_FUNC) &_mitolina_pedigrees_count, 1},
