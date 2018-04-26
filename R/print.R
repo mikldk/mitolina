@@ -30,7 +30,7 @@ print.mitolina_pedigreelist <-
     if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
     
     #sizes <- unlist(lapply(1L:pedigrees_count(x), function(i) pedigree_size(x[[i]])))
-    sizes <- unlist(lapply(seq_len(pedigrees_count(x)), function(i) pedigree_size(get_pedigree_by_0index(x, i-1))))
+    sizes <- unlist(lapply(seq_len(pedigrees_count(x)), function(i) pedigree_size(x[[i]])))
     sizes_str <- ""
     
     max_print <- 6L
@@ -54,19 +54,19 @@ stop_invalid_id <- function(id) {
   }
 }
 
-# @export
-# `[[.mitolina_pedigreelist` <- function(x, ...) {
-#   i <- ..1
-#   stop_invalid_id(i)
-#   
-#   #if (length(i) != 1L || !is.integer(i) || i[1L] <= 0L || i > pedigrees_count(x)) {
-#   if (i > pedigrees_count(x)) {
-#     stop("Wrong pedigree selected (not that many pedigrees exist)")
-#   }
-#   
-#   p <- get_pedigree(x, i - 1L) # -1 to go to 0-based indexing
-#   return(p)
-# }
+#' @export
+`[[.mitolina_pedigreelist` <- function(x, ...) {
+  i <- ..1
+  stop_invalid_id(i)
+
+  #if (length(i) != 1L || !is.integer(i) || i[1L] <= 0L || i > pedigrees_count(x)) {
+  if (i > pedigrees_count(x)) {
+    stop("Wrong pedigree selected (not that many pedigrees exist)")
+  }
+
+  p <- get_pedigree_by_0index(x, i - 1L) # -1 to go to 0-based indexing
+  return(p)
+}
 
 #' @export
 `[[.mitolina_population` <- function(x, ...) {

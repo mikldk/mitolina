@@ -21,16 +21,16 @@ test_that("build_pedigrees works", {
 })
 
 if (FALSE) {
-  plot(get_pedigree_by_0index(peds, 0))
-  plot(get_pedigree_by_0index(peds, 1))
+  plot(peds[[1]])
+  plot(peds[[2]])
 }
 
-ped <- get_pedigree_by_0index(peds, 0)
+ped <- peds[[1]]
 pids <- sort(get_pids_in_pedigree(ped))
 test_that("pedigree pids works", {
   expect_equal(length(pids), 12L)
   expect_true(all(pids == c(1L:11L, 19L)))
-  expect_equal(length(get_pids_in_pedigree(get_pedigree_by_0index(peds, 1))), 7L)
+  expect_equal(length(get_pids_in_pedigree(peds[[2]])), 7L)
 })
 
 test_that("meiotic_dist works", {

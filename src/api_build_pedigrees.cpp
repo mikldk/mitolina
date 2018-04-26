@@ -18,9 +18,11 @@ void wipe_pedigrees(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {
   delete peds;
 }
 
+/*
 bool pedigree_size_comparator(Pedigree* p1, Pedigree* p2) { 
   return (p1->get_all_individuals()->size() > p2->get_all_individuals()->size());
 }
+*/
 
 //' Build pedigrees from (individuals in) a population.
 //' 
@@ -63,7 +65,6 @@ Rcpp::XPtr< std::vector<Pedigree*> > build_pedigrees(Rcpp::XPtr<Population> popu
   int pedigree_id = 1;
   Pedigree* ped;
   
-  
   int N = pop.size();
   int k = 0;
   Progress p(N, progress);
@@ -100,7 +101,7 @@ Rcpp::XPtr< std::vector<Pedigree*> > build_pedigrees(Rcpp::XPtr<Population> popu
     delete ped;
   }
   
-  std::sort(pedigrees->begin(), pedigrees->end(), pedigree_size_comparator);
+  //std::sort(pedigrees->begin(), pedigrees->end(), pedigree_size_comparator);
   
   return res;
 }

@@ -47,7 +47,7 @@ test_that("male_individuals_generations: get_haplotypes_individuals / get_haplot
   expect_equal(haps_3gen, haps_pids_3gen)
 })
 
-ped <- get_pedigree_by_0index(peds, 0)
+ped <- peds[[1]]
 haps_ped <- get_haplotypes_in_pedigree(ped)
 pids_ped <- get_pids_in_pedigree(ped)
 haps_pids_ped <- get_haplotypes_pids(sim_res_growth$population, pids_ped)
