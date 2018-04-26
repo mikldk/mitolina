@@ -28,8 +28,6 @@ Rcpp::List get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerV
   size_t N = pids.size();
   Rcpp::List haps(N);
 
-  // FIXME: LogicalMatrix?
-  
   for (size_t i = 0; i < N; ++i) {
     Individual* indv = population->get_individual(pids[i]);
     haps(i) = indv->get_haplotype();
@@ -45,17 +43,17 @@ Rcpp::List get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerV
 //' [pedigrees_all_populate_haplotypes_custom_founders()].
 //' 
 //' @param individuals Individuals to get haplotypes for.
-//' @return Matrix of haplotypes where row `i` is the haplotype of `individuals[[i]]`.
+//' @return List of haplotypes where element `i` is the haplotype of `individuals[[i]]`.
 //' 
 //' @seealso [get_haplotypes_pids()].
 //' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::LogicalMatrix get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {  
+Rcpp::List get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {  
   size_t n = individuals.size();
  
   if (n <= 0) {
-    Rcpp::LogicalMatrix empty_haps(0, 0);
+    Rcpp::List empty_haps;
     return empty_haps;
   }
  
@@ -63,23 +61,23 @@ Rcpp::LogicalMatrix get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individu
 
   if (loci <= 0) {
     Rcpp::stop("Expected > 0 loci");
-    Rcpp::LogicalMatrix empty_haps(0, 0);
+    Rcpp::List empty_haps;
     return empty_haps;
   }
 
-  Rcpp::LogicalMatrix haps(n, loci);
+  Rcpp::List haps(n);
 
   for (size_t i = 0; i < n; ++i) {
     std::vector<bool> hap = individuals[i]->get_haplotype();
 
     if (hap.size() != loci) {
       Rcpp::stop("Expected > 0 loci for all haplotypes");
-      Rcpp::LogicalMatrix empty_haps(0, 0);
+      Rcpp::List empty_haps;
       return empty_haps;
     }
     
     Rcpp::LogicalVector h = Rcpp::wrap(hap);
-    haps(i, Rcpp::_) = h;
+    haps[i] = h;
   }
 
   return haps;

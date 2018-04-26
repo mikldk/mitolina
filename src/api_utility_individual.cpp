@@ -34,10 +34,10 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
   
   int pid_f = (i->get_mother() != nullptr) ? i->get_mother()->get_pid() : -1;
   char gender = i->is_female() ? 'F' : 'M';
-    
+  int gen = i->get_generations_from_final();
   std::vector<Individual*>* children = i->get_children();
   
-  Rcpp::Rcout << "  pid = " << i->get_pid() << " [" << gender << "] with mother pid = " << pid_f << " and";
+  Rcpp::Rcout << "  pid = " << i->get_pid() << " [" << gender << "] in generation " << gen << " with mother pid = " << pid_f << " and";
   
   if (children->size() == 0) {
     Rcpp::Rcout << " no children" << std::endl;
@@ -48,8 +48,10 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
       std::vector<Individual*>* child_children = child->get_children();
       
       char child_gender = child->is_female() ? 'F' : 'M';
+      int child_pid_f = (child->get_mother() != nullptr) ? child->get_mother()->get_pid() : -1;
+      int child_gen = child->get_generations_from_final();
       
-      Rcpp::Rcout << "    pid = " << child->get_pid() << " [" << gender << "] with mother pid = " << pid_f << " and " <<  child_children->size() << " children" << std::endl;
+      Rcpp::Rcout << "    pid = " << child->get_pid() << " [" << child_gender << "] in generation " << child_gen << " with mother pid = " << child_pid_f << " and " <<  child_children->size() << " children" << std::endl;
     }
   }
 }

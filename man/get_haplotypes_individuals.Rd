@@ -10,7 +10,7 @@ get_haplotypes_individuals(individuals)
 \item{individuals}{Individuals to get haplotypes for.}
 }
 \value{
-Matrix of haplotypes where row \code{i} is the haplotype of \code{individuals[[i]]}.
+List of haplotypes where element \code{i} is the haplotype of \code{individuals[[i]]}.
 
 [[i]: R:[i
 }

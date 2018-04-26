@@ -47,7 +47,7 @@ std::unordered_map<int, int> pedigrees_table(Rcpp::XPtr< std::vector<Pedigree*> 
 }
 
 //[[Rcpp::export]]
-Rcpp::XPtr<Pedigree> get_pedigree(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int index) {  
+Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int index) {  
   std::vector<Pedigree*>* peds = pedigrees;
   Pedigree* p = peds->at(index);
   
@@ -58,8 +58,19 @@ Rcpp::XPtr<Pedigree> get_pedigree(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees
   return res;
 }
 
-
-
+/*
+//[[Rcpp::export]]
+Rcpp::XPtr<Pedigree> get_pedigree_by_pedigree_id(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int index) {  
+  std::vector<Pedigree*>* peds = pedigrees;
+  Pedigree* p = peds->at(index);
+  
+  //Rcpp::XPtr<Pedigree> res(p, true);
+  Rcpp::XPtr<Pedigree> res(p, false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
+  res.attr("class") = Rcpp::CharacterVector::create("mitolina_pedigree", "externalptr");
+  
+  return res;
+}
+*/
 
 //[[Rcpp::export]]
 void print_pedigree(Rcpp::XPtr<Pedigree> ped) {  

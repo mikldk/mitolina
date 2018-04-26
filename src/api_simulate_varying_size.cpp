@@ -265,7 +265,7 @@ List sample_mtdna_geneology_varying_size(
     male_children_generation.resize(male_children_population_size);
         
     for (size_t i = 0; i < male_children_population_size; ++i) {
-      Individual* indv = new Individual(individual_id++, 0, false); // is_female = false: hence a male
+      Individual* indv = new Individual(individual_id++, generation, false); // is_female = false: hence a male
       (*population_map)[indv->get_pid()] = indv;
       male_children_generation[i] = indv;
     }

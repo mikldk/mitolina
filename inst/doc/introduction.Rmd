@@ -1,5 +1,5 @@
 ---
-title: "Introduction to **MITO**chondrial **LIN**eage **A**nalysis"
+title: "Introduction to mitolina: MITOchondrial LINeage Analysis"
 output: rmarkdown::html_vignette
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 author: Mikkel Meyer Andersen
@@ -11,7 +11,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(fig.width = 7)
+knitr::opts_chunk$set(fig.width = 7, cache = FALSE)
 ```
 
 ## Introduction
@@ -31,9 +31,138 @@ More information about these are available at <https://www.tidyverse.org/>, <htt
 
 ### Simulating genealogies
 
+A genealogy is simulated by specifying population sizes for females and males.
+
+```{r}
+sim <- sample_mtdna_geneology_varying_size(
+  population_sizes_females = rep(10, 10),
+  population_sizes_males = c(0L, rep(10, 9)),
+  progress = FALSE)
+pop <- sim$population
+pop
+```
+
+Note, that the first male generation must have size 0.
+
+Please refer to the documentation of `sample_mtdna_geneology_varying_size` (`?sample_mtdna_geneology_varying_size`) for details in variability in reproductive success (VRS) [@AndersenPLOSGEN2017].
+
+This only sample a genealogy. We also need to build pedigrees:
+
+```{r}
+peds <- build_pedigrees(pop, progress = FALSE)
+peds
+```
+
+
+We can then plot one pedigree. We take a pedigree with a male individual in the final generation (`end_generation_male_individuals`):
+
+```{r}
+end_gen_peds <- lapply(sim$end_generation_male_individuals, get_pedigree_from_individual)
+pedids <- sapply(end_gen_peds, get_pedigree_id)
+id_tab <- sort(table(pedids))
+ped_id_endgen <- as.integer(names(id_tab)[1]) # smallest
+indv_index <- which(pedids == ped_id_endgen)[1]
+ped <- get_pedigree_from_individual(sim$end_generation_male_individuals[[indv_index]])
+pedigree_size(ped)
+```
+
+```{r}
+plot(ped)
+```
+
+The squares are males and the circles are females.
+
 ### Adding mitogenomes
 
-#### mtDNA information included
+We are now ready to add haplotypes/mitogenomes to the individuals. Let us consider 
+```{r}
+sites <- 100
+```
+in the mitogenome for know.
+
+First, we construct a function to create founder haplotypes. Here, they are just random:
+
+```{r}
+get_founder_mito <- function() {
+  sample(c(FALSE, TRUE), sites, replace = TRUE)
+}
+x <- get_founder_mito()
+head(x)
+sum(x)
+```
+
+Let us assume the following mutation rates per site:
+
+```{r}
+mu <- rep(1e-2, sites)
+```
+
+Now, we can add mitogenomes:
+
+```{r}
+pedigrees_all_populate_haplotypes_custom_founders(
+  pedigrees = peds,
+  mutation_rates = mu,
+  get_founder_haplotype = get_founder_mito, 
+  progress = FALSE)
+```
+
+We can then try to plot the same pedigree again, this time with information about the individuals' mitogenomes (namely, the number of variants in each individuals mitogenome):
+
+```{r}
+plot(ped, num_vars = TRUE)
+```
+
+Plotting with the `igraph` plot quickly becomes difficult to customise. Therefore extensions to the `tidygraph`/`ggraph` packages is provided:
+
+```{r, fig.height=8, fig.width=12}
+library(tidygraph)
+library(ggraph)
+
+g <- as_tbl_graph(peds) %>% 
+  activate(nodes) %>% 
+  filter(ped_id == ped_id_endgen) %>% 
+  mutate(num_vars = sapply(haplotype, sum))
+
+p <- ggraph(g, layout = 'tree') +
+  geom_edge_link() +
+  geom_node_point(aes(color = sex, fill = num_vars, shape = sex), size = 12, stroke = 2) +
+  geom_node_text(aes(label = paste0(name, "\n", num_vars)), size = 4, color = "white") +
+  theme_graph(base_family = "") +
+  scale_shape_manual(NULL, values = c("Female" = 21, "Male" = 22)) +
+  scale_color_manual(NULL, values = c("Female" = "black", "Male" = "red"))
+p
+```
+
+Here, the top number is the id and the number below is the number of variants in the individual's mitogenome.
+Note, how it is possible to get both a (border) color and fill for `pch` values 21-25.
+
+We can also extract all haplotypes in this pedigree:
+
+```{r}
+haps <- get_haplotypes_in_pedigree(ped)
+length(haps)
+mean(sapply(haps, sum))
+```
+
+Or from the last male generation by
+
+```{r}
+haps <- get_haplotypes_individuals(sim$end_generation_male_individuals)
+length(haps)
+```
+
+In the simulation function `sample_mtdna_geneology_varying_size`, there is a parameter `extra_individuals_generations_return` to decide how many individuals are returned in the `male_individuals_generations` and `female_individuals_generations` elements. 
+The default is `2`, meaning that individuals in 2 additional generations (on top of the final generation) are returned. 
+So, with the default, the last three generations of males are available in the `male_individuals_generations` element. 
+
+```{r}
+haps <- get_haplotypes_individuals(sim$male_individuals_generations)
+length(haps)
+```
+
+
+### mtDNA information included
 
 There are several datasets with information about the mitogenome included.
 There is a help file to each of the datasets which can be found by e.g. `?mtdna_partitions` for 
@@ -93,9 +222,56 @@ Now, `mu_mean_gen` contains a mutation rate per generation (of 25 years) for eac
 1 - prod(1 - mu_mean_gen)
 ```
 
-
 Note, that to include variability in the mutation rates, 
 it is probably best to sample a rate per region (in `mtdna_mut_RieuxK4`), and then distribute 
 that to all sites in the partition.
+
+
+These rates are easily used to populate mitogenomes:
+
+```{r}
+get_founder_mito <- function() {
+  sample(c(FALSE, TRUE), length(mu_mean_gen), replace = TRUE)
+}
+
+pedigrees_all_populate_haplotypes_custom_founders(
+  pedigrees = peds,
+  mutation_rates = mu_mean_gen,
+  get_founder_haplotype = get_founder_mito, 
+  progress = FALSE)
+```
+
+Number of variants in the last three male generations (not just in the one pedigree, but in entire population):
+
+```{r}
+haps <- get_haplotypes_individuals(sim$male_individuals_generations)
+table(sapply(haps, sum))
+```
+
+Number of variants in the last male generation (not just in the one pedigree, but in entire population):
+
+```{r}
+haps <- get_haplotypes_individuals(sim$end_generation_male_individuals)
+table(sapply(haps, sum))
+```
+
+And the same pedigree with new mitogenomes, now where number of variants is a factor to get a discrete fill colour scale:
+
+```{r, fig.height=8, fig.width=12}
+g <- as_tbl_graph(peds) %>% 
+  activate(nodes) %>% 
+  filter(ped_id == ped_id_endgen) %>% 
+  mutate(num_vars = sapply(haplotype, sum))
+
+p <- ggraph(g, layout = 'tree') +
+  geom_edge_link() +
+  geom_node_point(aes(color = sex, fill = factor(num_vars), shape = sex), size = 12, stroke = 2, show.legend = FALSE) +
+  geom_node_text(aes(label = paste0(name, "\n", num_vars)), size = 4, color = "white") +
+  theme_graph(base_family = "") +
+  scale_shape_manual(NULL, values = c("Female" = 21, "Male" = 22)) +
+  scale_color_manual(NULL, values = c("Female" = "black", "Male" = "red"))
+p
+```
+
 
 ## References

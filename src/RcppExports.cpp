@@ -60,7 +60,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_haplotypes_individuals
-Rcpp::LogicalMatrix get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals);
+Rcpp::List get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals);
 RcppExport SEXP _mitolina_get_haplotypes_individuals(SEXP individualsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -414,15 +414,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_pedigree
-Rcpp::XPtr<Pedigree> get_pedigree(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int index);
-RcppExport SEXP _mitolina_get_pedigree(SEXP pedigreesSEXP, SEXP indexSEXP) {
+// get_pedigree_by_0index
+Rcpp::XPtr<Pedigree> get_pedigree_by_0index(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int index);
+RcppExport SEXP _mitolina_get_pedigree_by_0index(SEXP pedigreesSEXP, SEXP indexSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
     Rcpp::traits::input_parameter< int >::type index(indexSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_pedigree(pedigrees, index));
+    rcpp_result_gen = Rcpp::wrap(get_pedigree_by_0index(pedigrees, index));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -549,7 +549,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_pedigrees_count", (DL_FUNC) &_mitolina_pedigrees_count, 1},
     {"_mitolina_pedigree_size", (DL_FUNC) &_mitolina_pedigree_size, 1},
     {"_mitolina_pedigrees_table", (DL_FUNC) &_mitolina_pedigrees_table, 1},
-    {"_mitolina_get_pedigree", (DL_FUNC) &_mitolina_get_pedigree, 2},
+    {"_mitolina_get_pedigree_by_0index", (DL_FUNC) &_mitolina_get_pedigree_by_0index, 2},
     {"_mitolina_print_pedigree", (DL_FUNC) &_mitolina_print_pedigree, 1},
     {"_mitolina_get_pids_in_pedigree", (DL_FUNC) &_mitolina_get_pids_in_pedigree, 1},
     {"_mitolina_get_is_female_in_pedigree", (DL_FUNC) &_mitolina_get_is_female_in_pedigree, 1},

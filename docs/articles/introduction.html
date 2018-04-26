@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Introduction to <strong>MITO</strong>chondrial <strong>LIN</strong>eage <strong>A</strong>nalysis • mitolina</title>
+<title>Introduction to mitolina: MITOchondrial LINeage Analysis • mitolina</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to &lt;strong&gt;MITO&lt;/strong&gt;chondrial &lt;strong&gt;LIN&lt;/strong&gt;eage &lt;strong&gt;A&lt;/strong&gt;nalysis">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to mitolina: MITOchondrial LINeage Analysis">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -52,7 +52,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/introduction.html">Introduction to **MITO**chondrial **LIN**eage **A**nalysis</a>
+      <a href="../articles/introduction.html">Introduction to mitolina: MITOchondrial LINeage Analysis</a>
     </li>
   </ul>
 </li>
@@ -69,10 +69,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Introduction to <strong>MITO</strong>chondrial <strong>LIN</strong>eage <strong>A</strong>nalysis</h1>
+      <h1>Introduction to mitolina: MITOchondrial LINeage Analysis</h1>
                         <h4 class="author">Mikkel Meyer Andersen</h4>
             
-            <h4 class="date">25 April, 2018</h4>
+            <h4 class="date">26 April, 2018</h4>
       
       
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -92,13 +92,96 @@
 <div id="simulating-genealogies" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulating-genealogies" class="anchor"></a>Simulating genealogies</h3>
+<p>A genealogy is simulated by specifying population sizes for females and males.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sample_mtdna_geneology_varying_size.html">sample_mtdna_geneology_varying_size</a></span>(
+  <span class="dt">population_sizes_females =</span> <span class="kw">rep</span>(<span class="dv">10</span>, <span class="dv">10</span>),
+  <span class="dt">population_sizes_males =</span> <span class="kw">c</span>(0L, <span class="kw">rep</span>(<span class="dv">10</span>, <span class="dv">9</span>)),
+  <span class="dt">progress =</span> <span class="ot">FALSE</span>)
+pop &lt;-<span class="st"> </span>sim$population
+pop</code></pre></div>
+<pre><code>## Population with 178 individuals</code></pre>
+<p>Note, that the first male generation must have size 0.</p>
+<p>Please refer to the documentation of <code>sample_mtdna_geneology_varying_size</code> (<code><a href="../reference/sample_mtdna_geneology_varying_size.html">?sample_mtdna_geneology_varying_size</a></code>) for details in variability in reproductive success (VRS) <span class="citation">(Andersen and Balding 2017)</span>.</p>
+<p>This only sample a genealogy. We also need to build pedigrees:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peds &lt;-<span class="st"> </span><span class="kw"><a href="../reference/build_pedigrees.html">build_pedigrees</a></span>(pop, <span class="dt">progress =</span> <span class="ot">FALSE</span>)
+peds</code></pre></div>
+<pre><code>## List of 8 pedigrees (of size 94, 46, 15, 6, 6, 5, ...)</code></pre>
+<p>We can then plot one pedigree. We take a pedigree with a male individual in the final generation (<code>end_generation_male_individuals</code>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">end_gen_peds &lt;-<span class="st"> </span><span class="kw">lapply</span>(sim$end_generation_male_individuals, get_pedigree_from_individual)
+pedids &lt;-<span class="st"> </span><span class="kw">sapply</span>(end_gen_peds, get_pedigree_id)
+id_tab &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">table</span>(pedids))
+ped_id_endgen &lt;-<span class="st"> </span><span class="kw">as.integer</span>(<span class="kw">names</span>(id_tab)[<span class="dv">1</span>]) <span class="co"># smallest</span>
+indv_index &lt;-<span class="st"> </span><span class="kw">which</span>(pedids ==<span class="st"> </span>ped_id_endgen)[<span class="dv">1</span>]
+ped &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_pedigree_from_individual.html">get_pedigree_from_individual</a></span>(sim$end_generation_male_individuals[[indv_index]])
+<span class="kw"><a href="../reference/pedigree_size.html">pedigree_size</a></span>(ped)</code></pre></div>
+<pre><code>## [1] 46</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ped)</code></pre></div>
+<p><img src="introduction_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+<p>The squares are males and the circles are females.</p>
 </div>
 <div id="adding-mitogenomes" class="section level3">
 <h3 class="hasAnchor">
 <a href="#adding-mitogenomes" class="anchor"></a>Adding mitogenomes</h3>
-<div id="mtdna-information-included" class="section level4">
-<h4 class="hasAnchor">
-<a href="#mtdna-information-included" class="anchor"></a>mtDNA information included</h4>
+<p>We are now ready to add haplotypes/mitogenomes to the individuals. Let us consider</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sites &lt;-<span class="st"> </span><span class="dv">100</span></code></pre></div>
+<p>in the mitogenome for know.</p>
+<p>First, we construct a function to create founder haplotypes. Here, they are just random:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_founder_mito &lt;-<span class="st"> </span>function() {
+  <span class="kw">sample</span>(<span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>), sites, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+}
+x &lt;-<span class="st"> </span><span class="kw">get_founder_mito</span>()
+<span class="kw">head</span>(x)</code></pre></div>
+<pre><code>## [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(x)</code></pre></div>
+<pre><code>## [1] 51</code></pre>
+<p>Let us assume the following mutation rates per site:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mu &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="fl">1e-2</span>, sites)</code></pre></div>
+<p>Now, we can add mitogenomes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/pedigrees_all_populate_haplotypes_custom_founders.html">pedigrees_all_populate_haplotypes_custom_founders</a></span>(
+  <span class="dt">pedigrees =</span> peds,
+  <span class="dt">mutation_rates =</span> mu,
+  <span class="dt">get_founder_haplotype =</span> get_founder_mito, 
+  <span class="dt">progress =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p>We can then try to plot the same pedigree again, this time with information about the individuals’ mitogenomes (namely, the number of variants in each individuals mitogenome):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ped, <span class="dt">num_vars =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="introduction_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+<p>Plotting with the <code>igraph</code> plot quickly becomes difficult to customise. Therefore extensions to the <code>tidygraph</code>/<code>ggraph</code> packages is provided:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidygraph)
+<span class="kw">library</span>(ggraph)</code></pre></div>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/tbl_graph">as_tbl_graph</a></span>(peds) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/activate">activate</a></span>(nodes) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/reexports">filter</a></span>(ped_id ==<span class="st"> </span>ped_id_endgen) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/reexports">mutate</a></span>(<span class="dt">num_vars =</span> <span class="kw">sapply</span>(haplotype, sum))
+
+p &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/ggraph">ggraph</a></span>(g, <span class="dt">layout =</span> <span class="st">'tree'</span>) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_edge_link">geom_edge_link</a></span>() +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_node_point">geom_node_point</a></span>(<span class="kw">aes</span>(<span class="dt">color =</span> sex, <span class="dt">fill =</span> num_vars, <span class="dt">shape =</span> sex), <span class="dt">size =</span> <span class="dv">12</span>, <span class="dt">stroke =</span> <span class="dv">2</span>) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_node_text">geom_node_text</a></span>(<span class="kw">aes</span>(<span class="dt">label =</span> <span class="kw">paste0</span>(name, <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>, num_vars)), <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">color =</span> <span class="st">"white"</span>) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/theme_graph">theme_graph</a></span>(<span class="dt">base_family =</span> <span class="st">""</span>) +
+<span class="st">  </span><span class="kw">scale_shape_manual</span>(<span class="ot">NULL</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"Female"</span> =<span class="st"> </span><span class="dv">21</span>, <span class="st">"Male"</span> =<span class="st"> </span><span class="dv">22</span>)) +
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="ot">NULL</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"Female"</span> =<span class="st"> "black"</span>, <span class="st">"Male"</span> =<span class="st"> "red"</span>))
+p</code></pre></div>
+<p><img src="introduction_files/figure-html/unnamed-chunk-13-1.png" width="1152"></p>
+<p>Here, the top number is the id and the number below is the number of variants in the individual’s mitogenome. Note, how it is possible to get both a (border) color and fill for <code>pch</code> values 21-25.</p>
+<p>We can also extract all haplotypes in this pedigree:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_haplotypes_in_pedigree.html">get_haplotypes_in_pedigree</a></span>(ped)
+<span class="kw">length</span>(haps)</code></pre></div>
+<pre><code>## [1] 46</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="kw">sapply</span>(haps, sum))</code></pre></div>
+<pre><code>## [1] 45.6087</code></pre>
+<p>Or from the last male generation by</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_haplotypes_individuals.html">get_haplotypes_individuals</a></span>(sim$end_generation_male_individuals)
+<span class="kw">length</span>(haps)</code></pre></div>
+<pre><code>## [1] 1000</code></pre>
+<p>In the simulation function <code>sample_mtdna_geneology_varying_size</code>, there is a parameter <code>extra_individuals_generations_return</code> to decide how many individuals are returned in the <code>male_individuals_generations</code> and <code>female_individuals_generations</code> elements. The default is <code>2</code>, meaning that individuals in 2 additional generations (on top of the final generation) are returned. So, with the default, the last three generations of males are available in the <code>male_individuals_generations</code> element.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_haplotypes_individuals.html">get_haplotypes_individuals</a></span>(sim$male_individuals_generations)
+<span class="kw">length</span>(haps)</code></pre></div>
+<pre><code>## [1] 3000</code></pre>
+</div>
+<div id="mtdna-information-included" class="section level3">
+<h3 class="hasAnchor">
+<a href="#mtdna-information-included" class="anchor"></a>mtDNA information included</h3>
 <p>There are several datasets with information about the mitogenome included. There is a help file to each of the datasets which can be found by e.g. <code><a href="../reference/mtdna_partitions.html">?mtdna_partitions</a></code> for the <code>mtdna_partitions</code> dataset.</p>
 <p>First, there is information about the positions from PhyloTree <a href="http://www.phylotree.org/resources/rCRS_annotated.htm" class="uri">http://www.phylotree.org/resources/rCRS_annotated.htm</a> about the revised Cambridge Reference Sequence (rCRS) <span class="citation">(Andrews et al. 1999)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_partitions)
@@ -172,20 +255,59 @@ mtdna_mut_schemes %&gt;%<span class="st"> </span><span class="kw">print</span>(<
 ## 4 Soares 2009 (K = 8)  16569</code></pre>
 <p>This makes it easier to use the mutation rates from for example <code>mtdna_mut_RieuxK4</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_mu &lt;-<span class="st"> </span>mtdna_mut_schemes %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(MutationScheme ==<span class="st"> "Rieux 2014 (K = 4)"</span>, MutRateYearly &gt;<span class="st"> </span><span class="dv">0</span>)
-mu_mean_year &lt;-<span class="st"> </span>d_mu %&gt;%<span class="st"> </span><span class="kw">pull</span>(MutRateYearly)
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/reexports">filter</a></span>(MutationScheme ==<span class="st"> "Rieux 2014 (K = 4)"</span>, MutRateYearly &gt;<span class="st"> </span><span class="dv">0</span>)
+mu_mean_year &lt;-<span class="st"> </span>d_mu %&gt;%<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/reexports">pull</a></span>(MutRateYearly)
 mu_mean_gen &lt;-<span class="st"> </span><span class="dv">25</span>*mu_mean_year</code></pre></div>
 <p>Now, <code>mu_mean_gen</code> contains a mutation rate per generation (of 25 years) for each of the 16033 sites. The probability of one ore more mutations in a single meiosis is then</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">1</span> -<span class="st"> </span><span class="kw">prod</span>(<span class="dv">1</span> -<span class="st"> </span>mu_mean_gen)</code></pre></div>
 <pre><code>## [1] 0.01083419</code></pre>
 <p>Note, that to include variability in the mutation rates, it is probably best to sample a rate per region (in <code>mtdna_mut_RieuxK4</code>), and then distribute that to all sites in the partition.</p>
-</div>
+<p>These rates are easily used to populate mitogenomes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_founder_mito &lt;-<span class="st"> </span>function() {
+  <span class="kw">sample</span>(<span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>), <span class="kw">length</span>(mu_mean_gen), <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+}
+
+<span class="kw"><a href="../reference/pedigrees_all_populate_haplotypes_custom_founders.html">pedigrees_all_populate_haplotypes_custom_founders</a></span>(
+  <span class="dt">pedigrees =</span> peds,
+  <span class="dt">mutation_rates =</span> mu_mean_gen,
+  <span class="dt">get_founder_haplotype =</span> get_founder_mito, 
+  <span class="dt">progress =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p>Number of variants in the last three male generations (not just in the one pedigree, but in entire population):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_haplotypes_individuals.html">get_haplotypes_individuals</a></span>(sim$male_individuals_generations)
+<span class="kw">table</span>(<span class="kw">sapply</span>(haps, sum))</code></pre></div>
+<pre><code>## 
+##      0      1 
+## 241796 239194</code></pre>
+<p>Number of variants in the last male generation (not just in the one pedigree, but in entire population):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_haplotypes_individuals.html">get_haplotypes_individuals</a></span>(sim$end_generation_male_individuals)
+<span class="kw">table</span>(<span class="kw">sapply</span>(haps, sum))</code></pre></div>
+<pre><code>## 
+##     0     1 
+## 80604 79726</code></pre>
+<p>And the same pedigree with new mitogenomes, now where number of variants is a factor to get a discrete fill colour scale:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/tbl_graph">as_tbl_graph</a></span>(peds) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/activate">activate</a></span>(nodes) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/reexports">filter</a></span>(ped_id ==<span class="st"> </span>ped_id_endgen) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidygraph/topics/reexports">mutate</a></span>(<span class="dt">num_vars =</span> <span class="kw">sapply</span>(haplotype, sum))
+
+p &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/ggraph">ggraph</a></span>(g, <span class="dt">layout =</span> <span class="st">'tree'</span>) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_edge_link">geom_edge_link</a></span>() +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_node_point">geom_node_point</a></span>(<span class="kw">aes</span>(<span class="dt">color =</span> sex, <span class="dt">fill =</span> <span class="kw">factor</span>(num_vars), <span class="dt">shape =</span> sex), <span class="dt">size =</span> <span class="dv">12</span>, <span class="dt">stroke =</span> <span class="dv">2</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_node_text">geom_node_text</a></span>(<span class="kw">aes</span>(<span class="dt">label =</span> <span class="kw">paste0</span>(name, <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>, num_vars)), <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">color =</span> <span class="st">"white"</span>) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/theme_graph">theme_graph</a></span>(<span class="dt">base_family =</span> <span class="st">""</span>) +
+<span class="st">  </span><span class="kw">scale_shape_manual</span>(<span class="ot">NULL</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"Female"</span> =<span class="st"> </span><span class="dv">21</span>, <span class="st">"Male"</span> =<span class="st"> </span><span class="dv">22</span>)) +
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="ot">NULL</span>, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"Female"</span> =<span class="st"> "black"</span>, <span class="st">"Male"</span> =<span class="st"> "red"</span>))
+p</code></pre></div>
+<p><img src="introduction_files/figure-html/unnamed-chunk-27-1.png" width="1152"></p>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
+<div id="ref-AndersenPLOSGEN2017">
+<p>Andersen, MM, and DJ Balding. 2017. “How convincing is a matching Y-chromosome profile?” <em>PLOS Genetics</em> 13 (11): e1007028.</p>
+</div>
 <div id="ref-rCRS">
 <p>Andrews, Richard M, Iwona Kubacka, Patrick F Chinnery, Robert N Lightowlers, Douglass M Turnbull, and Neil Howell. 1999. “Reanalysis and revision of the Cambridge reference sequence for human mitochondrial DNA.” <em>Nature Genetics</em> 23.</p>
 </div>

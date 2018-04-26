@@ -106,7 +106,7 @@ get_haplotypes_pids <- function(population, pids) {
 #' [pedigrees_all_populate_haplotypes_custom_founders()].
 #' 
 #' @param individuals Individuals to get haplotypes for.
-#' @return Matrix of haplotypes where row `i` is the haplotype of `individuals[[i]]`.
+#' @return List of haplotypes where element `i` is the haplotype of `individuals[[i]]`.
 #' 
 #' @seealso [get_haplotypes_pids()].
 #' 
@@ -392,8 +392,8 @@ pedigrees_table <- function(pedigrees) {
     .Call('_mitolina_pedigrees_table', PACKAGE = 'mitolina', pedigrees)
 }
 
-get_pedigree <- function(pedigrees, index) {
-    .Call('_mitolina_get_pedigree', PACKAGE = 'mitolina', pedigrees, index)
+get_pedigree_by_0index <- function(pedigrees, index) {
+    .Call('_mitolina_get_pedigree_by_0index', PACKAGE = 'mitolina', pedigrees, index)
 }
 
 print_pedigree <- function(ped) {

@@ -17,11 +17,20 @@ print.mitolina_population <-
   }
 
 #' @export
+print.mitolina_individual <-
+  function(x, ...) {
+    if (!is(x, "mitolina_individual")) stop("x must be a mitolina_individual object")
+    print_individual(x)
+    return(invisible(NULL))
+  }
+
+#' @export
 print.mitolina_pedigreelist <-
   function(x, ...) {
     if (!is(x, "mitolina_pedigreelist")) stop("x must be a mitolina_pedigreelist object")
     
-    sizes <- unlist(lapply(1L:pedigrees_count(x), function(i) pedigree_size(x[[i]])))
+    #sizes <- unlist(lapply(1L:pedigrees_count(x), function(i) pedigree_size(x[[i]])))
+    sizes <- unlist(lapply(seq_len(pedigrees_count(x)), function(i) pedigree_size(get_pedigree_by_0index(x, i-1))))
     sizes_str <- ""
     
     max_print <- 6L
@@ -45,19 +54,19 @@ stop_invalid_id <- function(id) {
   }
 }
 
-#' @export
-`[[.mitolina_pedigreelist` <- function(x, ...) {
-  i <- ..1
-  stop_invalid_id(i)
-  
-  #if (length(i) != 1L || !is.integer(i) || i[1L] <= 0L || i > pedigrees_count(x)) {
-  if (i > pedigrees_count(x)) {
-    stop("Wrong pedigree selected (not that many pedigrees exist)")
-  }
-  
-  p <- get_pedigree(x, i - 1L) # -1 to go to 0-based indexing
-  return(p)
-}
+# @export
+# `[[.mitolina_pedigreelist` <- function(x, ...) {
+#   i <- ..1
+#   stop_invalid_id(i)
+#   
+#   #if (length(i) != 1L || !is.integer(i) || i[1L] <= 0L || i > pedigrees_count(x)) {
+#   if (i > pedigrees_count(x)) {
+#     stop("Wrong pedigree selected (not that many pedigrees exist)")
+#   }
+#   
+#   p <- get_pedigree(x, i - 1L) # -1 to go to 0-based indexing
+#   return(p)
+# }
 
 #' @export
 `[[.mitolina_population` <- function(x, ...) {
@@ -229,11 +238,11 @@ as_tbl_graph.mitolina_pedigreelist <- function(x, ...) {
 }
 
 
-  
+
 # mark_pids vector: use mark_color (with reuse)
 #' @export  
 plot.mitolina_pedigree <-
-  function(x, ids = TRUE, haplotypes = FALSE, locus_sep = " ", mark_pids = NULL, label_color = "black", node_color = "lightgray", mark_color = "orange", ...) {
+  function(x, ids = TRUE, num_vars = FALSE, locus_sep = " ", mark_pids = NULL, label_color = "black", node_color = "lightgray", mark_color = "orange", ...) {
   
     if (!is(x, "mitolina_pedigree")) stop("x must be a mitolina_pedigree object")
     
@@ -249,19 +258,9 @@ plot.mitolina_pedigree <-
       vertex_label <- x_pids
     }
     
-    if (haplotypes) {      
+    if (num_vars) {      
       haps <- get_haplotypes_in_pedigree(x)
-      
-      vertex_label <- unlist(lapply(seq_along(haps), function(h_i) {
-        h <- haps[[h_i]]
-        prefix <- ""
-        
-        if (ids) {
-          prefix <- paste0(x_pids[h_i], ": ")
-        }
-        
-        paste0(strwrap(paste0(prefix, paste0(h, collapse = locus_sep)), width = 15), collapse = "\n")
-      }))
+      vertex_label <- unlist(lapply(haps, sum))
     }
     
     vertex_colors <- rep(node_color, length(vertex_label))
@@ -300,6 +299,3 @@ plot.mitolina_pedigree <-
     return(invisible(NULL))
     #eturn(g)
   }
-  
-
-
