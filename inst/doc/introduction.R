@@ -8,7 +8,7 @@ library(mitolina)
 set.seed(1)
 
 ## ---- message=FALSE------------------------------------------------------
-library(tidyverse)
+library(dplyr)
 
 ## ------------------------------------------------------------------------
 sim <- sample_mtdna_geneology_varying_size(

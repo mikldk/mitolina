@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get pedigree id — get_pedigree_id • mitolina</title>
+<title>Meiotic distance between two individuals — meiotic_dist • mitolina</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,9 +25,10 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Get pedigree id — get_pedigree_id" />
+<meta property="og:title" content="Meiotic distance between two individuals — meiotic_dist" />
 
-<meta property="og:description" content="Get pedigree id" />
+<meta property="og:description" content="Get the number of meioses between two individuals.
+Note, that pedigrees must first have been inferred by build_pedigrees()." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,25 +101,34 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get pedigree id</h1>
+    <h1>Meiotic distance between two individuals</h1>
     
-    <div class="hidden name"><code>get_pedigree_id.Rd</code></div>
+    <div class="hidden name"><code>meiotic_dist.Rd</code></div>
     </div>
 
     
-    <p>Get pedigree id</p>
+    <p>Get the number of meioses between two individuals.
+Note, that pedigrees must first have been inferred by <code><a href='build_pedigrees.html'>build_pedigrees()</a></code>.</p>
     
 
-    <pre class="usage"><span class='fu'>get_pedigree_id</span>(<span class='no'>ped</span>)</pre>
+    <pre class="usage"><span class='fu'>meiotic_dist</span>(<span class='no'>ind1</span>, <span class='no'>ind2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>ped</th>
-      <td><p>Pedigree</p></td>
+      <th>ind1</th>
+      <td><p>Individual 1</p></td>
+    </tr>
+    <tr>
+      <th>ind2</th>
+      <td><p>Individual 2</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Number of meioses between <code>ind1</code> and <code>ind2</code> if they are in the same pedigree, else -1.</p>
     
 
   </div>
@@ -126,7 +136,9 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

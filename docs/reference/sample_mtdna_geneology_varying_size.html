@@ -112,28 +112,35 @@ by a vector of population sizes, one for each generation.</p>
     
 
     <pre class="usage"><span class='fu'>sample_mtdna_geneology_varying_size</span>(<span class='no'>population_sizes_females</span>,
-  <span class='no'>population_sizes_males</span>, <span class='kw'>extra_generations_full</span> <span class='kw'>=</span> <span class='fl'>0L</span>,
-  <span class='kw'>gamma_parameter_shape</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>gamma_parameter_scale</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>5</span>,
-  <span class='kw'>enable_gamma_variance_extension</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>extra_individuals_generations_return</span> <span class='kw'>=</span> <span class='fl'>2L</span>)</pre>
+  <span class='no'>population_sizes_males</span>, <span class='kw'>generations_full</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>generations_return</span> <span class='kw'>=</span> <span class='fl'>3L</span>,
+  <span class='kw'>enable_gamma_variance_extension</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>gamma_parameter_shape</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+  <span class='kw'>gamma_parameter_scale</span> <span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>5</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>population_sizes_females</th>
-      <td><p>The size of the female population at each generation, g. All &gt;= 1.
-population_sizes_femalesg is the population size at generation g.
+      <td><p>The size of the female population at each generation, <code>g</code>. All &gt;= 1.
+<code>population_sizes_females[g]</code> is the population size at generation <code>g</code>.
 The length of population_sizes_females is the number of generations being simulated.</p></td>
     </tr>
     <tr>
       <th>population_sizes_males</th>
-      <td><p>The size of the male population at each generation, g. All &gt;= 0.
-population_sizes_malesg is the population size at generation g.</p></td>
+      <td><p>The size of the male population at each generation, <code>g</code>. All &gt;= 0.
+<code>population_sizes_males[g]</code> is the population size at generation <code>g</code>.</p></td>
     </tr>
     <tr>
-      <th>extra_generations_full</th>
-      <td><p>Additional full generations to be simulated.</p></td>
+      <th>generations_full</th>
+      <td><p>Number of full generations to be simulated.</p></td>
+    </tr>
+    <tr>
+      <th>generations_return</th>
+      <td><p>How many generations to return (pointers to) individuals for.</p></td>
+    </tr>
+    <tr>
+      <th>enable_gamma_variance_extension</th>
+      <td><p>Enable symmetric Dirichlet (and disable standard Wright-Fisher).</p></td>
     </tr>
     <tr>
       <th>gamma_parameter_shape</th>
@@ -144,16 +151,8 @@ population_sizes_malesg is the population size at generation g.</p></td>
       <td><p>Parameter realted to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.</p></td>
     </tr>
     <tr>
-      <th>enable_gamma_variance_extension</th>
-      <td><p>Enable symmetric Dirichlet (and disable standard Wright-Fisher).</p></td>
-    </tr>
-    <tr>
       <th>progress</th>
       <td><p>Show progress.</p></td>
-    </tr>
-    <tr>
-      <th>extra_individuals_generations_return</th>
-      <td><p>How many generations back to return (pointers to) individuals for in addition to the end population?</p></td>
     </tr>
     </table>
     
@@ -166,9 +165,9 @@ population_sizes_malesg is the population size at generation g.</p></td>
 <li><p><code>growth_type</code>. Growth type model.</p></li>
 <li><p><code>sdo_type</code>. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on <code>enable_gamma_variance_extension</code>.</p></li>
 <li><p><code>end_generation_female_individuals</code>. Pointers to female individuals in end generation.</p></li>
-<li><p><code>female_individuals_generations</code>. Pointers to female individuals in end generation in addition to the previous <code>extra_individuals_generations_return</code>.</p></li>
+<li><p><code>female_individuals_generations</code>. Pointers to female individuals in last <code>generations_return</code> generation (if <code>generations_return = 3</code>, then female individuals in the last three generations are returned).</p></li>
 <li><p><code>end_generation_male_individuals</code>. Pointers to male individuals in end generation.</p></li>
-<li><p><code>male_individuals_generations</code>. Pointers to male individuals in end generation in addition to the previous <code>extra_individuals_generations_return</code>.</p></li>
+<li><p><code>male_individuals_generations</code>. Pointers to male individuals in last <code>generations_return</code> generation (if <code>generations_return = 3</code>, then male individuals in the last three generations are returned).</p></li>
 </ul>
 
     
@@ -177,7 +176,7 @@ population_sizes_malesg is the population size at generation g.</p></td>
     <p>By the backwards simulating process of the Wright-Fisher model,
 individuals with no descendants in the end population are not simulated
 If for some reason additional full generations should be simulated,
-the number can be specified via the <code>extra_generations_full</code> parameter.
+the number can be specified via the <code>generations_full</code> parameter.
 This can for example be useful if one wants to simulate the
 final 3 generations although some of these may not get (male) children.</p>
 <p>Let \(\alpha\) be the parameter of a symmetric Dirichlet distribution

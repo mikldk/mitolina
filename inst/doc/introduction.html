@@ -69,7 +69,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to mitolina: MITOchondrial LINeage Analysis</h1>
 <h4 class="author"><em>Mikkel Meyer Andersen</em></h4>
-<h4 class="date"><em>27 April, 2018</em></h4>
+<h4 class="date"><em>30 April, 2018</em></h4>
 
 
 
@@ -79,8 +79,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mitolina)</code></pre></div>
 <p>For reproducibility, the seed for the (pseudo) random number generator is set:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<p>In this vignette, I will use functionality from the <code>tidyverse</code> (the pipe operator from the <code>magrittr</code> package and <code>dplyr</code> functionality). More information about these are available at <a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>, <a href="https://magrittr.tidyverse.org/" class="uri">https://magrittr.tidyverse.org/</a> and <a href="http://dplyr.tidyverse.org/" class="uri">http://dplyr.tidyverse.org/</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre></div>
+<p>In this vignette, I will use functionality from the <code>dplyr</code> (that loads the pipe operator from the <code>magrittr</code> package). More information about these are available at <a href="https://magrittr.tidyverse.org/" class="uri">https://magrittr.tidyverse.org/</a> and <a href="http://dplyr.tidyverse.org/" class="uri">http://dplyr.tidyverse.org/</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre></div>
 <div id="simulating-genealogies" class="section level3">
 <h3>Simulating genealogies</h3>
 <p>A genealogy is simulated by specifying population sizes for females and males.</p>
@@ -164,7 +164,7 @@ p</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps &lt;-<span class="st"> </span><span class="kw">get_haplotypes_individuals</span>(sim$end_generation_male_individuals)
 <span class="kw">length</span>(haps)</code></pre></div>
 <pre><code>## [1] 10</code></pre>
-<p>In the simulation function <code>sample_mtdna_geneology_varying_size</code>, there is a parameter <code>extra_individuals_generations_return</code> to decide how many individuals are returned in the <code>male_individuals_generations</code> and <code>female_individuals_generations</code> elements. The default is <code>2</code>, meaning that individuals in 2 additional generations (on top of the final generation) are returned. So, with the default, the last three generations of males are available in the <code>male_individuals_generations</code> element.</p>
+<p>In the simulation function <code>sample_mtdna_geneology_varying_size</code>, there is a parameter <code>generations_return</code> to decide how many generations are returned in the <code>male_individuals_generations</code> and <code>female_individuals_generations</code> elements. The default is <code>3</code>, meaning that individuals in 3 last generations are returned. So, with the default, the last three generations of males are available in the <code>male_individuals_generations</code> element.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">haps &lt;-<span class="st"> </span><span class="kw">get_haplotypes_individuals</span>(sim$male_individuals_generations)
 <span class="kw">length</span>(haps)</code></pre></div>
 <pre><code>## [1] 30</code></pre>

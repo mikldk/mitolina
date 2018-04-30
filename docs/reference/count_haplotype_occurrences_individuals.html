@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get pedigree id — get_pedigree_id • mitolina</title>
+<title>Count haplotypes occurrences in list of individuals — count_haplotype_occurrences_individuals • mitolina</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,9 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Get pedigree id — get_pedigree_id" />
+<meta property="og:title" content="Count haplotypes occurrences in list of individuals — count_haplotype_occurrences_individuals" />
 
-<meta property="og:description" content="Get pedigree id" />
+<meta property="og:description" content="Counts the number of types haplotype appears in individuals." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,25 +100,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get pedigree id</h1>
+    <h1>Count haplotypes occurrences in list of individuals</h1>
     
-    <div class="hidden name"><code>get_pedigree_id.Rd</code></div>
+    <div class="hidden name"><code>count_haplotype_occurrences_individuals.Rd</code></div>
     </div>
 
     
-    <p>Get pedigree id</p>
+    <p>Counts the number of types <code>haplotype</code> appears in <code>individuals</code>.</p>
     
 
-    <pre class="usage"><span class='fu'>get_pedigree_id</span>(<span class='no'>ped</span>)</pre>
+    <pre class="usage"><span class='fu'>count_haplotype_occurrences_individuals</span>(<span class='no'>individuals</span>, <span class='no'>haplotype</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>ped</th>
-      <td><p>Pedigree</p></td>
+      <th>individuals</th>
+      <td><p>List of individuals to count occurrences in.</p></td>
+    </tr>
+    <tr>
+      <th>haplotype</th>
+      <td><p>Haplotype to count occurrences of.</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Number of times that <code>haplotype</code> occurred amongst <code>individuals</code>.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='get_matches_info.html'>get_matches_info()</a></code>, <code>count_haplotype_occurrences_individuals()</code>.</p></div>
     
 
   </div>
@@ -126,7 +138,11 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

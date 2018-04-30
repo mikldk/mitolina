@@ -26,11 +26,11 @@ For reproducibility, the seed for the (pseudo) random number generator is set:
 set.seed(1)
 ```
 
-In this vignette, I will use functionality from the `tidyverse` (the pipe operator from the `magrittr` package and `dplyr` functionality). 
-More information about these are available at <https://www.tidyverse.org/>, <https://magrittr.tidyverse.org/> and <http://dplyr.tidyverse.org/>.
+In this vignette, I will use functionality from the `dplyr` (that loads the pipe operator from the `magrittr` package). 
+More information about these are available at <https://magrittr.tidyverse.org/> and <http://dplyr.tidyverse.org/>.
 
 ```{r, message=FALSE}
-library(tidyverse)
+library(dplyr)
 ```
 
 ### Simulating genealogies
@@ -156,8 +156,8 @@ haps <- get_haplotypes_individuals(sim$end_generation_male_individuals)
 length(haps)
 ```
 
-In the simulation function `sample_mtdna_geneology_varying_size`, there is a parameter `extra_individuals_generations_return` to decide how many individuals are returned in the `male_individuals_generations` and `female_individuals_generations` elements. 
-The default is `2`, meaning that individuals in 2 additional generations (on top of the final generation) are returned. 
+In the simulation function `sample_mtdna_geneology_varying_size`, there is a parameter `generations_return` to decide how many generations are returned in the `male_individuals_generations` and `female_individuals_generations` elements. 
+The default is `3`, meaning that individuals in 3 last generations are returned. 
 So, with the default, the last three generations of males are available in the `male_individuals_generations` element. 
 
 ```{r}

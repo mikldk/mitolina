@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get pedigree id — get_pedigree_id • mitolina</title>
+<title>Convert haplotypes to hashes (integers) — haplotypes_to_hashes • mitolina</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,9 +25,10 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Get pedigree id — get_pedigree_id" />
+<meta property="og:title" content="Convert haplotypes to hashes (integers) — haplotypes_to_hashes" />
 
-<meta property="og:description" content="Get pedigree id" />
+<meta property="og:description" content="Individuals with the same haplotype will have the same hash (integer)
+and individuals with different haplotypes will have different hashes (integers)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,25 +101,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get pedigree id</h1>
+    <h1>Convert haplotypes to hashes (integers)</h1>
     
-    <div class="hidden name"><code>get_pedigree_id.Rd</code></div>
+    <div class="hidden name"><code>haplotypes_to_hashes.Rd</code></div>
     </div>
 
     
-    <p>Get pedigree id</p>
+    <p>Individuals with the same haplotype will have the same hash (integer)
+and individuals with different haplotypes will have different hashes (integers).</p>
     
 
-    <pre class="usage"><span class='fu'>get_pedigree_id</span>(<span class='no'>ped</span>)</pre>
+    <pre class="usage"><span class='fu'>haplotypes_to_hashes</span>(<span class='no'>haplotypes</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>ped</th>
-      <td><p>Pedigree</p></td>
+      <th>haplotypes</th>
+      <td><p>List of haplotypes (list of logical vectors)</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This can be useful if for example using haplotypes to define groups
+and the haplotype itself is not of interest.</p>
     
 
   </div>
@@ -126,7 +133,9 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>
