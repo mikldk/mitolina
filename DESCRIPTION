@@ -20,6 +20,7 @@ Imports:
     magrittr (>= 1.5),
     methods
 Depends:
+  R (>= 2.10),
   dplyr (>= 0.7.4),
   tidygraph (>= 1.0.0.9999)
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress
@@ -28,5 +29,6 @@ BugReports: https://github.com/mikldk/mitolina/issues
 VignetteBuilder: knitr
 SystemRequirements: C++11
 LazyData: true
+Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("rd", "collate", "namespace"))
 RoxygenNote: 6.0.1

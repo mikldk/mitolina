@@ -9,6 +9,8 @@
 
 //' Get pedigree id
 //' 
+//' @param ped Pedigree
+//' 
 //' @export
 // [[Rcpp::export]]
 int get_pedigree_id(Rcpp::XPtr<Pedigree> ped) { 
@@ -31,6 +33,8 @@ void stopifnot_mitolina_pedigreelist(Rcpp::List pedigrees) {
 
 //' Get number of pedigrees
 //' 
+//' @param pedigrees Pedigrees
+//' 
 //' @export
 // [[Rcpp::export]]
 int pedigrees_count(Rcpp::List pedigrees) {
@@ -40,6 +44,8 @@ int pedigrees_count(Rcpp::List pedigrees) {
 
 //' Get pedigree size
 //' 
+//' @param ped Pedigree
+//' 
 //' @export
 // [[Rcpp::export]]
 int pedigree_size(Rcpp::XPtr<Pedigree> ped) {  
@@ -47,6 +53,8 @@ int pedigree_size(Rcpp::XPtr<Pedigree> ped) {
 }
 
 //' Get distribution of pedigree sizes
+//' 
+//' @param pedigrees Pedigrees
 //' 
 //' @export
 //[[Rcpp::export]]
@@ -84,8 +92,7 @@ Rcpp::XPtr<Pedigree> get_pedigree_by_pedigree_id(Rcpp::XPtr< std::vector<Pedigre
   std::vector<Pedigree*>* peds = pedigrees;
   Pedigree* p = peds->at(index);
   
-  //Rcpp::XPtr<Pedigree> res(p, true);
-  Rcpp::XPtr<Pedigree> res(p, false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
+  Rcpp::XPtr<Pedigree> res(p, RCPP_XPTR_2ND_ARG); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
   res.attr("class") = Rcpp::CharacterVector::create("mitolina_pedigree", "externalptr");
   
   return res;
@@ -109,7 +116,9 @@ void print_pedigree(Rcpp::XPtr<Pedigree> ped) {
   } 
 }
 
-//' get pids in pedigree
+//' Get pids in pedigree
+//' 
+//' @param ped Pedigree
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -128,7 +137,10 @@ Rcpp::IntegerVector get_pids_in_pedigree(Rcpp::XPtr<Pedigree> ped) {
   return res;
 }
 
-//' get genders in pedigree
+//' Get sexes of individuals in pedigree
+//' 
+//' @param ped Pedigree to get sexes for
+//' @return `TRUE` if female, `FALSE` if male
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -147,7 +159,10 @@ Rcpp::LogicalVector get_is_female_in_pedigree(Rcpp::XPtr<Pedigree> ped) {
   return res;
 }
 
-//' get pids in pedigree
+//' Get haplotypes in pedigree
+//' 
+//' @param ped Pedigree to get haplotypes for
+//' @return List with haplotypes
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -187,6 +202,8 @@ Rcpp::CharacterMatrix get_pedigree_edgelist(Rcpp::XPtr<Pedigree> ped) {
 
 
 //' Get pedigree information as graph (mainly intended for plotting)
+//' 
+//' @param ped Pedigree to get as graph
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -228,8 +245,9 @@ Rcpp::List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped) {
 
 
 
-
-//' get pedigrees information in tidy format
+//' Get pedigrees information in tidy format
+//' 
+//' @param pedigrees Pedigrees
 //' 
 // [[Rcpp::export]]
 Rcpp::List get_pedigrees_tidy(Rcpp::List pedigrees) {  

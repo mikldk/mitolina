@@ -12,8 +12,6 @@ pedigrees_all_populate_haplotypes(pedigrees, mutation_rates, progress = TRUE)
 \item{mutation_rates}{Vector with mutation rates, length \code{loci}}
 
 \item{progress}{Show progress}
-
-\item{loci}{Number of loci}
 }
 \description{
 Populate haplotypes from founder and down in all pedigrees.

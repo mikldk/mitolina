@@ -2,10 +2,16 @@
 % Please edit documentation in R/RcppExports.R
 \name{get_generations_from_final}
 \alias{get_generations_from_final}
-\title{Get individual's generations}
+\title{Get individual's generations from final generation}
 \usage{
 get_generations_from_final(individual)
 }
+\arguments{
+\item{individual}{Individual to get number of generations from final generation}
+}
+\value{
+Number of generations from final generation
+}
 \description{
-Get individual's generations
+Get individual's generations from final generation
 }

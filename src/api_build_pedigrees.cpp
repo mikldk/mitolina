@@ -80,7 +80,7 @@ Rcpp::List build_pedigrees(Rcpp::XPtr<Population> population, bool progress = tr
 
     pedigree_id += 1;
 
-    Rcpp::XPtr<Pedigree> ped_res(ped, false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
+    Rcpp::XPtr<Pedigree> ped_res(ped, RCPP_XPTR_2ND_ARG); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
     ped_res.attr("class") = Rcpp::CharacterVector::create("mitolina_pedigree", "externalptr");
     pedigrees.push_back(ped_res);
     
@@ -98,7 +98,7 @@ Rcpp::List build_pedigrees(Rcpp::XPtr<Population> population, bool progress = tr
   }
   
   if (ped->get_all_individuals()->size() > 0) {
-    Rcpp::XPtr<Pedigree> ped_res(ped, false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
+    Rcpp::XPtr<Pedigree> ped_res(ped, RCPP_XPTR_2ND_ARG); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
     ped_res.attr("class") = Rcpp::CharacterVector::create("mitolina_pedigree", "externalptr");
     pedigrees.push_back(ped_res);
   } else {

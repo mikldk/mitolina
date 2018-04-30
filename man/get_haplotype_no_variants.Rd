@@ -6,6 +6,9 @@
 \usage{
 get_haplotype_no_variants(individual)
 }
+\arguments{
+\item{individual}{Individual to get number of variants for}
+}
 \description{
 Number of variants is for example faster when checking for equality or when
 summarising (like plotting). If haplotypes do not have same number of variants, they cannot be equal.

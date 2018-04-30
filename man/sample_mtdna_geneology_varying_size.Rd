@@ -5,30 +5,29 @@
 \title{Simulate a geneology with varying population size.}
 \usage{
 sample_mtdna_geneology_varying_size(population_sizes_females,
-  population_sizes_males, extra_generations_full = 0L,
-  gamma_parameter_shape = 5, gamma_parameter_scale = 1/5,
-  enable_gamma_variance_extension = FALSE, progress = TRUE,
-  extra_individuals_generations_return = 2L)
+  population_sizes_males, generations_full = 1L, generations_return = 3L,
+  enable_gamma_variance_extension = FALSE, gamma_parameter_shape = 5,
+  gamma_parameter_scale = 1/5, progress = TRUE)
 }
 \arguments{
-\item{population_sizes_females}{The size of the female population at each generation, g. All >= 1.
-population_sizes_females\link{g} is the population size at generation g.
+\item{population_sizes_females}{The size of the female population at each generation, \code{g}. All >= 1.
+\code{population_sizes_females[g]} is the population size at generation \code{g}.
 The length of population_sizes_females is the number of generations being simulated.}
 
-\item{population_sizes_males}{The size of the male population at each generation, g. All >= 0.
-population_sizes_males\link{g} is the population size at generation g.}
+\item{population_sizes_males}{The size of the male population at each generation, \code{g}. All >= 0.
+\code{population_sizes_males[g]} is the population size at generation \code{g}.}
 
-\item{extra_generations_full}{Additional full generations to be simulated.}
+\item{generations_full}{Number of full generations to be simulated.}
+
+\item{generations_return}{How many generations to return (pointers to) individuals for.}
+
+\item{enable_gamma_variance_extension}{Enable symmetric Dirichlet (and disable standard Wright-Fisher).}
 
 \item{gamma_parameter_shape}{Parameter related to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.}
 
 \item{gamma_parameter_scale}{Parameter realted to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.}
 
-\item{enable_gamma_variance_extension}{Enable symmetric Dirichlet (and disable standard Wright-Fisher).}
-
 \item{progress}{Show progress.}
-
-\item{extra_individuals_generations_return}{How many generations back to return (pointers to) individuals for in addition to the end population?}
 }
 \value{
 A \code{mitolina_simulation} / list with the following entries:
@@ -39,9 +38,9 @@ A \code{mitolina_simulation} / list with the following entries:
 \item \code{growth_type}. Growth type model.
 \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
 \item \code{end_generation_female_individuals}. Pointers to female individuals in end generation.
-\item \code{female_individuals_generations}. Pointers to female individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
+\item \code{female_individuals_generations}. Pointers to female individuals in last \code{generations_return} generation (if \code{generations_return = 3}, then female individuals in the last three generations are returned).
 \item \code{end_generation_male_individuals}. Pointers to male individuals in end generation.
-\item \code{male_individuals_generations}. Pointers to male individuals in end generation in addition to the previous \code{extra_individuals_generations_return}.
+\item \code{male_individuals_generations}. Pointers to male individuals in last \code{generations_return} generation (if \code{generations_return = 3}, then male individuals in the last three generations are returned).
 }
 }
 \description{
@@ -52,7 +51,7 @@ by a vector of population sizes, one for each generation.
 By the backwards simulating process of the Wright-Fisher model,
 individuals with no descendants in the end population are not simulated
 If for some reason additional full generations should be simulated,
-the number can be specified via the \code{extra_generations_full} parameter.
+the number can be specified via the \code{generations_full} parameter.
 This can for example be useful if one wants to simulate the
 final 3 generations although some of these may not get (male) children.
 

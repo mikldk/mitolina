@@ -94,11 +94,18 @@ print.mitolina_pedigree <-
   
 
 
+#' Convert pedigree to igraph
+#' 
+#' @param x Pedigree
+#' @param \dots ignored
+#' 
+#' @return `igraph` object
+#' 
 #' @importFrom igraph graph_from_data_frame plot.igraph union layout_as_tree layout.reingold.tilford vcount V
 #' @import tibble
 #' @importFrom graphics par
-#' @importFrom methods is
 #' @importFrom utils head
+#' @importFrom methods is
 #' @export
 pedigree_as_igraph <-
   function(x, ...) {
@@ -188,6 +195,19 @@ pedigree_as_igraph <-
 #  return(d)
 #}
 
+
+globalVariables(c("from", "to", "name"))
+
+#' Get nodes and edges 
+#' 
+#' Get nodes and edges in `mitolina_pedigreelist`.
+#' For example to plot via [as_tbl_graph()].
+#' 
+#' @param x `mitolina_pedigreelist`
+#' @param \dots Ignored
+#' 
+#' @return List with entries `nodes` and `edges`
+#' 
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr mutate
 #' @export
@@ -223,6 +243,7 @@ get_nodes_edges <- function(x, ...) {
       
   return(list(nodes = d_indv, edges = d_edges))
 }
+
 
 
 #' @importFrom tidygraph as_tbl_graph tbl_graph

@@ -7,26 +7,42 @@
 
 #include "mitolina_types.h"
 
+//' Get individual by pid
+//' 
+//' @param population Population
+//' @param pid pid
+//' 
+//' @return Individual
+//' 
 //' @export
 // [[Rcpp::export]]
 Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid) {  
   Population* pop = population;
   
   Individual* ind = population->get_individual(pid);
-  //Rcpp::XPtr<Individual> res(ind, true);
-  Rcpp::XPtr<Individual> res(ind, false); // do NOT delete individual when not used any more, it still exists in pedigree and population etc.!
+  Rcpp::XPtr<Individual> res(ind, RCPP_XPTR_2ND_ARG); // do NOT delete individual when not used any more, it still exists in pedigree and population etc.!
   res.attr("class") = Rcpp::CharacterVector::create("mitolina_individual", "externalptr");
   
   return res;
 }
 
 
+//' Get pid from individual
+//' 
+//' @param individual Individual to get pid of
+//' 
+//' @return pid
+//' 
 //' @export
 // [[Rcpp::export]]
 int get_pid(Rcpp::XPtr<Individual> individual) {  
   return individual->get_pid();
 }
 
+//' Print individual
+//' 
+//' @param individual Individual
+//' 
 //' @export
 // [[Rcpp::export]]
 void print_individual(Rcpp::XPtr<Individual> individual) {  
@@ -56,7 +72,10 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
   }
 }
 
-//' Get individual's generations
+//' Get individual's generations from final generation
+//'
+//' @param individual Individual to get number of generations from final generation
+//' @return Number of generations from final generation
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -66,17 +85,26 @@ int get_generations_from_final(Rcpp::XPtr<Individual> individual) {
 
 //' Get pedigree from individual
 //' 
+//' @param individual Individual
+//' 
+//' @return pedigree
+//' 
 //' @export
 //[[Rcpp::export]]
 Rcpp::XPtr<Pedigree> get_pedigree_from_individual(Rcpp::XPtr<Individual> individual) {  
   Individual* i = individual;  
-  Rcpp::XPtr<Pedigree> res(i->get_pedigree(), false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
+  Rcpp::XPtr<Pedigree> res(i->get_pedigree(), RCPP_XPTR_2ND_ARG); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
   res.attr("class") = Rcpp::CharacterVector::create("mitolina_pedigree", "externalptr");
   
   return res;
 }
 
-//' Get pedigree id from pid
+//' Get pedigree ids from pids
+//'
+//' @param population Population
+//' @param pids Pids
+//' 
+//' @return Vector with pedigree ids
 //' 
 //' @export
 // [[Rcpp::export]]

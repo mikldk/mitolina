@@ -19,7 +19,7 @@ using namespace Rcpp;
 //' By the backwards simulating process of the Wright-Fisher model, 
 //' individuals with no descendants in the end population are not simulated 
 //' If for some reason additional full generations should be simulated, 
-//' the number can be specified via the `extra_generations_full` parameter.
+//' the number can be specified via the `generations_full` parameter.
 //' This can for example be useful if one wants to simulate the 
 //' final 3 generations although some of these may not get (male) children.
 //' 
@@ -40,17 +40,17 @@ using namespace Rcpp;
 //' and 
 //' \eqn{`gamma_parameter_scale` = 1/\alpha}.
 //' 
-//' @param population_sizes_females The size of the female population at each generation, g. All >= 1.
-//'        population_sizes_females[g] is the population size at generation g.
+//' @param population_sizes_females The size of the female population at each generation, `g`. All >= 1.
+//'        `population_sizes_females[g]` is the population size at generation `g`.
 //'        The length of population_sizes_females is the number of generations being simulated.
-//' @param population_sizes_males The size of the male population at each generation, g. All >= 0.
-//'        population_sizes_males[g] is the population size at generation g.
-//' @param extra_generations_full Additional full generations to be simulated.
+//' @param population_sizes_males The size of the male population at each generation, `g`. All >= 0.
+//'        `population_sizes_males[g]` is the population size at generation `g`.
+//' @param generations_full Number of full generations to be simulated.
+//' @param generations_return How many generations to return (pointers to) individuals for.
+//' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
 //' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.
 //' @param gamma_parameter_scale Parameter realted to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.
-//' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
 //' @param progress Show progress.
-//' @param extra_individuals_generations_return How many generations back to return (pointers to) individuals for in addition to the end population?
 //' 
 //' @return A `mitolina_simulation` / list with the following entries:
 //' \itemize{
@@ -60,9 +60,9 @@ using namespace Rcpp;
 //'   \item `growth_type`. Growth type model.
 //'   \item `sdo_type`. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on `enable_gamma_variance_extension`.
 //'   \item `end_generation_female_individuals`. Pointers to female individuals in end generation.
-//'   \item `female_individuals_generations`. Pointers to female individuals in end generation in addition to the previous `extra_individuals_generations_return`.
+//'   \item `female_individuals_generations`. Pointers to female individuals in last `generations_return` generation (if `generations_return = 3`, then female individuals in the last three generations are returned).
 //'   \item `end_generation_male_individuals`. Pointers to male individuals in end generation.
-//'   \item `male_individuals_generations`. Pointers to male individuals in end generation in addition to the previous `extra_individuals_generations_return`.
+//'   \item `male_individuals_generations`. Pointers to male individuals in last `generations_return` generation (if `generations_return = 3`, then male individuals in the last three generations are returned).
 //' }
 //' @import Rcpp
 //' @import RcppProgress
@@ -72,11 +72,24 @@ using namespace Rcpp;
 List sample_mtdna_geneology_varying_size(
   IntegerVector population_sizes_females,
   IntegerVector population_sizes_males,
-  int extra_generations_full = 0,  
-  double gamma_parameter_shape = 5.0, double gamma_parameter_scale = 1.0/5.0, 
+  int generations_full = 1,  
+  int generations_return = 3,
   bool enable_gamma_variance_extension = false,
-  bool progress = true, 
-  int extra_individuals_generations_return = 2) {
+  double gamma_parameter_shape = 5.0, double gamma_parameter_scale = 1.0/5.0, 
+  bool progress = true) {
+  
+  if (generations_full <= 0) {
+    Rcpp::stop("generations_full must be at least 1");
+  }
+  // Always include full last generation, but how many additional?
+  int extra_generations_full = generations_full - 1;
+  
+  if (generations_return <= 0) {
+    Rcpp::stop("generations_return must be at least 1");
+  }  
+  // Always include full last generation, but how many additional?
+  int extra_individuals_generations_return = generations_return - 1;
+  
   
   // boolean chosen like this to obey NA's
   bool all_gte_1_females = is_true(all(population_sizes_females >= 1));
@@ -120,7 +133,7 @@ List sample_mtdna_geneology_varying_size(
   
   std::unordered_map<int, Individual*>* population_map = new std::unordered_map<int, Individual*>(); // pid's are garanteed to be unique
   Population* population = new Population(population_map);
-  Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG);
+  Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG_CLEANER);
   population_xptr.attr("class") = CharacterVector::create("mitolina_population", "externalptr");
   
   

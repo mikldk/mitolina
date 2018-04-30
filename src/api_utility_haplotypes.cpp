@@ -108,6 +108,7 @@ Rcpp::LogicalVector get_individuals_is_female(Rcpp::ListOf< Rcpp::XPtr<Individua
   return sexes;
 }
 
+/*
 //' @export
 // [[Rcpp::export]]
 void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::NumericVector mutation_rates) {  
@@ -120,7 +121,7 @@ void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::Nume
     
   ped->populate_haplotypes(loci, mut_rates);
 }
-
+*/
 
 //' Populate haplotypes in pedigrees (founder types same for all).
 //' 
@@ -131,7 +132,6 @@ void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::Nume
 //' Note, that pedigrees must first have been inferred by [build_pedigrees()].
 //' 
 //' @param pedigrees Pedigree list in which to populate haplotypes
-//' @param loci Number of loci
 //' @param mutation_rates Vector with mutation rates, length `loci`
 //' @param progress Show progress
 //'
@@ -139,7 +139,10 @@ void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::Nume
 //' 
 //' @export
 // [[Rcpp::export]]
-void pedigrees_all_populate_haplotypes(Rcpp::List pedigrees, Rcpp::NumericVector mutation_rates, bool progress = true) {
+void pedigrees_all_populate_haplotypes(Rcpp::List pedigrees, 
+                                       Rcpp::NumericVector mutation_rates, 
+                                       bool progress = true) {
+  
   stopifnot_mitolina_pedigreelist(pedigrees);
 
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
@@ -215,6 +218,17 @@ void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::List pedigrees,
   }
 }
 
+//' Get haplotype from an individual
+//' 
+//' Requires that haplotypes are first populated, e.g. 
+//' with [pedigrees_all_populate_haplotypes()] or 
+//' [pedigrees_all_populate_haplotypes_custom_founders()].
+//' 
+//' @param individual Individual to get haplotypes for.
+//' @return Haplotype for `individual`.
+//' 
+//' @seealso [get_haplotypes_individuals()] and [get_haplotypes_pids()].
+//' 
 //' @export
 // [[Rcpp::export]]
 std::vector<bool> get_haplotype(Rcpp::XPtr<Individual> individual) {
@@ -226,12 +240,25 @@ std::vector<bool> get_haplotype(Rcpp::XPtr<Individual> individual) {
 //' Number of variants is for example faster when checking for equality or when 
 //' summarising (like plotting). If haplotypes do not have same number of variants, they cannot be equal.
 //'
+//' @param individual Individual to get number of variants for
+//'
 //' @export
 // [[Rcpp::export]]
 int get_haplotype_no_variants(Rcpp::XPtr<Individual> individual) {
   return individual->get_haplotype_total_no_variants();
 }
 
+//' Count haplotypes occurrences in list of individuals
+//' 
+//' Counts the number of types `haplotype` appears in `individuals`.
+//' 
+//' @param individuals List of individuals to count occurrences in.
+//' @param haplotype Haplotype to count occurrences of.
+//' 
+//' @return Number of times that `haplotype` occurred amongst `individuals`.
+//' 
+//' @seealso [get_matches_info()], [count_haplotype_occurrences_individuals()].
+//' 
 //' @export
 // [[Rcpp::export]]
 int count_haplotype_occurrences_individuals(const Rcpp::List individuals, 
@@ -306,7 +333,27 @@ Rcpp::List get_haplotype_matching_individuals(const Rcpp::List individuals,
   return ret_indv;
 }
 
-
+//' Information about matching individuals
+//' 
+//' Note: This function does not check that individuals in 
+//' `matching_indv` actually match.
+//' 
+//' This gives detailed information about matching individuals in the pedigree, 
+//' e.g. meiotic distances and maximum L0 distance (number of sites they differ) on the path as some of these 
+//' matches may have (back)mutations between in between them (but often this will be 0).
+//' 
+//' @param suspect Individual that others must match the profile of.
+//' @param matching_indv List of matching individuals to get information for.
+//' 
+//' @return Matrix with information about matching individuals. 
+//' Columns in order: meioses (meiotic distance to `suspect`), 
+//' max_L0 (on the path between the matching individual and `suspect`, 
+//' what is the maximum L0 distance between the `suspect`'s profile and the 
+//' profiles of the individuals on the path), 
+//' pid (pid of matching individual)
+//' 
+//' @seealso [count_haplotype_occurrences_individuals()] and [count_haplotype_occurrences_pedigree()].
+//'
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerMatrix get_matches_info(const Rcpp::XPtr<Individual> suspect, const Rcpp::List matching_indv) {
@@ -371,12 +418,39 @@ Rcpp::IntegerMatrix get_matches_info(const Rcpp::XPtr<Individual> suspect, const
 }
   
   
+//' Meiotic distance between two individuals
+//' 
+//' Get the number of meioses between two individuals.
+//' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+//' 
+//' @param ind1 Individual 1
+//' @param ind2 Individual 2
+//' 
+//' @return Number of meioses between `ind1` and `ind2` if they are in the same pedigree, else -1.
+//' 
 //' @export
 // [[Rcpp::export]]
 int meiotic_dist(Rcpp::XPtr<Individual> ind1, Rcpp::XPtr<Individual> ind2) {
   return ind1->meiosis_dist_tree(ind2);
 }
 
+//' Count haplotypes occurrences in pedigree
+//' 
+//' Counts the number of types `haplotype` appears in `pedigree`.
+//' 
+//' @param pedigree Pedigree to count occurrences in.
+//' @param haplotype Haplotype to count occurrences of.
+//' @param generation_upper_bound_in_result Only consider matches in 
+//' generation 0, 1, ... generation_upper_bound_in_result.
+//' -1 means disabled, consider all generations.
+//' End generation is generation 0.
+//' Second last generation is 1. 
+//' And so on.
+//' 
+//' @return Number of times that `haplotype` occurred in `pedigree`.
+//' 
+//' @seealso [get_matches_info()], [count_haplotype_occurrences_individuals()].
+//' 
 //' @export
 // [[Rcpp::export]]
 int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, 
@@ -416,7 +490,16 @@ int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree,
   return count;
 }
 
-
+//' Convert haplotypes to hashes (integers)
+//' 
+//' Individuals with the same haplotype will have the same hash (integer)
+//' and individuals with different haplotypes will have different hashes (integers).
+//' 
+//' This can be useful if for example using haplotypes to define groups 
+//' and the haplotype itself is not of interest.
+//' 
+//' @param haplotypes List of haplotypes (list of logical vectors)
+//' 
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > haplotypes) {   

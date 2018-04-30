@@ -24,7 +24,7 @@ build_pedigrees <- function(population, progress = TRUE) {
 #' By the backwards simulating process of the Wright-Fisher model, 
 #' individuals with no descendants in the end population are not simulated 
 #' If for some reason additional full generations should be simulated, 
-#' the number can be specified via the `extra_generations_full` parameter.
+#' the number can be specified via the `generations_full` parameter.
 #' This can for example be useful if one wants to simulate the 
 #' final 3 generations although some of these may not get (male) children.
 #' 
@@ -45,17 +45,17 @@ build_pedigrees <- function(population, progress = TRUE) {
 #' and 
 #' \eqn{`gamma_parameter_scale` = 1/\alpha}.
 #' 
-#' @param population_sizes_females The size of the female population at each generation, g. All >= 1.
-#'        population_sizes_females[g] is the population size at generation g.
+#' @param population_sizes_females The size of the female population at each generation, `g`. All >= 1.
+#'        `population_sizes_females[g]` is the population size at generation `g`.
 #'        The length of population_sizes_females is the number of generations being simulated.
-#' @param population_sizes_males The size of the male population at each generation, g. All >= 0.
-#'        population_sizes_males[g] is the population size at generation g.
-#' @param extra_generations_full Additional full generations to be simulated.
+#' @param population_sizes_males The size of the male population at each generation, `g`. All >= 0.
+#'        `population_sizes_males[g]` is the population size at generation `g`.
+#' @param generations_full Number of full generations to be simulated.
+#' @param generations_return How many generations to return (pointers to) individuals for.
+#' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
 #' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.
 #' @param gamma_parameter_scale Parameter realted to symmetric Dirichlet distribution for each man's probability to be mother. Refer to details.
-#' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
 #' @param progress Show progress.
-#' @param extra_individuals_generations_return How many generations back to return (pointers to) individuals for in addition to the end population?
 #' 
 #' @return A `mitolina_simulation` / list with the following entries:
 #' \itemize{
@@ -65,16 +65,16 @@ build_pedigrees <- function(population, progress = TRUE) {
 #'   \item `growth_type`. Growth type model.
 #'   \item `sdo_type`. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on `enable_gamma_variance_extension`.
 #'   \item `end_generation_female_individuals`. Pointers to female individuals in end generation.
-#'   \item `female_individuals_generations`. Pointers to female individuals in end generation in addition to the previous `extra_individuals_generations_return`.
+#'   \item `female_individuals_generations`. Pointers to female individuals in last `generations_return` generation (if `generations_return = 3`, then female individuals in the last three generations are returned).
 #'   \item `end_generation_male_individuals`. Pointers to male individuals in end generation.
-#'   \item `male_individuals_generations`. Pointers to male individuals in end generation in addition to the previous `extra_individuals_generations_return`.
+#'   \item `male_individuals_generations`. Pointers to male individuals in last `generations_return` generation (if `generations_return = 3`, then male individuals in the last three generations are returned).
 #' }
 #' @import Rcpp
 #' @import RcppProgress
 #' @import RcppArmadillo
 #' @export
-sample_mtdna_geneology_varying_size <- function(population_sizes_females, population_sizes_males, extra_generations_full = 0L, gamma_parameter_shape = 5.0, gamma_parameter_scale = 1.0/5.0, enable_gamma_variance_extension = FALSE, progress = TRUE, extra_individuals_generations_return = 2L) {
-    .Call('_mitolina_sample_mtdna_geneology_varying_size', PACKAGE = 'mitolina', population_sizes_females, population_sizes_males, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, extra_individuals_generations_return)
+sample_mtdna_geneology_varying_size <- function(population_sizes_females, population_sizes_males, generations_full = 1L, generations_return = 3L, enable_gamma_variance_extension = FALSE, gamma_parameter_shape = 5.0, gamma_parameter_scale = 1.0/5.0, progress = TRUE) {
+    .Call('_mitolina_sample_mtdna_geneology_varying_size', PACKAGE = 'mitolina', population_sizes_females, population_sizes_males, generations_full, generations_return, enable_gamma_variance_extension, gamma_parameter_shape, gamma_parameter_scale, progress)
 }
 
 #' Get haplotypes from a vector of pids.
@@ -121,11 +121,6 @@ get_individuals_is_female <- function(individuals) {
     .Call('_mitolina_get_individuals_is_female', PACKAGE = 'mitolina', individuals)
 }
 
-#' @export
-pedigree_populate_haplotypes <- function(ped, loci, mutation_rates) {
-    invisible(.Call('_mitolina_pedigree_populate_haplotypes', PACKAGE = 'mitolina', ped, loci, mutation_rates))
-}
-
 #' Populate haplotypes in pedigrees (founder types same for all).
 #' 
 #' Populate haplotypes from founder and down in all pedigrees.
@@ -135,7 +130,6 @@ pedigree_populate_haplotypes <- function(ped, loci, mutation_rates) {
 #' Note, that pedigrees must first have been inferred by [build_pedigrees()].
 #' 
 #' @param pedigrees Pedigree list in which to populate haplotypes
-#' @param loci Number of loci
 #' @param mutation_rates Vector with mutation rates, length `loci`
 #' @param progress Show progress
 #'
@@ -166,6 +160,17 @@ pedigrees_all_populate_haplotypes_custom_founders <- function(pedigrees, mutatio
     invisible(.Call('_mitolina_pedigrees_all_populate_haplotypes_custom_founders', PACKAGE = 'mitolina', pedigrees, mutation_rates, get_founder_haplotype, progress))
 }
 
+#' Get haplotype from an individual
+#' 
+#' Requires that haplotypes are first populated, e.g. 
+#' with [pedigrees_all_populate_haplotypes()] or 
+#' [pedigrees_all_populate_haplotypes_custom_founders()].
+#' 
+#' @param individual Individual to get haplotypes for.
+#' @return Haplotype for `individual`.
+#' 
+#' @seealso [get_haplotypes_individuals()] and [get_haplotypes_pids()].
+#' 
 #' @export
 get_haplotype <- function(individual) {
     .Call('_mitolina_get_haplotype', PACKAGE = 'mitolina', individual)
@@ -176,11 +181,24 @@ get_haplotype <- function(individual) {
 #' Number of variants is for example faster when checking for equality or when 
 #' summarising (like plotting). If haplotypes do not have same number of variants, they cannot be equal.
 #'
+#' @param individual Individual to get number of variants for
+#'
 #' @export
 get_haplotype_no_variants <- function(individual) {
     .Call('_mitolina_get_haplotype_no_variants', PACKAGE = 'mitolina', individual)
 }
 
+#' Count haplotypes occurrences in list of individuals
+#' 
+#' Counts the number of types `haplotype` appears in `individuals`.
+#' 
+#' @param individuals List of individuals to count occurrences in.
+#' @param haplotype Haplotype to count occurrences of.
+#' 
+#' @return Number of times that `haplotype` occurred amongst `individuals`.
+#' 
+#' @seealso [get_matches_info()], [count_haplotype_occurrences_individuals()].
+#' 
 #' @export
 count_haplotype_occurrences_individuals <- function(individuals, haplotype) {
     .Call('_mitolina_count_haplotype_occurrences_individuals', PACKAGE = 'mitolina', individuals, haplotype)
@@ -199,21 +217,79 @@ get_haplotype_matching_individuals <- function(individuals, haplotype) {
     .Call('_mitolina_get_haplotype_matching_individuals', PACKAGE = 'mitolina', individuals, haplotype)
 }
 
+#' Information about matching individuals
+#' 
+#' Note: This function does not check that individuals in 
+#' `matching_indv` actually match.
+#' 
+#' This gives detailed information about matching individuals in the pedigree, 
+#' e.g. meiotic distances and maximum L0 distance (number of sites they differ) on the path as some of these 
+#' matches may have (back)mutations between in between them (but often this will be 0).
+#' 
+#' @param suspect Individual that others must match the profile of.
+#' @param matching_indv List of matching individuals to get information for.
+#' 
+#' @return Matrix with information about matching individuals. 
+#' Columns in order: meioses (meiotic distance to `suspect`), 
+#' max_L0 (on the path between the matching individual and `suspect`, 
+#' what is the maximum L0 distance between the `suspect`'s profile and the 
+#' profiles of the individuals on the path), 
+#' pid (pid of matching individual)
+#' 
+#' @seealso [count_haplotype_occurrences_individuals()] and [count_haplotype_occurrences_pedigree()].
+#'
 #' @export
 get_matches_info <- function(suspect, matching_indv) {
     .Call('_mitolina_get_matches_info', PACKAGE = 'mitolina', suspect, matching_indv)
 }
 
+#' Meiotic distance between two individuals
+#' 
+#' Get the number of meioses between two individuals.
+#' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+#' 
+#' @param ind1 Individual 1
+#' @param ind2 Individual 2
+#' 
+#' @return Number of meioses between `ind1` and `ind2` if they are in the same pedigree, else -1.
+#' 
 #' @export
 meiotic_dist <- function(ind1, ind2) {
     .Call('_mitolina_meiotic_dist', PACKAGE = 'mitolina', ind1, ind2)
 }
 
+#' Count haplotypes occurrences in pedigree
+#' 
+#' Counts the number of types `haplotype` appears in `pedigree`.
+#' 
+#' @param pedigree Pedigree to count occurrences in.
+#' @param haplotype Haplotype to count occurrences of.
+#' @param generation_upper_bound_in_result Only consider matches in 
+#' generation 0, 1, ... generation_upper_bound_in_result.
+#' -1 means disabled, consider all generations.
+#' End generation is generation 0.
+#' Second last generation is 1. 
+#' And so on.
+#' 
+#' @return Number of times that `haplotype` occurred in `pedigree`.
+#' 
+#' @seealso [get_matches_info()], [count_haplotype_occurrences_individuals()].
+#' 
 #' @export
 count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
     .Call('_mitolina_count_haplotype_occurrences_pedigree', PACKAGE = 'mitolina', pedigree, haplotype, generation_upper_bound_in_result)
 }
 
+#' Convert haplotypes to hashes (integers)
+#' 
+#' Individuals with the same haplotype will have the same hash (integer)
+#' and individuals with different haplotypes will have different hashes (integers).
+#' 
+#' This can be useful if for example using haplotypes to define groups 
+#' and the haplotype itself is not of interest.
+#' 
+#' @param haplotypes List of haplotypes (list of logical vectors)
+#' 
 #' @export
 haplotypes_to_hashes <- function(haplotypes) {
     .Call('_mitolina_haplotypes_to_hashes', PACKAGE = 'mitolina', haplotypes)
@@ -268,22 +344,42 @@ get_haplotype_matching_individuals_from_hashmap <- function(hashmap, haplotype) 
     .Call('_mitolina_get_haplotype_matching_individuals_from_hashmap', PACKAGE = 'mitolina', hashmap, haplotype)
 }
 
+#' Get individual by pid
+#' 
+#' @param population Population
+#' @param pid pid
+#' 
+#' @return Individual
+#' 
 #' @export
 get_individual <- function(population, pid) {
     .Call('_mitolina_get_individual', PACKAGE = 'mitolina', population, pid)
 }
 
+#' Get pid from individual
+#' 
+#' @param individual Individual to get pid of
+#' 
+#' @return pid
+#' 
 #' @export
 get_pid <- function(individual) {
     .Call('_mitolina_get_pid', PACKAGE = 'mitolina', individual)
 }
 
+#' Print individual
+#' 
+#' @param individual Individual
+#' 
 #' @export
 print_individual <- function(individual) {
     invisible(.Call('_mitolina_print_individual', PACKAGE = 'mitolina', individual))
 }
 
-#' Get individual's generations
+#' Get individual's generations from final generation
+#'
+#' @param individual Individual to get number of generations from final generation
+#' @return Number of generations from final generation
 #' 
 #' @export
 get_generations_from_final <- function(individual) {
@@ -292,12 +388,21 @@ get_generations_from_final <- function(individual) {
 
 #' Get pedigree from individual
 #' 
+#' @param individual Individual
+#' 
+#' @return pedigree
+#' 
 #' @export
 get_pedigree_from_individual <- function(individual) {
     .Call('_mitolina_get_pedigree_from_individual', PACKAGE = 'mitolina', individual)
 }
 
-#' Get pedigree id from pid
+#' Get pedigree ids from pids
+#'
+#' @param population Population
+#' @param pids Pids
+#' 
+#' @return Vector with pedigree ids
 #' 
 #' @export
 get_pedigree_id_from_pid <- function(population, pids) {
@@ -363,12 +468,16 @@ pedigree_size_generation <- function(pedigree, generation_upper_bound_in_result 
 
 #' Get pedigree id
 #' 
+#' @param ped Pedigree
+#' 
 #' @export
 get_pedigree_id <- function(ped) {
     .Call('_mitolina_get_pedigree_id', PACKAGE = 'mitolina', ped)
 }
 
 #' Get number of pedigrees
+#' 
+#' @param pedigrees Pedigrees
 #' 
 #' @export
 pedigrees_count <- function(pedigrees) {
@@ -377,12 +486,16 @@ pedigrees_count <- function(pedigrees) {
 
 #' Get pedigree size
 #' 
+#' @param ped Pedigree
+#' 
 #' @export
 pedigree_size <- function(ped) {
     .Call('_mitolina_pedigree_size', PACKAGE = 'mitolina', ped)
 }
 
 #' Get distribution of pedigree sizes
+#' 
+#' @param pedigrees Pedigrees
 #' 
 #' @export
 pedigrees_table <- function(pedigrees) {
@@ -393,21 +506,29 @@ print_pedigree <- function(ped) {
     invisible(.Call('_mitolina_print_pedigree', PACKAGE = 'mitolina', ped))
 }
 
-#' get pids in pedigree
+#' Get pids in pedigree
+#' 
+#' @param ped Pedigree
 #' 
 #' @export
 get_pids_in_pedigree <- function(ped) {
     .Call('_mitolina_get_pids_in_pedigree', PACKAGE = 'mitolina', ped)
 }
 
-#' get genders in pedigree
+#' Get sexes of individuals in pedigree
+#' 
+#' @param ped Pedigree to get sexes for
+#' @return `TRUE` if female, `FALSE` if male
 #' 
 #' @export
 get_is_female_in_pedigree <- function(ped) {
     .Call('_mitolina_get_is_female_in_pedigree', PACKAGE = 'mitolina', ped)
 }
 
-#' get pids in pedigree
+#' Get haplotypes in pedigree
+#' 
+#' @param ped Pedigree to get haplotypes for
+#' @return List with haplotypes
 #' 
 #' @export
 get_haplotypes_in_pedigree <- function(ped) {
@@ -420,12 +541,16 @@ get_pedigree_edgelist <- function(ped) {
 
 #' Get pedigree information as graph (mainly intended for plotting)
 #' 
+#' @param ped Pedigree to get as graph
+#' 
 #' @export
 get_pedigree_as_graph <- function(ped) {
     .Call('_mitolina_get_pedigree_as_graph', PACKAGE = 'mitolina', ped)
 }
 
-#' get pedigrees information in tidy format
+#' Get pedigrees information in tidy format
+#' 
+#' @param pedigrees Pedigrees
 #' 
 get_pedigrees_tidy <- function(pedigrees) {
     .Call('_mitolina_get_pedigrees_tidy', PACKAGE = 'mitolina', pedigrees)

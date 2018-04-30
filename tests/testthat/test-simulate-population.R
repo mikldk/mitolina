@@ -4,10 +4,10 @@ set.seed(1)
 sim_res_growth <- sample_mtdna_geneology_varying_size(
   population_sizes_females = rep(1e3, 20),
   population_sizes_males = c(0L, rep(1e3, 19)),
+  generations_full = 3,
   enable_gamma_variance_extension = TRUE,
   gamma_parameter_shape = 5,
   gamma_parameter_scale = 1/5,
-  extra_generations_full = 2,
   progress = FALSE)
 
 test_that("sample_geneology works", {

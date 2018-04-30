@@ -20,20 +20,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_mtdna_geneology_varying_size
-List sample_mtdna_geneology_varying_size(IntegerVector population_sizes_females, IntegerVector population_sizes_males, int extra_generations_full, double gamma_parameter_shape, double gamma_parameter_scale, bool enable_gamma_variance_extension, bool progress, int extra_individuals_generations_return);
-RcppExport SEXP _mitolina_sample_mtdna_geneology_varying_size(SEXP population_sizes_femalesSEXP, SEXP population_sizes_malesSEXP, SEXP extra_generations_fullSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP progressSEXP, SEXP extra_individuals_generations_returnSEXP) {
+List sample_mtdna_geneology_varying_size(IntegerVector population_sizes_females, IntegerVector population_sizes_males, int generations_full, int generations_return, bool enable_gamma_variance_extension, double gamma_parameter_shape, double gamma_parameter_scale, bool progress);
+RcppExport SEXP _mitolina_sample_mtdna_geneology_varying_size(SEXP population_sizes_femalesSEXP, SEXP population_sizes_malesSEXP, SEXP generations_fullSEXP, SEXP generations_returnSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP progressSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type population_sizes_females(population_sizes_femalesSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type population_sizes_males(population_sizes_malesSEXP);
-    Rcpp::traits::input_parameter< int >::type extra_generations_full(extra_generations_fullSEXP);
+    Rcpp::traits::input_parameter< int >::type generations_full(generations_fullSEXP);
+    Rcpp::traits::input_parameter< int >::type generations_return(generations_returnSEXP);
+    Rcpp::traits::input_parameter< bool >::type enable_gamma_variance_extension(enable_gamma_variance_extensionSEXP);
     Rcpp::traits::input_parameter< double >::type gamma_parameter_shape(gamma_parameter_shapeSEXP);
     Rcpp::traits::input_parameter< double >::type gamma_parameter_scale(gamma_parameter_scaleSEXP);
-    Rcpp::traits::input_parameter< bool >::type enable_gamma_variance_extension(enable_gamma_variance_extensionSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
-    Rcpp::traits::input_parameter< int >::type extra_individuals_generations_return(extra_individuals_generations_returnSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_mtdna_geneology_varying_size(population_sizes_females, population_sizes_males, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, extra_individuals_generations_return));
+    rcpp_result_gen = Rcpp::wrap(sample_mtdna_geneology_varying_size(population_sizes_females, population_sizes_males, generations_full, generations_return, enable_gamma_variance_extension, gamma_parameter_shape, gamma_parameter_scale, progress));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -69,18 +69,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::ListOf< Rcpp::XPtr<Individual> > >::type individuals(individualsSEXP);
     rcpp_result_gen = Rcpp::wrap(get_individuals_is_female(individuals));
     return rcpp_result_gen;
-END_RCPP
-}
-// pedigree_populate_haplotypes
-void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::NumericVector mutation_rates);
-RcppExport SEXP _mitolina_pedigree_populate_haplotypes(SEXP pedSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type ped(pedSEXP);
-    Rcpp::traits::input_parameter< int >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
-    pedigree_populate_haplotypes(ped, loci, mutation_rates);
-    return R_NilValue;
 END_RCPP
 }
 // pedigrees_all_populate_haplotypes
@@ -498,7 +486,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_get_haplotypes_pids", (DL_FUNC) &_mitolina_get_haplotypes_pids, 2},
     {"_mitolina_get_haplotypes_individuals", (DL_FUNC) &_mitolina_get_haplotypes_individuals, 1},
     {"_mitolina_get_individuals_is_female", (DL_FUNC) &_mitolina_get_individuals_is_female, 1},
-    {"_mitolina_pedigree_populate_haplotypes", (DL_FUNC) &_mitolina_pedigree_populate_haplotypes, 3},
     {"_mitolina_pedigrees_all_populate_haplotypes", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes, 3},
     {"_mitolina_pedigrees_all_populate_haplotypes_custom_founders", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes_custom_founders, 4},
     {"_mitolina_get_haplotype", (DL_FUNC) &_mitolina_get_haplotype, 1},

@@ -2,10 +2,16 @@
 % Please edit documentation in R/RcppExports.R
 \name{get_is_female_in_pedigree}
 \alias{get_is_female_in_pedigree}
-\title{get genders in pedigree}
+\title{Get sexes of individuals in pedigree}
 \usage{
 get_is_female_in_pedigree(ped)
 }
+\arguments{
+\item{ped}{Pedigree to get sexes for}
+}
+\value{
+\code{TRUE} if female, \code{FALSE} if male
+}
 \description{
-get genders in pedigree
+Get sexes of individuals in pedigree
 }
