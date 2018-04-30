@@ -30,6 +30,9 @@ sudo: true
 dist: trusty
 cache: packages
 
+apt_packages:
+  - libudunits2-dev
+
 matrix:
   include:
   - r: oldrel
