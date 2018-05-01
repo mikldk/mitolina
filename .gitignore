@@ -42,3 +42,4 @@ src/*.so
 
 #
 paper*
+codemeta.json

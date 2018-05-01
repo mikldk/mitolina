@@ -1,6 +1,6 @@
 Package: mitolina
 Type: Package
-Title: MItochondrial LINeage Analysis
+Title: MITOchondrial LINeage Analysis
 Version: 0.0.1
 Date: 2018-04-24
 Authors@R: c(
@@ -9,7 +9,7 @@ Authors@R: c(
   )
 Author: Mikkel Meyer Andersen [aut, cre]
 Maintainer: Mikkel Meyer Andersen <mikl@math.aau.dk>
-Description: Simulation and tools for analysing mitochondrial lineages. Genealogies are simulated backwards and binary mtDNA imposed forwards with mutations. Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.
+Description: Simulation and tools for analysing mitochondrial lineages. Genealogies are simulated backwards and binary mtDNA/mitochondrial genomes (mitogenomes) imposed forwards from founders with mutations. Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.
 License: GPL (>= 2) | file LICENSE
 Imports:
     Rcpp (>= 0.12.7),
