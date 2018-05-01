@@ -30,8 +30,10 @@ sudo: true
 dist: trusty
 cache: packages
 
-apt_packages:
-  - libudunits2-dev
+addons:
+  apt:
+    packages:
+    - libudunits2-dev
 
 r-packages:
   - ggraph
