@@ -48,9 +48,9 @@ Rcpp::XPtr<Population> test_create_population() {
   Individual* i12 = new Individual(12, 3, true); indvs.push_back(i12);
   Individual* i13 = new Individual(13, 2, true); indvs.push_back(i13);
   Individual* i14 = new Individual(14, 1, true); indvs.push_back(i14);
-  Individual* i15 = new Individual(15, 3, false); indvs.push_back(i15);
-  Individual* i16 = new Individual(16, 3, false); indvs.push_back(i16);
-  Individual* i17 = new Individual(17, 3, false); indvs.push_back(i17);
+  Individual* i15 = new Individual(15, 0, false); indvs.push_back(i15);
+  Individual* i16 = new Individual(16, 0, false); indvs.push_back(i16);
+  Individual* i17 = new Individual(17, 0, false); indvs.push_back(i17);
   
   Individual* i18 = new Individual(18, 1, false); indvs.push_back(i18);  
   Individual* i19 = new Individual(19, 1, false); indvs.push_back(i19);

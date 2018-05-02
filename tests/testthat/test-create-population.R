@@ -215,9 +215,23 @@ test_that("print_individual", {
                 fixed = TRUE)
 })
 
+test_that("print_individual", {
+  expect_output(print_individual(get_individual(test_pop, 10)), 
+                "  pid = 10 [F] in generation 2 with mother pid = 11 and children (n = 2): 
+    pid = 8 [F] in generation 1 with mother pid = 10 and 2 children
+    pid = 19 [M] in generation 1 with mother pid = 10 and 0 children",
+                fixed = TRUE)
+})
+
+
 test_that("get_pedigree_id_from_pid", {
   expect_equal(get_pedigree_id(peds[[1]]), 1)
   expect_equal(get_pedigree_id(peds[[2]]), 2)
+})
+
+test_that("get_pedigree_from_individual", {
+  expect_equal(get_pedigree_id(get_pedigree_from_individual(get_individual(test_pop, 10))), 
+               get_pedigree_id_from_pid(test_pop, 10))
 })
 
 test_that("get_pedigree_id_from_pid", {
@@ -254,6 +268,61 @@ peds_tidy <- get_pedigrees_tidy(pedigrees = peds)
 test_that("get_pedigrees_tidy", {
   expect_equal(unlist(peds_tidy$ped_ids), c(1, 2))
 })
+
+
+
+
+#######################################################
+
+meis_dist_0 <- meioses_generation_distribution(individual = get_individual(test_pop, 1), 
+                                               generation_upper_bound_in_result = 0)
+
+
+test_that("meioses_generation_distribution gen 0", {
+  expect_true(all(meis_dist_0[, 1L] == 0L))
+  
+  # itself
+  expect_equal(meis_dist_0[1L, 2L], c("meioses" = 0L)) 
+  expect_equal(meis_dist_0[1L, 3L], c("count" = 1L))
+  
+  # 2 indvs (pid = 2, 3) in dist 4
+  expect_equal(meis_dist_0[2L, 2L], c("meioses" = 4L)) 
+  expect_equal(meis_dist_0[2L, 3L], c("count" = 2L))
+  
+  # 2 indvs (pid = 4, 5) in dist 6
+  expect_equal(meis_dist_0[3L, 2L], c("meioses" = 6L)) 
+  expect_equal(meis_dist_0[3L, 3L], c("count" = 2L))
+})
+
+
+test_that("pedigree_size_generation gen 0", {
+  # 1 female in generation 0
+  expect_equal(pedigree_size_generation(peds[[1]], TRUE, 0), 1L)
+  
+  # 4 males in generation 0
+  expect_equal(pedigree_size_generation(peds[[1]], FALSE, 0), 4L)
+  
+  # 7 female in total
+  expect_equal(pedigree_size_generation(peds[[1]], TRUE, -1), 7L)
+  
+  # 5 males in total
+  expect_equal(pedigree_size_generation(peds[[1]], FALSE, -1), 5L)
+})
+
+test_that("population_size_generation gen 0", {
+  # 1 female in generation 0
+  expect_equal(population_size_generation(test_pop, TRUE, 0), 1L)
+  
+  # 4+3 males in generation 0
+  expect_equal(population_size_generation(test_pop, FALSE, 0), 4L+3L)
+  
+  # 7+3 female in total
+  expect_equal(population_size_generation(test_pop, TRUE, -1), 7L+3L)
+  
+  # 5+4 males in total
+  expect_equal(population_size_generation(test_pop, FALSE, -1), 5L+4L)
+})
+
 
 
 #######################################################

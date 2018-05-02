@@ -147,12 +147,13 @@ int population_size_generation(Rcpp::XPtr<Population> population, bool is_female
 //' Note the `generation_upper_bound_in_result` parameter.
 //' 
 //' @param pedigree Pedigree to get size of
+//' @param is_female true to count females, false to count males
 //' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
 //' 0 only include the final generation. 1 only second last generation etc.
 //' 
 //' @export
 // [[Rcpp::export]]
-int pedigree_size_generation(Rcpp::XPtr<Pedigree> pedigree, int generation_upper_bound_in_result = -1) {  
+int pedigree_size_generation(Rcpp::XPtr<Pedigree> pedigree, bool is_female = true, int generation_upper_bound_in_result = -1) {  
   std::vector<Individual*>* family = pedigree->get_all_individuals();
   
   int size = 0;
@@ -161,6 +162,10 @@ int pedigree_size_generation(Rcpp::XPtr<Pedigree> pedigree, int generation_upper
     int generation = dest->get_generations_from_final();
     
     if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
+      continue;
+    }
+    
+    if (dest->is_female() != is_female) {
       continue;
     }
     

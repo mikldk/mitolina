@@ -458,12 +458,13 @@ population_size_generation <- function(population, is_female = TRUE, generation_
 #' Note the `generation_upper_bound_in_result` parameter.
 #' 
 #' @param pedigree Pedigree to get size of
+#' @param is_female true to count females, false to count males
 #' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
 #' 0 only include the final generation. 1 only second last generation etc.
 #' 
 #' @export
-pedigree_size_generation <- function(pedigree, generation_upper_bound_in_result = -1L) {
-    .Call('_mitolina_pedigree_size_generation', PACKAGE = 'mitolina', pedigree, generation_upper_bound_in_result)
+pedigree_size_generation <- function(pedigree, is_female = TRUE, generation_upper_bound_in_result = -1L) {
+    .Call('_mitolina_pedigree_size_generation', PACKAGE = 'mitolina', pedigree, is_female, generation_upper_bound_in_result)
 }
 
 #' Get pedigree id

@@ -4,10 +4,13 @@
 \alias{pedigree_size_generation}
 \title{Size of pedigree}
 \usage{
-pedigree_size_generation(pedigree, generation_upper_bound_in_result = -1L)
+pedigree_size_generation(pedigree, is_female = TRUE,
+  generation_upper_bound_in_result = -1L)
 }
 \arguments{
 \item{pedigree}{Pedigree to get size of}
+
+\item{is_female}{true to count females, false to count males}
 
 \item{generation_upper_bound_in_result}{Limit on generation to include in count; -1 means no limit.
 0 only include the final generation. 1 only second last generation etc.}
