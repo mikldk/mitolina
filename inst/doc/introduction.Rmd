@@ -33,7 +33,7 @@ More information about these are available at <https://magrittr.tidyverse.org/> 
 library(dplyr)
 ```
 
-### Simulating genealogies
+## Simulating genealogies
 
 A genealogy is simulated by specifying population sizes for females and males.
 
@@ -76,7 +76,7 @@ plot(ped)
 
 The squares are males and the circles are females.
 
-### Adding mitogenomes
+## Adding mitogenomes
 
 We are now ready to add haplotypes/mitogenomes to the individuals. Let us consider 
 ```{r}
@@ -166,7 +166,7 @@ length(haps)
 ```
 
 
-### mtDNA information included
+## mtDNA mutation schemes
 
 There are several datasets with information about the mitogenome included.
 There is a help file to each of the datasets which can be found by e.g. `?mtdna_partitions` for 

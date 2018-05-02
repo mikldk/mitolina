@@ -23,7 +23,7 @@ Rcpp::XPtr<Population> test_create_population() {
     new std::unordered_map<int, Individual*>(); 
   
   Population* population = new Population(population_map);
-  Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG);
+  Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG_CLEANER);
   population_xptr.attr("class") = CharacterVector::create("mitolina_population", "externalptr");
   
   //////////

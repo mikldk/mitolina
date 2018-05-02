@@ -72,7 +72,7 @@
       <h1>Introduction to mitolina: MITOchondrial LINeage Analysis</h1>
                         <h4 class="author">Mikkel Meyer Andersen</h4>
             
-            <h4 class="date">30 April, 2018</h4>
+            <h4 class="date">02 May, 2018</h4>
       
       
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -90,9 +90,10 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
 <p>In this vignette, I will use functionality from the <code>dplyr</code> (that loads the pipe operator from the <code>magrittr</code> package). More information about these are available at <a href="https://magrittr.tidyverse.org/" class="uri">https://magrittr.tidyverse.org/</a> and <a href="http://dplyr.tidyverse.org/" class="uri">http://dplyr.tidyverse.org/</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre></div>
-<div id="simulating-genealogies" class="section level3">
-<h3 class="hasAnchor">
-<a href="#simulating-genealogies" class="anchor"></a>Simulating genealogies</h3>
+</div>
+<div id="simulating-genealogies" class="section level2">
+<h2 class="hasAnchor">
+<a href="#simulating-genealogies" class="anchor"></a>Simulating genealogies</h2>
 <p>A genealogy is simulated by specifying population sizes for females and males.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sample_mtdna_geneology_varying_size.html">sample_mtdna_geneology_varying_size</a></span>(
   <span class="dt">population_sizes_females =</span> <span class="kw">rep</span>(<span class="dv">10</span>, <span class="dv">10</span>),
@@ -120,15 +121,15 @@ ped &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_ped
 <p><img src="introduction_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 <p>The squares are males and the circles are females.</p>
 </div>
-<div id="adding-mitogenomes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#adding-mitogenomes" class="anchor"></a>Adding mitogenomes</h3>
+<div id="adding-mitogenomes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#adding-mitogenomes" class="anchor"></a>Adding mitogenomes</h2>
 <p>We are now ready to add haplotypes/mitogenomes to the individuals. Let us consider</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sites &lt;-<span class="st"> </span><span class="dv">100</span></code></pre></div>
 <p>in the mitogenome for know.</p>
 <p>First, we construct a function to create founder haplotypes. Here, they are just random:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_founder_mito &lt;-<span class="st"> </span>function() {
-  <span class="kw"><a href="http://dplyr.tidyverse.org/reference/sample.html">sample</a></span>(<span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>), sites, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/sample">sample</a></span>(<span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>), sites, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 }
 x &lt;-<span class="st"> </span><span class="kw">get_founder_mito</span>()
 <span class="kw">head</span>(x)</code></pre></div>
@@ -180,9 +181,9 @@ p</code></pre></div>
 <span class="kw">length</span>(haps)</code></pre></div>
 <pre><code>## [1] 30</code></pre>
 </div>
-<div id="mtdna-information-included" class="section level3">
-<h3 class="hasAnchor">
-<a href="#mtdna-information-included" class="anchor"></a>mtDNA information included</h3>
+<div id="mtdna-mutation-schemes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#mtdna-mutation-schemes" class="anchor"></a>mtDNA mutation schemes</h2>
 <p>There are several datasets with information about the mitogenome included. There is a help file to each of the datasets which can be found by e.g. <code><a href="../reference/mtdna_partitions.html">?mtdna_partitions</a></code> for the <code>mtdna_partitions</code> dataset.</p>
 <p>First, there is information about the positions from PhyloTree <a href="http://www.phylotree.org/resources/rCRS_annotated.htm" class="uri">http://www.phylotree.org/resources/rCRS_annotated.htm</a> about the revised Cambridge Reference Sequence (rCRS) <span class="citation">(Andrews et al. 1999)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_partitions)
@@ -217,7 +218,7 @@ mtdna_mut_RieuxK4</code></pre></div>
 ## 2 PC3             0.0000000332  0.0000000257       4.07e-8  0.00000000384 
 ## 3 HVS1 + HVS2     0.000000314   0.000000226        4.03e-7  0.0000000453  
 ## 4 rRNA + tRNA     0.0000000101  0.00000000757      1.27e-8  0.00000000130 
-## 5 [Not included?] 0.            0.                 0.       0.            
+## 5 [Not included?] 0             0                  0.       0             
 ## # ... with 1 more variable: MutationScheme &lt;chr&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_mut_RieuxK1)
 mtdna_mut_RieuxK1</code></pre></div>
@@ -229,13 +230,13 @@ mtdna_mut_RieuxK1</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_mut_OverstiK4)
 mtdna_mut_OverstiK4</code></pre></div>
 <pre><code>## # A tibble: 5 x 6
-##   PartitionRieux  MutRateYearly   MutHPDLower  MutHPDUpper MutRateSEYearly
-##   &lt;chr&gt;                   &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;
-## 1 PC1 + PC2        0.0000000180 0.0000000117  0.0000000240   0.00000000314
-## 2 PC3              0.0000000304 0.0000000192  0.0000000421   0.00000000584
-## 3 HVS1 + HVS2      0.000000206  0.000000125   0.000000290    0.0000000421 
-## 4 rRNA + tRNA      0.0000000158 0.00000000940 0.0000000230   0.00000000347
-## 5 [Not included?]  0.           0.            0.             0.           
+##   PartitionRieux  MutRateYearly  MutHPDLower  MutHPDUpper MutRateSEYearly
+##   &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;
+## 1 PC1 + PC2        0.000000018  0.0000000117 0.000000024    0.00000000314
+## 2 PC3              0.0000000304 0.0000000192 0.0000000421   0.00000000584
+## 3 HVS1 + HVS2      0.000000206  0.000000125  0.000000290    0.0000000421 
+## 4 rRNA + tRNA      0.0000000158 0.0000000094 0.0000000230   0.00000000347
+## 5 [Not included?]  0            0            0              0            
 ## # ... with 1 more variable: MutationScheme &lt;chr&gt;</code></pre>
 <p>All these are assembled info one dataframe:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mtdna_mut_schemes)
@@ -246,11 +247,11 @@ mtdna_mut_schemes %&gt;%<span class="st"> </span><span class="kw">print</span>(<
 ## 1        1 Soares 2009 (K = 8)  0.0000000155  0.000000000755
 ## 2        2 Soares 2009 (K = 8)  0.0000000155  0.000000000755
 ## # ... with 6.627e+04 more rows</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtdna_mut_schemes %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/tally.html">count</a></span>(MutationScheme)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtdna_mut_schemes %&gt;%<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/tally">count</a></span>(MutationScheme)</code></pre></div>
 <pre><code>## # A tibble: 4 x 2
 ##   MutationScheme           n
 ##   &lt;chr&gt;                &lt;int&gt;
-## 1 Översti 2017 (K = 4) 16569
+## 1 Oversti 2017 (K = 4) 16569
 ## 2 Rieux 2014 (K = 1)   16569
 ## 3 Rieux 2014 (K = 4)   16569
 ## 4 Soares 2009 (K = 8)  16569</code></pre>
@@ -265,7 +266,7 @@ mu_mean_gen &lt;-<span class="st"> </span><span class="dv">25</span>*mu_mean_yea
 <p>Note, that to include variability in the mutation rates, it is probably best to sample a rate per region (in <code>mtdna_mut_RieuxK4</code>), and then distribute that to all sites in the partition.</p>
 <p>These rates are easily used to populate mitogenomes:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_founder_mito &lt;-<span class="st"> </span>function() {
-  <span class="kw"><a href="http://dplyr.tidyverse.org/reference/sample.html">sample</a></span>(<span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>), <span class="kw">length</span>(mu_mean_gen), <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/sample">sample</a></span>(<span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>), <span class="kw">length</span>(mu_mean_gen), <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 }
 
 <span class="kw"><a href="../reference/pedigrees_all_populate_haplotypes_custom_founders.html">pedigrees_all_populate_haplotypes_custom_founders</a></span>(
@@ -301,7 +302,6 @@ p &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentat
 p</code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-28-1.png" width="1152"></p>
 </div>
-</div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
@@ -331,6 +331,9 @@ p</code></pre></div>
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#simulating-genealogies">Simulating genealogies</a></li>
+      <li><a href="#adding-mitogenomes">Adding mitogenomes</a></li>
+      <li><a href="#mtdna-mutation-schemes">mtDNA mutation schemes</a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

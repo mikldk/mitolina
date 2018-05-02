@@ -201,3 +201,64 @@ test_that("hashmap works", {
   expect_equal(0L, length(get_haplotype_matching_individuals_from_hashmap(hashmap, !f_hap)))
 })
 
+
+#######################################################
+
+test_that("get_generations_from_final", {
+  expect_equal(0L, get_generations_from_final(get_individual(test_pop, 1)))
+  expect_equal(1L, get_generations_from_final(get_individual(test_pop, 6)))
+})
+
+test_that("print_individual", {
+  expect_output(print_individual(indvs[[1L]]), 
+                "  pid = 19 [M] in generation 1 with mother pid = 10 and no children",
+                fixed = TRUE)
+})
+
+test_that("get_pedigree_id_from_pid", {
+  expect_equal(get_pedigree_id(peds[[1]]), 1)
+  expect_equal(get_pedigree_id(peds[[2]]), 2)
+})
+
+test_that("get_pedigree_id_from_pid", {
+  expect_equal(get_pedigree_id_from_pid(test_pop, 1), get_pedigree_id_from_pid(test_pop, 6))
+  expect_equal(get_pedigree_id_from_pid(test_pop, 15), get_pedigree_id_from_pid(test_pop, 16))
+})
+
+test_that("pedigrees_table", {
+  expect_equal(pedigrees_table(peds), c("7" = 1, "12" = 1))
+})
+
+test_that("print_pedigree", {
+  expect_output(print_pedigree(peds[[2]]), 
+                "Pedigree with 7 individuals:
+  18 [M] with mother 13
+  13 [F] with mother 12
+  12 [F] with mother -1
+  14 [F] with mother 13
+  15 [M] with mother 14
+  16 [M] with mother 14
+  17 [M] with mother 14",
+                fixed = TRUE)
+})
+
+test_that("get_is_female_in_pedigree", {
+  expect_equal(sum(get_is_female_in_pedigree(ped = peds[[1]])), 7)
+  expect_equal(sum(!get_is_female_in_pedigree(ped = peds[[1]])), 5)
+  
+  expect_equal(sum(get_is_female_in_pedigree(ped = peds[[2]])), 3)
+  expect_equal(sum(!get_is_female_in_pedigree(ped = peds[[2]])), 4)
+})
+
+peds_tidy <- get_pedigrees_tidy(pedigrees = peds)
+test_that("get_pedigrees_tidy", {
+  expect_equal(unlist(peds_tidy$ped_ids), c(1, 2))
+})
+
+
+#######################################################
+# destructor
+rm(test_pop)
+gc()
+#######################################################
+
