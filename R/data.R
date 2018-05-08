@@ -146,3 +146,22 @@
 #' * Rieux et al. (2014): \url{https://doi.org/10.1093/molbev/msu222}; 
 #' * Översti et al. (2017): \url{https://doi.org/10.1038/s41598-017-05673-7}
 "mtdna_mut_schemes"
+
+#' 588 forensic-quality haplotypes representing three U.S. populations
+#'
+#' Full mtGenome reference data: Development and characterization of 588 forensic-quality 
+#' haplotypes representing three U.S. populations
+#'
+#' @format A tibble / data frame with 588 rows and 5 variables:
+#' \describe{
+#'   \item{id}{Sample id}
+#'   \item{HG}{Haplogroup}
+#'   \item{Variants}{List column with variants for each individual}
+#'   \item{Origin}{Origin}
+#'   \item{State}{US state}
+#' }
+#' @source \url{https://doi.org/10.1016/j.fsigen.2014.09.021}
+#' @references Just et al. "Full mtGenome reference data: Development and characterization of 588 
+#' forensic-quality haplotypes representing three U.S. populations", Forensic Science International: 
+#' Genetics, 14, 2015.
+"mtdna_vars_Just"
