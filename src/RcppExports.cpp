@@ -71,6 +71,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_individual_is_female
+Rcpp::LogicalVector get_individual_is_female(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP _mitolina_get_individual_is_female(SEXP individualSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_individual_is_female(individual));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigrees_all_populate_haplotypes
 void pedigrees_all_populate_haplotypes(Rcpp::List pedigrees, Rcpp::NumericVector mutation_rates, bool progress);
 RcppExport SEXP _mitolina_pedigrees_all_populate_haplotypes(SEXP pedigreesSEXP, SEXP mutation_ratesSEXP, SEXP progressSEXP) {
@@ -487,6 +498,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_get_haplotypes_pids", (DL_FUNC) &_mitolina_get_haplotypes_pids, 2},
     {"_mitolina_get_haplotypes_individuals", (DL_FUNC) &_mitolina_get_haplotypes_individuals, 1},
     {"_mitolina_get_individuals_is_female", (DL_FUNC) &_mitolina_get_individuals_is_female, 1},
+    {"_mitolina_get_individual_is_female", (DL_FUNC) &_mitolina_get_individual_is_female, 1},
     {"_mitolina_pedigrees_all_populate_haplotypes", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes, 3},
     {"_mitolina_pedigrees_all_populate_haplotypes_custom_founders", (DL_FUNC) &_mitolina_pedigrees_all_populate_haplotypes_custom_founders, 4},
     {"_mitolina_get_haplotype", (DL_FUNC) &_mitolina_get_haplotype, 1},

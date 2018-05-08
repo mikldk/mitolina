@@ -24,6 +24,8 @@ Note: This function does not check that individuals in
 \code{matching_indv} actually match.
 }
 \details{
+Note: only considering individuals within same pedigree!
+
 This gives detailed information about matching individuals in the pedigree,
 e.g. meiotic distances and maximum L0 distance (number of sites they differ) on the path as some of these
 matches may have (back)mutations between in between them (but often this will be 0).

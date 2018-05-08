@@ -86,7 +86,7 @@ Rcpp::List get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > ind
 
 //' Is individuals females (or males)
 //' 
-//' @param individuals Individuals to get haplotypes for.
+//' @param individuals Individuals to get sex for.
 //' @return Logical vector: true for female, false for male
 //' 
 //' @export
@@ -106,6 +106,18 @@ Rcpp::LogicalVector get_individuals_is_female(Rcpp::ListOf< Rcpp::XPtr<Individua
   }
 
   return sexes;
+}
+
+
+//' Is individual female (or male)
+//' 
+//' @param individual Individual to get sex for.
+//' @return Logical: true for female, false for male
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::LogicalVector get_individual_is_female(Rcpp::XPtr<Individual> individual) {  
+  return individual->is_female();
 }
 
 /*
@@ -337,7 +349,9 @@ Rcpp::List get_haplotype_matching_individuals(const Rcpp::List individuals,
 //' 
 //' Note: This function does not check that individuals in 
 //' `matching_indv` actually match.
-//' 
+//'
+//' Note: only considering individuals within same pedigree!
+//'  
 //' This gives detailed information about matching individuals in the pedigree, 
 //' e.g. meiotic distances and maximum L0 distance (number of sites they differ) on the path as some of these 
 //' matches may have (back)mutations between in between them (but often this will be 0).

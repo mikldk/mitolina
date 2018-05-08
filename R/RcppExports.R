@@ -113,12 +113,22 @@ get_haplotypes_individuals <- function(individuals) {
 
 #' Is individuals females (or males)
 #' 
-#' @param individuals Individuals to get haplotypes for.
+#' @param individuals Individuals to get sex for.
 #' @return Logical vector: true for female, false for male
 #' 
 #' @export
 get_individuals_is_female <- function(individuals) {
     .Call('_mitolina_get_individuals_is_female', PACKAGE = 'mitolina', individuals)
+}
+
+#' Is individual female (or male)
+#' 
+#' @param individual Individual to get sex for.
+#' @return Logical: true for female, false for male
+#' 
+#' @export
+get_individual_is_female <- function(individual) {
+    .Call('_mitolina_get_individual_is_female', PACKAGE = 'mitolina', individual)
 }
 
 #' Populate haplotypes in pedigrees (founder types same for all).
@@ -221,7 +231,9 @@ get_haplotype_matching_individuals <- function(individuals, haplotype) {
 #' 
 #' Note: This function does not check that individuals in 
 #' `matching_indv` actually match.
-#' 
+#'
+#' Note: only considering individuals within same pedigree!
+#'  
 #' This gives detailed information about matching individuals in the pedigree, 
 #' e.g. meiotic distances and maximum L0 distance (number of sites they differ) on the path as some of these 
 #' matches may have (back)mutations between in between them (but often this will be 0).

@@ -7,7 +7,7 @@
 get_individuals_is_female(individuals)
 }
 \arguments{
-\item{individuals}{Individuals to get haplotypes for.}
+\item{individuals}{Individuals to get sex for.}
 }
 \value{
 Logical vector: true for female, false for male
