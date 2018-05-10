@@ -314,14 +314,16 @@ haplotypes_to_hashes <- function(haplotypes) {
 #' or [print_haplotypes_hashmap()].
 #' 
 #' @param individuals List of individuals to build hashmap of
+#' @param max_load_factor Tuning parameter for hash table
+#' @param verbose_interval 0 for no verbose output, e.g. 1,000 for output for every 1000 individual added
 #' @return Hashmap with haplotypes as keys and vector of individuals as value
 #' 
 #' @seealso [get_haplotype_matching_individuals_from_hashmap()] 
 #' and [print_haplotypes_hashmap()].
 #' 
 #' @export
-build_haplotypes_hashmap <- function(individuals) {
-    .Call('_mitolina_build_haplotypes_hashmap', PACKAGE = 'mitolina', individuals)
+build_haplotypes_hashmap <- function(individuals, max_load_factor = 100, verbose_interval = 0L) {
+    .Call('_mitolina_build_haplotypes_hashmap', PACKAGE = 'mitolina', individuals, max_load_factor, verbose_interval)
 }
 
 #' Print haplotype hashmap

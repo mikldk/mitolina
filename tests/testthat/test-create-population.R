@@ -147,9 +147,9 @@ test_that("pedigrees_all_populate_haplotypes haplotypes works", {
   expect_true(all(unlist(haps_from_pids) == 0L))
   
   #haps_from_indvs
-  expect_equal(length(haps_from_indvs), 19L)
+  expect_equal(nrow(haps_from_indvs), 19L)
   expect_true(all(unique(unlist(haps_from_indvs))) == FALSE)
-  expect_equal(as.integer(unique(unlist(haps_from_indvs))), 0L)
+  expect_equal(as.integer(unique(c(haps_from_indvs))), 0L)
   
   #hap_from_indv
   expect_equal(haps_from_ped, hap_from_indv)
@@ -158,7 +158,7 @@ test_that("pedigrees_all_populate_haplotypes haplotypes works", {
 no_vars <- unlist(lapply(indvs, get_haplotype_no_variants))
 test_that("get_haplotype_no_variants works", {
   expect_true(all(no_vars == 0L))
-  expect_equal(no_vars, unlist(lapply(haps_from_indvs, sum)))
+  expect_equal(no_vars, unlist(apply(haps_from_indvs, 1, sum)))
 })
 
 f_hap <- c(TRUE, rep(FALSE, LOCI-1L))
@@ -181,14 +181,14 @@ test_that("pedigrees_all_populate_haplotypes_custom_founders works", {
   
   expect_equal(haps_from_ped, haps_from_pids)
   expect_equal(haps_from_ped, hap_from_indv)
-  expect_equal(haps_from_indvs, lapply(seq_along(indvs), function(j) f_hap))
+  expect_equal(haps_from_indvs, do.call(rbind, lapply(seq_along(indvs), function(j) f_hap)))
 })
 
 no_vars <- unlist(lapply(indvs, get_haplotype_no_variants))
 test_that("get_haplotype_no_variants works", {
   expect_true(all(no_vars == 1L))
   expect_true(all(no_vars == sum(f_hap)))
-  expect_equal(no_vars, unlist(lapply(haps_from_indvs, sum)))
+  expect_equal(no_vars, unlist(apply(haps_from_indvs, 1, sum)))
 })
 
 ##########################################################

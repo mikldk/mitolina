@@ -551,8 +551,6 @@ Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > hap
 
 
 
-
-
 //' Build hashmap of haplotypes to individuals
 //' 
 //' Makes it possible to find all individuals with a certain haplotype.
@@ -560,6 +558,8 @@ Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > hap
 //' or [print_haplotypes_hashmap()].
 //' 
 //' @param individuals List of individuals to build hashmap of
+//' @param max_load_factor Tuning parameter for hash table
+//' @param verbose_interval 0 for no verbose output, e.g. 1,000 for output for every 1000 individual added
 //' @return Hashmap with haplotypes as keys and vector of individuals as value
 //' 
 //' @seealso [get_haplotype_matching_individuals_from_hashmap()] 
@@ -568,14 +568,26 @@ Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > hap
 //' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(
-    const Rcpp::List& individuals) {
+    const Rcpp::List& individuals, 
+    const float max_load_factor = 100,
+    const int verbose_interval = 0) {
   
   int n = individuals.size();
   
   std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >* hashtable = new std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >();
   hashtable->reserve(n);
+  hashtable->max_load_factor(max_load_factor);
   
   for (int i = 0; i < n; ++i) {
+    if (verbose_interval > 0 && i % verbose_interval == 0) {
+      Rcpp::Rcout << 100.0*((double)(i + 1)/(double)n) << "%:" << std::endl;
+      Rcpp::Rcout << "  current max_load_factor: " << hashtable->max_load_factor() << std::endl;
+      Rcpp::Rcout << "  current max_load_factor: " << hashtable->max_load_factor() << std::endl;
+      Rcpp::Rcout << "  current size: " << hashtable->size() << std::endl;
+      Rcpp::Rcout << "  current bucket_count: " << hashtable->bucket_count() << std::endl;
+      Rcpp::Rcout << "  current load_factor: " << hashtable->load_factor() << std::endl;    
+    }
+    
     Rcpp::XPtr<Individual> indv = individuals[i];
     (*hashtable)[indv->get_haplotype()].push_back(indv);
   }

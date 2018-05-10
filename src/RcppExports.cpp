@@ -202,13 +202,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // build_haplotypes_hashmap
-Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(const Rcpp::List& individuals);
-RcppExport SEXP _mitolina_build_haplotypes_hashmap(SEXP individualsSEXP) {
+Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(const Rcpp::List& individuals, const float max_load_factor, const int verbose_interval);
+RcppExport SEXP _mitolina_build_haplotypes_hashmap(SEXP individualsSEXP, SEXP max_load_factorSEXP, SEXP verbose_intervalSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::List& >::type individuals(individualsSEXP);
-    rcpp_result_gen = Rcpp::wrap(build_haplotypes_hashmap(individuals));
+    Rcpp::traits::input_parameter< const float >::type max_load_factor(max_load_factorSEXP);
+    Rcpp::traits::input_parameter< const int >::type verbose_interval(verbose_intervalSEXP);
+    rcpp_result_gen = Rcpp::wrap(build_haplotypes_hashmap(individuals, max_load_factor, verbose_interval));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -519,7 +521,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_meiotic_dist", (DL_FUNC) &_mitolina_meiotic_dist, 2},
     {"_mitolina_count_haplotype_occurrences_pedigree", (DL_FUNC) &_mitolina_count_haplotype_occurrences_pedigree, 3},
     {"_mitolina_haplotypes_to_hashes", (DL_FUNC) &_mitolina_haplotypes_to_hashes, 1},
-    {"_mitolina_build_haplotypes_hashmap", (DL_FUNC) &_mitolina_build_haplotypes_hashmap, 1},
+    {"_mitolina_build_haplotypes_hashmap", (DL_FUNC) &_mitolina_build_haplotypes_hashmap, 3},
     {"_mitolina_print_haplotypes_hashmap", (DL_FUNC) &_mitolina_print_haplotypes_hashmap, 1},
     {"_mitolina_get_haplotype_matching_individuals_from_hashmap", (DL_FUNC) &_mitolina_get_haplotype_matching_individuals_from_hashmap, 2},
     {"_mitolina_delete_haplotypes_hashmap", (DL_FUNC) &_mitolina_delete_haplotypes_hashmap, 1},

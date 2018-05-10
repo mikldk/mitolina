@@ -4,10 +4,15 @@
 \alias{build_haplotypes_hashmap}
 \title{Build hashmap of haplotypes to individuals}
 \usage{
-build_haplotypes_hashmap(individuals)
+build_haplotypes_hashmap(individuals, max_load_factor = 100,
+  verbose_interval = 0L)
 }
 \arguments{
 \item{individuals}{List of individuals to build hashmap of}
+
+\item{max_load_factor}{Tuning parameter for hash table}
+
+\item{verbose_interval}{0 for no verbose output, e.g. 1,000 for output for every 1000 individual added}
 }
 \value{
 Hashmap with haplotypes as keys and vector of individuals as value
