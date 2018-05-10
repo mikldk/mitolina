@@ -565,13 +565,15 @@ Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Indiv
   int n = individuals.size();
   
   std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >* hashtable = new std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >();
-  Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > res(hashtable, RCPP_XPTR_2ND_ARG);
-  res.attr("class") = Rcpp::CharacterVector::create("mitolina_haplotype_hashmap", "externalptr");
+  hashtable->reserve(n);
   
   for (int i = 0; i < n; ++i) {
     Rcpp::XPtr<Individual> indv = individuals[i];
     (*hashtable)[indv->get_haplotype()].push_back(indv);
   }
+
+  Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > res(hashtable, RCPP_XPTR_2ND_ARG);
+  res.attr("class") = Rcpp::CharacterVector::create("mitolina_haplotype_hashmap", "externalptr");
   
   return res;
 }
