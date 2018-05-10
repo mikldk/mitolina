@@ -356,6 +356,20 @@ get_haplotype_matching_individuals_from_hashmap <- function(hashmap, haplotype) 
     .Call('_mitolina_get_haplotype_matching_individuals_from_hashmap', PACKAGE = 'mitolina', hashmap, haplotype)
 }
 
+#' Delete haplotype hashmap
+#' 
+#' Delete hashmap made by [build_haplotypes_hashmap()].
+#' 
+#' @param hashmap Hashmap made by [build_haplotypes_hashmap()]
+#' 
+#' @seealso [get_haplotype_matching_individuals_from_hashmap()] 
+#' and [build_haplotypes_hashmap()].
+#' 
+#' @export
+delete_haplotypes_hashmap <- function(hashmap) {
+    invisible(.Call('_mitolina_delete_haplotypes_hashmap', PACKAGE = 'mitolina', hashmap))
+}
+
 #' Get individual by pid
 #' 
 #' @param population Population

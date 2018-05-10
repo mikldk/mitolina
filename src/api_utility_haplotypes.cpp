@@ -560,7 +560,7 @@ Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > hap
 //' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(
-    const Rcpp::List individuals) {
+    const Rcpp::List& individuals) {
   
   int n = individuals.size();
   
@@ -591,7 +591,7 @@ Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Indiv
 //' @export
 // [[Rcpp::export]]
 void print_haplotypes_hashmap(const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > hashmap) {
-  std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > map = *hashmap;
+  std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >& map = *hashmap;
 
   auto fn = map.hash_function();
   int n = 0;
@@ -649,7 +649,7 @@ void print_haplotypes_hashmap(const Rcpp::XPtr< std::unordered_map< std::vector<
 //' @export
 // [[Rcpp::export]]
 Rcpp::List get_haplotype_matching_individuals_from_hashmap(
-    const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > hashmap,
+    const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > >& hashmap,
     const Rcpp::LogicalVector haplotype) {
     
   std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > map = *hashmap;  
@@ -676,3 +676,21 @@ Rcpp::List get_haplotype_matching_individuals_from_hashmap(
   return ret_indv_empty;
 }
 
+
+
+
+//' Delete haplotype hashmap
+//' 
+//' Delete hashmap made by [build_haplotypes_hashmap()].
+//' 
+//' @param hashmap Hashmap made by [build_haplotypes_hashmap()]
+//' 
+//' @seealso [get_haplotype_matching_individuals_from_hashmap()] 
+//' and [build_haplotypes_hashmap()].
+//' 
+//' @export
+// [[Rcpp::export]]
+void delete_haplotypes_hashmap(Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > hashmap) {
+  std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >* map = hashmap;
+  delete map;
+}

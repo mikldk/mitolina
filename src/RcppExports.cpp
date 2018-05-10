@@ -202,12 +202,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // build_haplotypes_hashmap
-Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(const Rcpp::List individuals);
+Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(const Rcpp::List& individuals);
 RcppExport SEXP _mitolina_build_haplotypes_hashmap(SEXP individualsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type individuals(individualsSEXP);
     rcpp_result_gen = Rcpp::wrap(build_haplotypes_hashmap(individuals));
     return rcpp_result_gen;
 END_RCPP
@@ -223,15 +223,25 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_haplotype_matching_individuals_from_hashmap
-Rcpp::List get_haplotype_matching_individuals_from_hashmap(const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > hashmap, const Rcpp::LogicalVector haplotype);
+Rcpp::List get_haplotype_matching_individuals_from_hashmap(const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > >& hashmap, const Rcpp::LogicalVector haplotype);
 RcppExport SEXP _mitolina_get_haplotype_matching_individuals_from_hashmap(SEXP hashmapSEXP, SEXP haplotypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > >::type hashmap(hashmapSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > >& >::type hashmap(hashmapSEXP);
     Rcpp::traits::input_parameter< const Rcpp::LogicalVector >::type haplotype(haplotypeSEXP);
     rcpp_result_gen = Rcpp::wrap(get_haplotype_matching_individuals_from_hashmap(hashmap, haplotype));
     return rcpp_result_gen;
+END_RCPP
+}
+// delete_haplotypes_hashmap
+void delete_haplotypes_hashmap(Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > hashmap);
+RcppExport SEXP _mitolina_delete_haplotypes_hashmap(SEXP hashmapSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > >::type hashmap(hashmapSEXP);
+    delete_haplotypes_hashmap(hashmap);
+    return R_NilValue;
 END_RCPP
 }
 // get_individual
@@ -512,6 +522,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_build_haplotypes_hashmap", (DL_FUNC) &_mitolina_build_haplotypes_hashmap, 1},
     {"_mitolina_print_haplotypes_hashmap", (DL_FUNC) &_mitolina_print_haplotypes_hashmap, 1},
     {"_mitolina_get_haplotype_matching_individuals_from_hashmap", (DL_FUNC) &_mitolina_get_haplotype_matching_individuals_from_hashmap, 2},
+    {"_mitolina_delete_haplotypes_hashmap", (DL_FUNC) &_mitolina_delete_haplotypes_hashmap, 1},
     {"_mitolina_get_individual", (DL_FUNC) &_mitolina_get_individual, 2},
     {"_mitolina_get_pid", (DL_FUNC) &_mitolina_get_pid, 1},
     {"_mitolina_print_individual", (DL_FUNC) &_mitolina_print_individual, 1},
