@@ -50,11 +50,11 @@ Rcpp::List get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerV
 //' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::List get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {  
+Rcpp::LogicalMatrix get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {  
   size_t n = individuals.size();
  
   if (n <= 0) {
-    Rcpp::List empty_haps;
+    Rcpp::LogicalMatrix empty_haps;
     return empty_haps;
   }
  
@@ -62,27 +62,35 @@ Rcpp::List get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > ind
 
   if (loci <= 0) {
     Rcpp::stop("Expected > 0 loci");
-    Rcpp::List empty_haps;
+    Rcpp::LogicalMatrix empty_haps;
     return empty_haps;
   }
 
-  Rcpp::List haps(n);
+  //Rcpp::List haps(n);
+  //Rcpp::LogicalMatrix haps(n, loci);
+  Rcpp::LogicalMatrix haps_trans(loci, n);
 
   for (size_t i = 0; i < n; ++i) {
     std::vector<bool> hap = individuals[i]->get_haplotype();
 
     if (hap.size() != loci) {
       Rcpp::stop("Expected > 0 loci for all haplotypes");
-      Rcpp::List empty_haps;
+      Rcpp::LogicalMatrix empty_haps;
       return empty_haps;
     }
     
     Rcpp::LogicalVector h = Rcpp::wrap(hap);
-    haps[i] = h;
+    //haps[i] = h;
+    haps_trans(Rcpp::_, i) = h;
   }
+  
+  //Rcpp::LogicalMatrix haps = Rcpp::transpose(haps_trans);
+  Rcpp::LogicalMatrix haps = Rcpp::tranpose_impl<LGLSXP, Rcpp::PreserveStorage>(haps_trans);
 
   return haps;
 }
+
+
 
 //' Is individuals females (or males)
 //' 

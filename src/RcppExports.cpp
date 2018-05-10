@@ -50,7 +50,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_haplotypes_individuals
-Rcpp::List get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals);
+Rcpp::LogicalMatrix get_haplotypes_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals);
 RcppExport SEXP _mitolina_get_haplotypes_individuals(SEXP individualsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
