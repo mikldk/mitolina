@@ -9,7 +9,7 @@ get_haplotypeid_matching_individuals_from_hashmap(hashmap, haplotype_id)
 \arguments{
 \item{hashmap}{Hashmap to make lookup in, made by \code{\link[=build_haplotypeids_hashmap]{build_haplotypeids_hashmap()}}}
 
-\item{haplotypeid}{to get individuals that has this haplotype id}
+\item{haplotype_id}{to get individuals that has this haplotype id}
 }
 \value{
 List of individuals with a given haplotype id

@@ -193,13 +193,29 @@ test_that("get_haplotype_no_variants works", {
 
 ##########################################################
 
-hashmap <- build_haplotypes_hashmap(indvs)
+# hashmap <- build_haplotypes_hashmap(indvs)
+# 
+# test_that("hashmap works", {
+#   expect_output(print_haplotypes_hashmap(hashmap), "Total = 19", fixed = TRUE)
+#   expect_equal(length(indvs), length(get_haplotype_matching_individuals_from_hashmap(hashmap, f_hap)))
+#   expect_equal(0L, length(get_haplotype_matching_individuals_from_hashmap(hashmap, !f_hap)))
+# })
+
+test_that("infer_haplotype_ids not called", {
+  expect_error(build_haplotypeids_hashmap(indvs, progress = FALSE))
+})
+
+infer_haplotype_ids(indvs, progress = FALSE)
+hashmap <- build_haplotypeids_hashmap(indvs, progress = FALSE)
+hap_id <- get_haplotype_id_individual(indvs[[1]])
 
 test_that("hashmap works", {
-  expect_output(print_haplotypes_hashmap(hashmap), "Total = 19", fixed = TRUE)
-  expect_equal(length(indvs), length(get_haplotype_matching_individuals_from_hashmap(hashmap, f_hap)))
-  expect_equal(0L, length(get_haplotype_matching_individuals_from_hashmap(hashmap, !f_hap)))
+  expect_equal(length(indvs), length(get_haplotypeid_matching_individuals_from_hashmap(hashmap, hap_id)))
+  expect_equal(0L, length(get_haplotypeid_matching_individuals_from_hashmap(hashmap, 1000)))
+  expect_silent(delete_haplotypeids_hashmap(hashmap))
 })
+
+
 
 
 #######################################################

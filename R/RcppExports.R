@@ -141,7 +141,7 @@ get_individual_is_female <- function(individual) {
 #' 
 #' @param pedigrees Pedigree list in which to populate haplotypes
 #' @param mutation_rates Vector with mutation rates, length `loci`
-#' @param progress Show progress
+#' @param progress Show progress?
 #'
 #' @seealso [pedigrees_all_populate_haplotypes_custom_founders()].
 #' 
@@ -312,10 +312,11 @@ haplotypes_to_hashes <- function(haplotypes) {
 #' Makes it faster to compare haplotypes by an id instead of the entire mitogenome.
 #' 
 #' @param individuals List of individuals to infer haplotype ids for
+#' @param progress Show progress?
 #' 
 #' @export
-infer_haplotype_ids <- function(individuals) {
-    invisible(.Call('_mitolina_infer_haplotype_ids', PACKAGE = 'mitolina', individuals))
+infer_haplotype_ids <- function(individuals, progress = TRUE) {
+    invisible(.Call('_mitolina_infer_haplotype_ids', PACKAGE = 'mitolina', individuals, progress))
 }
 
 #' Get haplotype id from individual
@@ -343,19 +344,18 @@ get_haplotype_ids_individuals <- function(individuals) {
 #' Build hashmap of haplotype ids to individuals
 #' 
 #' Makes it possible to find all individuals with a certain haplotype id.
-#' Must be used with e.g. [get_haplotypeid_matching_individuals_from_hashmap()] 
-#' or [print_haplotypes_hashmap()].
+#' Must be used with e.g. [get_haplotypeid_matching_individuals_from_hashmap()].
 #' 
 #' @param individuals List of individuals to build hashmap of
-#' @param max_load_factor Tuning parameter for hash table
-#' @param verbose_interval 0 for no verbose output, e.g. 1,000 for output for every 1000 individual added
+#' @param progress Show progress?
+#' 
 #' @return Hashmap with haplotype id as keys and vector of individuals as value
 #' 
 #' @seealso [get_haplotypeid_matching_individuals_from_hashmap()].
 #' 
 #' @export
-build_haplotypeids_hashmap <- function(individuals, max_load_factor = 10, verbose_interval = 0L) {
-    .Call('_mitolina_build_haplotypeids_hashmap', PACKAGE = 'mitolina', individuals, max_load_factor, verbose_interval)
+build_haplotypeids_hashmap <- function(individuals, progress = TRUE) {
+    .Call('_mitolina_build_haplotypeids_hashmap', PACKAGE = 'mitolina', individuals, progress)
 }
 
 #' Get individuals with a certain haplotype id by hashmap lookup
@@ -364,7 +364,7 @@ build_haplotypeids_hashmap <- function(individuals, max_load_factor = 10, verbos
 #' it is easy to get all individuals with a certain haplotype id.
 #' 
 #' @param hashmap Hashmap to make lookup in, made by [build_haplotypeids_hashmap()]
-#' @param haplotypeid to get individuals that has this haplotype id
+#' @param haplotype_id to get individuals that has this haplotype id
 #' 
 #' @return List of individuals with a given haplotype id
 #' 

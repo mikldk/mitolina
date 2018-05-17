@@ -4,23 +4,19 @@
 \alias{build_haplotypeids_hashmap}
 \title{Build hashmap of haplotype ids to individuals}
 \usage{
-build_haplotypeids_hashmap(individuals, max_load_factor = 10,
-  verbose_interval = 0L)
+build_haplotypeids_hashmap(individuals, progress = TRUE)
 }
 \arguments{
 \item{individuals}{List of individuals to build hashmap of}
 
-\item{max_load_factor}{Tuning parameter for hash table}
-
-\item{verbose_interval}{0 for no verbose output, e.g. 1,000 for output for every 1000 individual added}
+\item{progress}{Show progress?}
 }
 \value{
 Hashmap with haplotype id as keys and vector of individuals as value
 }
 \description{
 Makes it possible to find all individuals with a certain haplotype id.
-Must be used with e.g. \code{\link[=get_haplotypeid_matching_individuals_from_hashmap]{get_haplotypeid_matching_individuals_from_hashmap()}}
-or \code{\link[=print_haplotypes_hashmap]{print_haplotypes_hashmap()}}.
+Must be used with e.g. \code{\link[=get_haplotypeid_matching_individuals_from_hashmap]{get_haplotypeid_matching_individuals_from_hashmap()}}.
 }
 \seealso{
 \code{\link[=get_haplotypeid_matching_individuals_from_hashmap]{get_haplotypeid_matching_individuals_from_hashmap()}}.

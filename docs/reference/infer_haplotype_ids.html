@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Populate haplotypes in pedigrees (founder types same for all). — pedigrees_all_populate_haplotypes • mitolina</title>
+<title>Infer haplotype ids — infer_haplotype_ids • mitolina</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,11 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Populate haplotypes in pedigrees (founder types same for all). — pedigrees_all_populate_haplotypes" />
+<meta property="og:title" content="Infer haplotype ids — infer_haplotype_ids" />
 
-<meta property="og:description" content="Populate haplotypes from founder and down in all pedigrees.
-Note, that haplotypes are binary (TRUE/FALSE) and
-that all founders get haplotype rep(FALSE, loci)." />
+<meta property="og:description" content="Makes it faster to compare haplotypes by an id instead of the entire mitogenome." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -102,29 +100,23 @@ that all founders get haplotype rep(FALSE, loci)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Populate haplotypes in pedigrees (founder types same for all).</h1>
+    <h1>Infer haplotype ids</h1>
     
-    <div class="hidden name"><code>pedigrees_all_populate_haplotypes.Rd</code></div>
+    <div class="hidden name"><code>infer_haplotype_ids.Rd</code></div>
     </div>
 
     
-    <p>Populate haplotypes from founder and down in all pedigrees.
-Note, that haplotypes are binary (TRUE/FALSE) and
-that all founders get haplotype <code>rep(FALSE, loci)</code>.</p>
+    <p>Makes it faster to compare haplotypes by an id instead of the entire mitogenome.</p>
     
 
-    <pre class="usage"><span class='fu'>pedigrees_all_populate_haplotypes</span>(<span class='no'>pedigrees</span>, <span class='no'>mutation_rates</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>infer_haplotype_ids</span>(<span class='no'>individuals</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>pedigrees</th>
-      <td><p>Pedigree list in which to populate haplotypes</p></td>
-    </tr>
-    <tr>
-      <th>mutation_rates</th>
-      <td><p>Vector with mutation rates, length <code>loci</code></p></td>
+      <th>individuals</th>
+      <td><p>List of individuals to infer haplotype ids for</p></td>
     </tr>
     <tr>
       <th>progress</th>
@@ -132,25 +124,13 @@ that all founders get haplotype <code>rep(FALSE, loci)</code>.</p>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Note, that pedigrees must first have been inferred by <code><a href='build_pedigrees.html'>build_pedigrees()</a></code>.</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='pedigrees_all_populate_haplotypes_custom_founders.html'>pedigrees_all_populate_haplotypes_custom_founders()</a></code>.</p></div>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

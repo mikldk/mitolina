@@ -4,10 +4,12 @@
 \alias{infer_haplotype_ids}
 \title{Infer haplotype ids}
 \usage{
-infer_haplotype_ids(individuals)
+infer_haplotype_ids(individuals, progress = TRUE)
 }
 \arguments{
 \item{individuals}{List of individuals to infer haplotype ids for}
+
+\item{progress}{Show progress?}
 }
 \description{
 Makes it faster to compare haplotypes by an id instead of the entire mitogenome.
