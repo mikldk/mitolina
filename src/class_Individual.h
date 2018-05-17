@@ -25,6 +25,8 @@ private:
   bool m_haplotype_mutated = false;
   void haplotype_mutate(std::vector<double>& mutation_rates);
   
+  int m_haplotype_id = 0; // for faster equality
+  
 public:
   Individual(int pid, int generation, bool is_female);
   ~Individual();
@@ -67,6 +69,9 @@ public:
   std::vector<bool> get_haplotype() const;
   int get_haplotype_total_no_variants() const;
   void pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates);
+  
+  void set_haplotype_id(const int id);
+  int get_haplotype_id() const;
   
   int get_haplotype_L0(Individual* dest) const;
 };
