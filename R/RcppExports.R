@@ -372,52 +372,6 @@ delete_haplotypes_hashmap <- function(hashmap) {
     invisible(.Call('_mitolina_delete_haplotypes_hashmap', PACKAGE = 'mitolina', hashmap))
 }
 
-#' Populate haplotypes in pedigrees (custom founder types).
-#' 
-#' Populate haplotypes from founder and down in all pedigrees.
-#' All founders get a haplotype from calling the user 
-#' provided function `get_founder_haplotype()` that must return a vector of TRUE/FALSE values.
-#' 
-#' Note, that pedigrees must first have been inferred by [build_pedigrees()].
-#' 
-#' @param pedigrees Pedigree list in which to populate haplotypes
-#' @param mutation_rates Vector with mutation rates
-#' @param get_founder_haplotype Function taking no arguments returning a haplotype, i.e. a logical vector (TRUE/FALSE values) of length `length(mutation_rates)`
-#' @param progress Show progress
-#'
-#' @seealso [pedigrees_all_populate_haplotypes()].
-#' 
-#' @export
-pedigrees_all_populate_mitogenomes_custom_founders <- function(pedigrees, mutation_rates, get_founder_haplotype = NULL, progress = TRUE) {
-    invisible(.Call('_mitolina_pedigrees_all_populate_mitogenomes_custom_founders', PACKAGE = 'mitolina', pedigrees, mutation_rates, get_founder_haplotype, progress))
-}
-
-#' Get mitogenome variant positions from an individual
-#' 
-#' Requires that mitogenomes are first populated, e.g. 
-#' with [pedigrees_all_populate_mitogenomes_custom_founders()].
-#' 
-#' @param individual Individual to get haplotypes for.
-#' @return Vector with variant positions for `individual`.
-#' 
-#' @export
-get_mitogenome <- function(individual) {
-    .Call('_mitolina_get_mitogenome', PACKAGE = 'mitolina', individual)
-}
-
-#' Get individuals matching from list of individuals
-#' 
-#' Get the indvididuals that matches `mitogenome` in `individuals`.
-#' 
-#' @param individuals List of individuals to count occurrences in.
-#' @param mitogenome Mitogenome to count occurrences of.
-#' @return List of individuals that matches `mitogenome` amongst `individuals`.
-#' 
-#' @export
-get_mitogenome_matching_individuals <- function(individuals, mitogenome) {
-    .Call('_mitolina_get_mitogenome_matching_individuals', PACKAGE = 'mitolina', individuals, mitogenome)
-}
-
 #' Get individual by pid
 #' 
 #' @param population Population

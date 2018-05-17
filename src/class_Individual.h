@@ -1,7 +1,6 @@
 #include "mitolina_types.h"
 
 #include <vector>
-#include <set>
 
 class Individual {
 private:
@@ -20,22 +19,12 @@ private:
   bool m_dijkstra_visited = false;
   int m_dijkstra_distance = 0;
 
-  /*
-  Multiple ways of representing the haplotype/mitogenome have been tried:
-  
-  1) std::vector<bool>
-  */
   std::vector<bool> m_haplotype;
   int m_haplotype_total_no_variants = -1; // for faster equality; if they do not have same number of variants, they cannot be equal
   bool m_haplotype_set = false;
   bool m_haplotype_mutated = false;
   void haplotype_mutate(std::vector<double>& mutation_rates);
   
-  //unsigned short int, 2 bytes, 0-65,535, enough for mtDNA
-  std::set<unsigned short int> m_mitogenome;
-  bool m_mitogenome_set = false;
-  void mitogenome_mutate(std::vector<double>& mutation_rates);
-
   
 public:
   Individual(int pid, int generation, bool is_female);
@@ -81,12 +70,5 @@ public:
   void pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates);
   
   int get_haplotype_L0(Individual* dest) const;
-  
-  
-  
-  bool is_mitogenome_set() const;
-  void set_mitogenome(std::set<unsigned short int> g);
-  std::set<unsigned short int> get_mitogenome() const;
-  void pass_mitogenome_to_children(bool recursive, std::vector<double>& mutation_rates);  
 };
 
