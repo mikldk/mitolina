@@ -338,3 +338,16 @@ std::vector<Individual*> Individual::calculate_path_to(Individual* dest) const {
 }
 
 
+
+void Individual::set_haplotype_id(const int id) {
+  m_haplotype_id = id;
+}
+
+int Individual::get_haplotype_id() const {
+  if (m_haplotype_id == 0) {
+    throw std::invalid_argument("haplotype id not yet inferred");
+  }
+  
+  return m_haplotype_id;
+}
+

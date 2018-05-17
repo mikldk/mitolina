@@ -153,7 +153,7 @@ void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::Nume
 //' 
 //' @param pedigrees Pedigree list in which to populate haplotypes
 //' @param mutation_rates Vector with mutation rates, length `loci`
-//' @param progress Show progress
+//' @param progress Show progress?
 //'
 //' @seealso [pedigrees_all_populate_haplotypes_custom_founders()].
 //' 
@@ -551,6 +551,9 @@ Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > hap
 
 
 
+
+/*
+
 //' Build hashmap of haplotypes to individuals
 //' 
 //' Makes it possible to find all individuals with a certain haplotype.
@@ -569,7 +572,7 @@ Rcpp::IntegerVector haplotypes_to_hashes(Rcpp::ListOf< Rcpp::LogicalVector > hap
 // [[Rcpp::export]]
 Rcpp::XPtr< std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > > > build_haplotypes_hashmap(
     const Rcpp::List& individuals, 
-    const float max_load_factor = 100,
+    const float max_load_factor = 10,
     const int verbose_interval = 0) {
   
   int n = individuals.size();
@@ -714,3 +717,231 @@ void delete_haplotypes_hashmap(Rcpp::XPtr< std::unordered_map< std::vector<bool>
   std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >* map = hashmap;
   delete map;
 }
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+//' Infer haplotype ids
+//' 
+//' Makes it faster to compare haplotypes by an id instead of the entire mitogenome.
+//' 
+//' @param individuals List of individuals to infer haplotype ids for
+//' @param progress Show progress?
+//' 
+//' @export
+// [[Rcpp::export]]
+void infer_haplotype_ids(const Rcpp::List& individuals, bool progress = true) {
+  int n = individuals.size();
+  Progress p(n, progress);
+  
+  std::unordered_map< std::vector<bool>, int > haplo_to_id;
+  int hap_id = 1;
+  
+  for (size_t i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    
+    if (!(indv->is_haplotype_set())) {
+      Rcpp::stop("Haplotype not yet set");
+    }
+    
+    std::vector<bool> h = indv->get_haplotype();
+    
+    std::unordered_map<std::vector<bool>, int>::const_iterator got = haplo_to_id.find(h);
+    
+    if (got == haplo_to_id.end()) {
+      // not found
+      indv->set_haplotype_id(hap_id);
+      haplo_to_id[h] = hap_id;
+      ++hap_id;
+    } else {
+      // found
+      indv->set_haplotype_id(got->second);
+    }
+    
+    if (progress) {
+      p.increment();
+    }
+  }
+}
+
+
+
+//' Get haplotype id from individual
+//' 
+//' @param individual Individual to get haplotypes for.
+//' 
+//' @return Haplotype id
+//' 
+//' @export
+// [[Rcpp::export]]
+int get_haplotype_id_individual(Rcpp::XPtr<Individual> individual) {  
+  return individual->get_haplotype_id();
+}
+
+
+//' Get haplotype ids from list of individuals
+//' 
+//' @param individuals Individuals to get haplotypes for.
+//' 
+//' @return List of haplotype ids where element `i` is the haplotype of `individuals[[i]]`.
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector get_haplotype_ids_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {  
+  size_t n = individuals.size();
+ 
+  if (n <= 0) {
+    Rcpp::IntegerVector empty_hapids;
+    return empty_hapids;
+  }
+ 
+  Rcpp::IntegerVector hapids(n);
+
+  for (size_t i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    hapids[i] = indv->get_haplotype_id();
+  }  
+
+  return hapids;
+}
+
+
+
+
+//' Build hashmap of haplotype ids to individuals
+//' 
+//' Makes it possible to find all individuals with a certain haplotype id.
+//' Must be used with e.g. [get_haplotypeid_matching_individuals_from_hashmap()].
+//' 
+//' @param individuals List of individuals to build hashmap of
+//' @param progress Show progress?
+//' 
+//' @return Hashmap with haplotype id as keys and vector of individuals as value
+//' 
+//' @seealso [get_haplotypeid_matching_individuals_from_hashmap()].
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::XPtr< std::vector< std::vector<Individual*>* > > build_haplotypeids_hashmap(
+    const Rcpp::List& individuals, bool progress = true) {
+  
+  
+  int n = individuals.size();
+  Progress p(2*n, progress);
+  
+  int max_id = 0;
+  
+  for (int i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    int id = indv->get_haplotype_id();
+    
+    if (id > max_id) {
+      max_id = id;
+    }
+    
+    if (progress) {
+      p.increment();
+    }
+  }
+  
+  // size + 1: max_id will be attained, 0 index not used
+  std::vector< std::vector<Individual*>* >* hashtable = new std::vector< std::vector<Individual*>* >(max_id + 1);
+  for (int id = 0; id <= max_id; ++id) {
+    std::vector<Individual*>* vec = new std::vector<Individual*>();
+    hashtable->at(id) = vec;
+  }
+    
+  for (int i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv_xptr = individuals[i];
+    Individual* indv = indv_xptr;
+    int id = indv->get_haplotype_id();
+    
+    hashtable->at(id)->push_back(indv);
+    
+    if (progress) {
+      p.increment();
+    }
+  }
+
+  Rcpp::XPtr< std::vector< std::vector<Individual*>* > > res(hashtable, RCPP_XPTR_2ND_ARG);
+  res.attr("class") = Rcpp::CharacterVector::create("mitolina_haplotypeid_hashmap", "externalptr");
+  
+  return res;
+}
+
+
+//' Get individuals with a certain haplotype id by hashmap lookup
+//' 
+//' By using hashmap made by [build_haplotypeids_hashmap()], 
+//' it is easy to get all individuals with a certain haplotype id.
+//' 
+//' @param hashmap Hashmap to make lookup in, made by [build_haplotypeids_hashmap()]
+//' @param haplotype_id to get individuals that has this haplotype id
+//' 
+//' @return List of individuals with a given haplotype id
+//' 
+//' @seealso [build_haplotypeids_hashmap()].
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::List get_haplotypeid_matching_individuals_from_hashmap(
+    const Rcpp::XPtr< std::vector< std::vector<Individual*>* > >& hashmap,
+    const int haplotype_id) {
+  
+  Rcpp::List ret_indv_empty;  
+  
+  if (haplotype_id >= hashmap->size()) {
+    return ret_indv_empty;
+  }
+  
+  std::vector<Individual*>* indvs_with_id = hashmap->at(haplotype_id);
+  int n = indvs_with_id->size();  
+  Rcpp::List ret_indv(n);
+  
+  for (int i = 0; i < n; ++i) {
+    Individual* indv = indvs_with_id->at(i);    
+    Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
+    ret_indv[i] = indv_xptr;
+  }
+  
+  return ret_indv;  
+}
+
+
+
+
+//' Delete haplotype id hashmap
+//' 
+//' Delete hashmap made by [build_haplotypeids_hashmap()].
+//' 
+//' @param hashmap Hashmap made by [build_haplotypeids_hashmap()]
+//' 
+//' @seealso [get_haplotypeid_matching_individuals_from_hashmap()] 
+//' and [build_haplotypeids_hashmap()].
+//' 
+//' @export
+// [[Rcpp::export]]
+void delete_haplotypeids_hashmap(Rcpp::XPtr< std::vector< std::vector<Individual*>* > > hashmap) {
+  std::vector< std::vector<Individual*>* >* map = hashmap;
+  
+  int n = map->size();  
+  
+  for (int i = 0; i < n; ++i) {
+    std::vector<Individual*>* map_i = map->at(i);
+    delete map_i;
+  }
+  
+  delete map;
+}
+
