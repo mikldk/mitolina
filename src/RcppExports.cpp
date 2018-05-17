@@ -246,6 +246,42 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// pedigrees_all_populate_mitogenomes_custom_founders
+void pedigrees_all_populate_mitogenomes_custom_founders(Rcpp::List pedigrees, Rcpp::NumericVector mutation_rates, Rcpp::Nullable<Rcpp::Function> get_founder_haplotype, bool progress);
+RcppExport SEXP _mitolina_pedigrees_all_populate_mitogenomes_custom_founders(SEXP pedigreesSEXP, SEXP mutation_ratesSEXP, SEXP get_founder_haplotypeSEXP, SEXP progressSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Function> >::type get_founder_haplotype(get_founder_haplotypeSEXP);
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    pedigrees_all_populate_mitogenomes_custom_founders(pedigrees, mutation_rates, get_founder_haplotype, progress);
+    return R_NilValue;
+END_RCPP
+}
+// get_mitogenome
+std::vector<int> get_mitogenome(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP _mitolina_get_mitogenome(SEXP individualSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_mitogenome(individual));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_mitogenome_matching_individuals
+Rcpp::List get_mitogenome_matching_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector mitogenome);
+RcppExport SEXP _mitolina_get_mitogenome_matching_individuals(SEXP individualsSEXP, SEXP mitogenomeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type mitogenome(mitogenomeSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_mitogenome_matching_individuals(individuals, mitogenome));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_individual
 Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid);
 RcppExport SEXP _mitolina_get_individual(SEXP populationSEXP, SEXP pidSEXP) {
@@ -525,6 +561,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mitolina_print_haplotypes_hashmap", (DL_FUNC) &_mitolina_print_haplotypes_hashmap, 1},
     {"_mitolina_get_haplotype_matching_individuals_from_hashmap", (DL_FUNC) &_mitolina_get_haplotype_matching_individuals_from_hashmap, 2},
     {"_mitolina_delete_haplotypes_hashmap", (DL_FUNC) &_mitolina_delete_haplotypes_hashmap, 1},
+    {"_mitolina_pedigrees_all_populate_mitogenomes_custom_founders", (DL_FUNC) &_mitolina_pedigrees_all_populate_mitogenomes_custom_founders, 4},
+    {"_mitolina_get_mitogenome", (DL_FUNC) &_mitolina_get_mitogenome, 1},
+    {"_mitolina_get_mitogenome_matching_individuals", (DL_FUNC) &_mitolina_get_mitogenome_matching_individuals, 2},
     {"_mitolina_get_individual", (DL_FUNC) &_mitolina_get_individual, 2},
     {"_mitolina_get_pid", (DL_FUNC) &_mitolina_get_pid, 1},
     {"_mitolina_print_individual", (DL_FUNC) &_mitolina_print_individual, 1},

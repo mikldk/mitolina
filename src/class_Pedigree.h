@@ -3,6 +3,7 @@
 #include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?
 
 #include <vector>
+#include <set>
 
 class Pedigree {
 private:
@@ -24,5 +25,7 @@ public:
   
   void populate_haplotypes(int loci, std::vector<double>& mutation_rates);
   void populate_haplotypes_custom_founders(std::vector<double>& mutation_rates, Rcpp::Function get_founder_hap);
+  
+  void populate_mitogenome_custom_founders(std::vector<double>& mutation_rates, Rcpp::Function get_founder_hap);
 };
 

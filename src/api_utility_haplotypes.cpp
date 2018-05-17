@@ -714,3 +714,147 @@ void delete_haplotypes_hashmap(Rcpp::XPtr< std::unordered_map< std::vector<bool>
   std::unordered_map< std::vector<bool>, std::vector< Rcpp::XPtr<Individual> > >* map = hashmap;
   delete map;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//' Populate haplotypes in pedigrees (custom founder types).
+//' 
+//' Populate haplotypes from founder and down in all pedigrees.
+//' All founders get a haplotype from calling the user 
+//' provided function `get_founder_haplotype()` that must return a vector of TRUE/FALSE values.
+//' 
+//' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+//' 
+//' @param pedigrees Pedigree list in which to populate haplotypes
+//' @param mutation_rates Vector with mutation rates
+//' @param get_founder_haplotype Function taking no arguments returning a haplotype, i.e. a logical vector (TRUE/FALSE values) of length `length(mutation_rates)`
+//' @param progress Show progress
+//'
+//' @seealso [pedigrees_all_populate_haplotypes()].
+//' 
+//' @export
+// [[Rcpp::export]]
+void pedigrees_all_populate_mitogenomes_custom_founders(Rcpp::List pedigrees, 
+                                       Rcpp::NumericVector mutation_rates,
+                                       Rcpp::Nullable<Rcpp::Function> get_founder_haplotype = R_NilValue,
+                                       bool progress = true) {
+
+  if (mutation_rates.size() > 65535) { // unsigned short int
+    Rcpp::stop("A maximum of 65,535 sites are supported; please contact maintainer about this.");
+  }
+  
+  stopifnot_mitolina_pedigreelist(pedigrees);
+  
+  std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
+  
+  if (get_founder_haplotype.isNull()) {
+    Rcpp::stop("get_founder_haplotype must not be NULL");
+  }  
+  
+  Rcpp::Function g_founder_hap = Rcpp::as<Rcpp::Function>(get_founder_haplotype);
+
+  size_t N = pedigrees.size();
+  Progress p(N, progress);
+  
+  for (size_t i = 0; i < N; ++i) {
+    Rcpp::XPtr<Pedigree> ped = pedigrees.at(i);    
+    
+    ped->populate_mitogenome_custom_founders(mut_rates, g_founder_hap);
+    
+     if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
+      Rcpp::stop("Aborted.");
+    }
+    
+    if (progress) {
+      p.increment();
+    }
+  }
+}
+
+
+
+//' Get mitogenome variant positions from an individual
+//' 
+//' Requires that mitogenomes are first populated, e.g. 
+//' with [pedigrees_all_populate_mitogenomes_custom_founders()].
+//' 
+//' @param individual Individual to get haplotypes for.
+//' @return Vector with variant positions for `individual`.
+//' 
+//' @export
+// [[Rcpp::export]]
+std::vector<int> get_mitogenome(Rcpp::XPtr<Individual> individual) {
+  std::set<unsigned short int> g = individual->get_mitogenome();
+  std::vector<int> x;
+    
+  for (unsigned short int v : g) {
+    x.push_back(v + 1); // 0-based to 1-based indexing
+  }
+  
+  return x;  
+}
+
+
+//' Get individuals matching from list of individuals
+//' 
+//' Get the indvididuals that matches `mitogenome` in `individuals`.
+//' 
+//' @param individuals List of individuals to count occurrences in.
+//' @param mitogenome Mitogenome to count occurrences of.
+//' @return List of individuals that matches `mitogenome` amongst `individuals`.
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::List get_mitogenome_matching_individuals(const Rcpp::List individuals, 
+    const Rcpp::IntegerVector mitogenome) {
+
+  int n = individuals.size();  
+  Rcpp::List ret_indv;
+  
+  std::set<unsigned short int> g;
+  
+  for (size_t i = 0; i < mitogenome.size(); ++i) {
+    g.insert(mitogenome[i] - 1); // 1-based to 0-based indexing
+  }
+  
+  for (int i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+
+    std::set<unsigned short int> indv_g = indv->get_mitogenome();
+    
+    if (indv_g == g) {
+      ret_indv.push_back(indv);
+    }
+  }
+  
+  return ret_indv;
+}
+

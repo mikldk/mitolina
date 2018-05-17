@@ -338,3 +338,94 @@ std::vector<Individual*> Individual::calculate_path_to(Individual* dest) const {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Assumes mutation_rates.size() <= 65535, see e.g. Pedigree::populate_mitogenome_custom_founders
+void Individual::mitogenome_mutate(std::vector<double>& mutation_rates) {
+  if (!m_mitogenome_set) {
+    throw std::invalid_argument("mitogenome not set yet, so cannot mutate");
+  }
+  
+  for (int loc = 0; loc < mutation_rates.size(); ++loc) {
+    if (R::runif(0.0, 1.0) >= mutation_rates[loc]) {
+      continue; // don't mutate
+    }
+    
+    // mutate, binary: if exists, delete; else insert 
+    
+    std::set<unsigned short int>::iterator it = m_mitogenome.find(loc);
+    
+    if (it == m_mitogenome.end()) {
+      // insert
+      m_mitogenome.insert(loc);
+    } else {
+      // delete
+      m_mitogenome.erase(it);
+    }
+  }
+}
+
+bool Individual::is_mitogenome_set() const {
+  return m_mitogenome_set; 
+}
+
+void Individual::set_mitogenome(std::set<unsigned short int> g) {
+  m_mitogenome = g;
+  m_mitogenome_set = true;
+}
+
+std::set<unsigned short int> Individual::get_mitogenome() const {
+  return m_mitogenome;
+}
+
+// Assumes mutation_rates.size() <= 65535, see e.g. Pedigree::populate_mitogenome_custom_founders
+void Individual::pass_mitogenome_to_children(bool recursive, std::vector<double>& mutation_rates) {
+  for (auto &child : (*m_children)) {
+    child->set_mitogenome(m_mitogenome);
+    child->mitogenome_mutate(mutation_rates);
+    
+    if (recursive) {
+      child->pass_mitogenome_to_children(recursive, mutation_rates);
+    }
+  }
+}
+
+
