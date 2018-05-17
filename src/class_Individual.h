@@ -23,7 +23,7 @@ private:
   int m_haplotype_total_no_variants = -1; // for faster equality; if they do not have same number of variants, they cannot be equal
   bool m_haplotype_set = false;
   bool m_haplotype_mutated = false;
-  void haplotype_mutate(std::vector<double>& mutation_rates);  
+  void haplotype_mutate(std::vector<double>& mutation_rates);
   
 public:
   Individual(int pid, int generation, bool is_female);
