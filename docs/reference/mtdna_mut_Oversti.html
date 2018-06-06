@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mitogenome annotated — mtdna_partitions • mitolina</title>
+<title>Mitogenome mutation rates according to Översti et al. (2017) — mtdna_mut_Oversti • mitolina</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,9 +25,11 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Mitogenome annotated — mtdna_partitions" />
+<meta property="og:title" content="Mitogenome mutation rates according to Översti et al. (2017) — mtdna_mut_Oversti" />
 
-<meta property="og:description" content="A dataset containing information about the mitogenome." />
+<meta property="og:description" content="A dataset containing mutation information about the mitogenome
+partitioned into 4 partitions
+according to Rieux et al. (2014)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,47 +102,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Mitogenome annotated</h1>
+    <h1>Mitogenome mutation rates according to Översti et al. (2017)</h1>
     
-    <div class="hidden name"><code>mtdna_partitions.Rd</code></div>
+    <div class="hidden name"><code>mtdna_mut_Oversti.Rd</code></div>
     </div>
 
     
-    <p>A dataset containing information about the mitogenome.</p>
+    <p>A dataset containing mutation information about the mitogenome
+partitioned into 4 partitions
+according to Rieux et al. (2014).</p>
     
 
-    <pre class="usage"><span class='no'>mtdna_partitions</span></pre>
+    <pre class="usage"><span class='no'>mtdna_mut_Oversti</span></pre>
         
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A tibble / data frame with 16,569 rows and 5 variables:</p><dl class='dl-horizontal'>
-<dt>Position</dt><dd><p>Position in the mitogenome</p></dd>
-<dt>rCRS</dt><dd><p>The base in the revised Cambridge Reference Sequence (rCRS)</p></dd>
-<dt>PartitionPhyloTree</dt><dd><p>Partition according to <a href='http://www.phylotree.org'>http://www.phylotree.org</a></p></dd>
-<dt>PartitionRieux</dt><dd><p>Partition according to Rieux et al. (2014) (see references)</p></dd>
-<dt>PartitionOversti</dt><dd><p>Partition according to Rieux et al. (2014) and Översti et al. 2017 (see references)</p></dd>
+    <p>A tibble / data frame with 5 rows and 6 variables:</p><dl class='dl-horizontal'>
+<dt>PartitionOversti</dt><dd><p>Partition according to Översti et al. (2017) (see references)</p></dd>
+<dt>MutRateYearly</dt><dd><p>Mutation rate per site per year</p></dd>
+<dt>MutHPDLower</dt><dd><p>Mutation rate highest posterior density lower limit</p></dd>
+<dt>MutHPDUpper</dt><dd><p>Mutation rate highest posterior density upper limit</p></dd>
+<dt>MutRateSEYearly</dt><dd><p>Standard error of <code>MutRateYearly</code> by assuming that the highest posterior region is a 95% normal</p></dd>
+<dt>MutationScheme</dt><dd><p>Name of the mutation scheme</p></dd>
 </dl>
     
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='http://www.phylotree.org/resources/rCRS_annotated.htm'>http://www.phylotree.org/resources/rCRS_annotated.htm</a></p>
+    <p><a href='https://dx.doi.org/10.1016/j.ajhg.2009.05.001'>https://dx.doi.org/10.1016/j.ajhg.2009.05.001</a></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Note, that <code>PartitionRieux</code> and <code>PartitionOversti</code> have been
-modified to obtain the same number of positions as were given in the papers.</p>
+    <p>Note the value <code>[Not included?]</code> in the <code>PartitionOversti</code> column.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <ul>
-<li><p>PhyloTree: <a href='http://www.phylotree.org/resources/rCRS_annotated.htm'>http://www.phylotree.org/resources/rCRS_annotated.htm</a>;</p></li>
-<li><p>Rieux et al. (2014): <a href='https://doi.org/10.1093/molbev/msu222'>https://doi.org/10.1093/molbev/msu222</a>;</p></li>
 <li><p>Översti et al. (2017): <a href='https://doi.org/10.1038/s41598-017-05673-7'>https://doi.org/10.1038/s41598-017-05673-7</a></p></li>
 </ul>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>mtdna_mut_Rieux mtdna_mut_Oversti</p></div>
+    <div class='dont-index'><p>mtdna_partitions mtdna_mut_Rieux</p></div>
     
 
   </div>

@@ -94,33 +94,48 @@ data(mtdna_partitions)
 mtdna_partitions %>% print(n = 2)
 
 ## ------------------------------------------------------------------------
-data(mtdna_mut_SoaresK8)
-mtdna_mut_SoaresK8
+data(mtdna_mut_Rieux)
+mtdna_mut_Rieux
 
 ## ------------------------------------------------------------------------
-data(mtdna_mut_RieuxK4)
-mtdna_mut_RieuxK4
-
-data(mtdna_mut_RieuxK1)
-mtdna_mut_RieuxK1
+data(mtdna_mut_Oversti)
+mtdna_mut_Oversti
 
 ## ------------------------------------------------------------------------
-data(mtdna_mut_OverstiK4)
-mtdna_mut_OverstiK4
-
-## ------------------------------------------------------------------------
-data(mtdna_mut_schemes)
-mtdna_mut_schemes %>% print(n = 2)
-mtdna_mut_schemes %>% count(MutationScheme)
-
-## ------------------------------------------------------------------------
-d_mu <- mtdna_mut_schemes %>% 
-  filter(MutationScheme == "Rieux 2014 (K = 4)", MutRateYearly > 0)
-mu_mean_year <- d_mu %>% pull(MutRateYearly)
+mu_mean_year <- mtdna_partitions %>% 
+  left_join(mtdna_mut_Rieux, by = "PartitionRieux") %>% pull(MutRateYearly)
 mu_mean_gen <- 25*mu_mean_year
 
 ## ------------------------------------------------------------------------
 1 - prod(1 - mu_mean_gen)
+
+## ------------------------------------------------------------------------
+d_mu_sample <- mtdna_mut_Rieux %>% 
+  rowwise() %>% 
+  mutate(mu = 25*rnorm(1, mean = MutRateYearly, sd = MutRateSEYearly))
+
+mu_sample <- mtdna_partitions %>% 
+  left_join(d_mu_sample, by = "PartitionRieux") %>% pull(mu)
+
+## ------------------------------------------------------------------------
+get_overall_mu <- function() {
+  d_mu_sample <- mtdna_mut_Rieux %>% 
+    rowwise() %>% 
+    mutate(mu = 25*rnorm(1, mean = MutRateYearly, sd = MutRateSEYearly))
+  
+  mu_sample <- mtdna_partitions %>% 
+    left_join(d_mu_sample, by = "PartitionRieux") %>% pull(mu)
+  
+  1 - prod(1 - mu_sample)
+}
+
+set.seed(10)
+mu_overall <- replicate(100, get_overall_mu())
+
+summary(mu_overall)
+mean(mu_overall)
+qnorm(0.975)*sd(mu_overall)
+quantile(mu_overall, c(0.025, 0.975))
 
 ## ------------------------------------------------------------------------
 get_founder_mito <- function() {

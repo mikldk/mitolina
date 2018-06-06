@@ -179,44 +179,31 @@ data(mtdna_partitions)
 mtdna_partitions %>% print(n = 2)
 ```
 
-There is also mutation information from [@Soares2009]:
+Note, that `PartitionRieux` and `PartitionOversti` have been 
+modified to obtain the same number of positions as were given in the papers [@Rieux2014;@Oversti2017].
+
+There is also mutation information from [@Rieux2014]
 
 ```{r}
-data(mtdna_mut_SoaresK8)
-mtdna_mut_SoaresK8
-```
-
-From [@Rieux2014]
-
-```{r}
-data(mtdna_mut_RieuxK4)
-mtdna_mut_RieuxK4
-
-data(mtdna_mut_RieuxK1)
-mtdna_mut_RieuxK1
+data(mtdna_mut_Rieux)
+mtdna_mut_Rieux
 ```
 
 And from [@Oversti2017]:
 
 ```{r}
-data(mtdna_mut_OverstiK4)
-mtdna_mut_OverstiK4
+data(mtdna_mut_Oversti)
+mtdna_mut_Oversti
 ```
 
-All these are assembled info one dataframe:
+Note, that `MutRateSEYearly` is found by assuming that the 
+HPD (highest posterior density) is a 95\% interval from the Normal distribution.
+
+To use the mutation rates from for example `mtdna_mut_Rieux`:
 
 ```{r}
-data(mtdna_mut_schemes)
-mtdna_mut_schemes %>% print(n = 2)
-mtdna_mut_schemes %>% count(MutationScheme)
-```
-
-This makes it easier to use the mutation rates from for example `mtdna_mut_RieuxK4`:
-
-```{r}
-d_mu <- mtdna_mut_schemes %>% 
-  filter(MutationScheme == "Rieux 2014 (K = 4)", MutRateYearly > 0)
-mu_mean_year <- d_mu %>% pull(MutRateYearly)
+mu_mean_year <- mtdna_partitions %>% 
+  left_join(mtdna_mut_Rieux, by = "PartitionRieux") %>% pull(MutRateYearly)
 mu_mean_gen <- 25*mu_mean_year
 ```
 
@@ -227,8 +214,41 @@ Now, `mu_mean_gen` contains a mutation rate per generation (of 25 years) for eac
 ```
 
 Note, that to include variability in the mutation rates, 
-it is probably best to sample a rate per region (in `mtdna_mut_RieuxK4`), and then distribute 
-that to all sites in the partition.
+it is probably best to sample a rate per region (in `mtdna_mut_Rieux`), and then distribute 
+that to all sites in the partition:
+
+```{r}
+d_mu_sample <- mtdna_mut_Rieux %>% 
+  rowwise() %>% 
+  mutate(mu = 25*rnorm(1, mean = MutRateYearly, sd = MutRateSEYearly))
+
+mu_sample <- mtdna_partitions %>% 
+  left_join(d_mu_sample, by = "PartitionRieux") %>% pull(mu)
+```
+
+We can get an impression of the variability of the overall mutation rate:
+
+```{r}
+get_overall_mu <- function() {
+  d_mu_sample <- mtdna_mut_Rieux %>% 
+    rowwise() %>% 
+    mutate(mu = 25*rnorm(1, mean = MutRateYearly, sd = MutRateSEYearly))
+  
+  mu_sample <- mtdna_partitions %>% 
+    left_join(d_mu_sample, by = "PartitionRieux") %>% pull(mu)
+  
+  1 - prod(1 - mu_sample)
+}
+
+set.seed(10)
+mu_overall <- replicate(100, get_overall_mu())
+
+summary(mu_overall)
+mean(mu_overall)
+qnorm(0.975)*sd(mu_overall)
+quantile(mu_overall, c(0.025, 0.975))
+```
+
 
 
 These rates are easily used to populate mitogenomes:
