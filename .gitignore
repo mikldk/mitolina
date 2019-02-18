@@ -31,5 +31,5 @@ src/*.so
 *.knit.md
 .Rproj.user
 #
-paper*
-codemeta.json
+docs/paper.html
+paper.html
