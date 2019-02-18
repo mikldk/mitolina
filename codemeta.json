@@ -1,0 +1,23 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "https://orcid.org/0000-0002-0234-0266",
+      "@type": "Person",
+      "email": "mikl@math.aau.dk",
+      "name": "Mikkel Meyer Andersen",
+      "affiliation": "Department of Mathematical Sciences, Aalborg University, Denmark"
+    }
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/mikldk/mitolina",
+  "datePublished": "2019-02-18",
+  "dateModified": "2019-02-18",
+  "dateCreated": "2019-02-18",
+  "description": "An R package to perform MITOchondrial LINeage Analysis by simulating genealogies backwards and imposing mtDNA/mitochondrial genomes (mitogenomes) forwards from founders with mutations. Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.",
+  "keywords": "simulation, mtDNA, mitochondrial genomes, mitogenome, forensic genetics, population genetics, weight of evidence",
+  "license": "GPL v2.0",
+  "title": "mitolina: MITOchondrial LINeage Analysis",
+  "version": "0.0.1"
+}
