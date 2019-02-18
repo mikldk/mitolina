@@ -4,7 +4,8 @@
 \alias{pedigrees_all_populate_haplotypes}
 \title{Populate haplotypes in pedigrees (founder types same for all).}
 \usage{
-pedigrees_all_populate_haplotypes(pedigrees, mutation_rates, progress = TRUE)
+pedigrees_all_populate_haplotypes(pedigrees, mutation_rates,
+  progress = TRUE)
 }
 \arguments{
 \item{pedigrees}{Pedigree list in which to populate haplotypes}

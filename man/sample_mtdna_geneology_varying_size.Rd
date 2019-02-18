@@ -5,9 +5,10 @@
 \title{Simulate a geneology with varying population size.}
 \usage{
 sample_mtdna_geneology_varying_size(population_sizes_females,
-  population_sizes_males, generations_full = 1L, generations_return = 3L,
-  enable_gamma_variance_extension = FALSE, gamma_parameter_shape = 5,
-  gamma_parameter_scale = 1/5, progress = TRUE)
+  population_sizes_males, generations_full = 1L,
+  generations_return = 3L, enable_gamma_variance_extension = FALSE,
+  gamma_parameter_shape = 5, gamma_parameter_scale = 1/5,
+  progress = TRUE)
 }
 \arguments{
 \item{population_sizes_females}{The size of the female population at each generation, \code{g}. All >= 1.

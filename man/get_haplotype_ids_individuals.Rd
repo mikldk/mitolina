@@ -11,8 +11,6 @@ get_haplotype_ids_individuals(individuals)
 }
 \value{
 List of haplotype ids where element \code{i} is the haplotype of \code{individuals[[i]]}.
-
-[[i]: R:[i
 }
 \description{
 Get haplotype ids from list of individuals

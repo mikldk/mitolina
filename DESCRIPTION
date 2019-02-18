@@ -2,7 +2,6 @@ Package: mitolina
 Type: Package
 Title: MITOchondrial LINeage Analysis
 Version: 0.0.1
-Date: 2018-04-24
 Authors@R: c(
     person(given = "Mikkel Meyer", family = "Andersen", 
         email = "mikl@math.aau.dk", role = c("aut", "cre"))
@@ -31,4 +30,4 @@ SystemRequirements: C++11
 LazyData: true
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("rd", "collate", "namespace"))
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
