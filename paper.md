@@ -31,6 +31,7 @@ sample is degraded (for example by time or environment).
 
 Just as DNA profiles based on the Y chromosome are paternal lineage markers (inherited from fathers to boys) [@Butler2009; @AndersenPLOSGEN2017], 
 then DNA profiles based on the mitogenome are maternal lineage markers (inherited from mothers to children) [@Butler2009; @AndersenPLOSGENmtDNA2018]. 
+This software operates under the maternal inheritance only model, i.e. that mtDNA is only passed on by mothers to children. 
 It is often helpful to perform simulations of populations in lineage marker research as 
 recent research on using Y chromosomal DNA profiles in forensic genetics 
 demonstrate [@AndersenCoalescent2013; @AndersenDisclap2013; @AndersenPLOSGEN2017; @AndersenMalan2018]. 

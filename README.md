@@ -3,6 +3,7 @@
 An R package (<https://www.r-project.org/>) to perform **MITO**chondrial **LIN**eage **A**nalysis 
 by simulating genealogies backwards and 
 imposing mtDNA including binary mutations forwards. 
+This software operates under the maternal inheritance only model, i.e. that mtDNA is only passed on by mothers to children. 
 Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.
 
 See documentation included in package (vignettes and manual) at <https://mikldk.github.io/mitolina/>.
