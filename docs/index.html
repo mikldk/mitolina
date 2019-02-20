@@ -79,13 +79,14 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You first need <code>R</code> (<a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>). Then you can install <code>mitolina</code> from GitHub by using the <code>remotes</code> package (<a href="https://CRAN.R-project.org/package=remotes" class="uri">https://CRAN.R-project.org/package=remotes</a>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("remotes")</span>
-remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"mikldk/mitolina"</span>)</code></pre></div>
+remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"mikldk/mitolina"</span>, <span class="dt">build_opts =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span>))</code></pre></div>
+<p>The <code>build_opts</code> is provided to remove <code>--no-build-vignettes</code> such that vignettes are built.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2 class="hasAnchor">
 <a href="#getting-started" class="anchor"></a>Getting started</h2>
 <p>Refer to the included vignettes. You can get an overview of the included vignettes by the following <code>R</code> command:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/vignette">vignette</a></span>(<span class="dt">package =</span> <span class="st">"mitolina"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/browseVignettes">browseVignettes</a></span>(<span class="dt">package =</span> <span class="st">"mitolina"</span>)</code></pre></div>
 <p>To read a vignette, type:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/vignette">vignette</a></span>(<span class="st">"introduction"</span>, <span class="dt">package =</span> <span class="st">"mitolina"</span>)</code></pre></div>
 </div>

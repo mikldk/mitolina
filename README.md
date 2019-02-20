@@ -14,15 +14,17 @@ Then you can install `mitolina` from GitHub by using the `remotes` package (<htt
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("mikldk/mitolina")
+remotes::install_github("mikldk/mitolina", build_opts = c("--no-resave-data", "--no-manual"))
 ```
+
+The `build_opts` is provided to remove `--no-build-vignettes` such that vignettes are built.
 
 ## Getting started
 
 Refer to the included vignettes. You can get an overview of the included vignettes by the following `R` command:
 
 ```r
-vignette(package = "mitolina")
+browseVignettes(package = "mitolina")
 ```
 
 To read a vignette, type:
