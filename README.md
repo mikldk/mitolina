@@ -53,5 +53,9 @@ License: GPL-2.
 
 Travis CI:
 
-[![Travis-CI Build Status](https://travis-ci.org/mikldk/mitolina.svg?branch=master)](https://travis-ci.org/mikldk/mitolina)
+[![Travis-CI Build Status](https://travis-ci.org/mikldk/mitolina.svg?branch=master)](https://travis-ci.org/mikldk/mitolina) 
+
+The Journal of Open Source Software (JOSS):
+
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.01266/status.svg)](https://doi.org/10.21105/joss.01266)
 
